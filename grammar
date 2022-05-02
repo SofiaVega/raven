@@ -4,9 +4,6 @@
 
 IF: "si"
 ELSE: "si no"
-VAR: "var"
-INT: "int"
-FLOAT: "float"
 HUV: "habiaUnaVez"
 PRINT: "->"
 SALTO: "\n"
@@ -15,19 +12,30 @@ NUM: "num"
 ENUNCIADO: "enunciado"
 BOOL: "bool"
 ARREGLO: "arreglo"
+CAPITULO: "capitulo"
+MECANICA: "mecanica"
+TITULO: "titulo"
+REGRESA: "regresa"
+
+COMENTARIO: "//" /[^\n]*/ SALTO
+%ignore COMENTARIO
+
 
 ICOR: "{"
 FCOR: "}"
 IPAR: "("
 FPAR: ")"
 NOT_EQUAL: "<>"
+IGUAL: "="
+IMPORTAR: "importar"
+COMO: "como"
 
 ID: /[a-zA-Z_][a-zA-Z_0-9]*/
 INUM: /^[-+]?[0-9]+$/
 FNUM: /[0-9]*\.?[0-9]+((E|e)(\+|-)?[0-9]+)?/
 
 start: programa
-programa: HUV ID SALTO importarloop "titulo" "=" ID SALTO varsloop mecanicaloop capituloloop
+programa: HUV ID SALTO importarloop TITULO IGUAL ID SALTO varsloop mecanicaloop capituloloop
 importarloop: importar | importar importarloop
 varsloop: vars | vars varsloop
 mecanicaloop: mecanica | mecanica mecanicaloop
@@ -37,15 +45,15 @@ vars: tipo vars3 vars2 SALTO
 vars2: , vars3 vars2 |
 vars3: ID | ID = expresion
 
-importar: "importar" STRING "como" ID
+importar: IMPORTAR STRING COMO ID
 
-mecanica: "mecanica" tipo ID IPAR mecanica2 FPAR ICOR SALTO ESTATUTO SALTO mecanica4 mecanica5 FCOR
+mecanica: MECANICA tipo ID IPAR mecanica2 FPAR ICOR SALTO ESTATUTO SALTO mecanica4 mecanica5 FCOR
 mecanica2: tipo ID mecanica3 |
 mecanica3: , tipo ID mecanica3 | 
 mecanica4: estatuto SALTO mecanica4 |
-mecanica5: "regresa" varcte | 
+mecanica5: REGRESA varcte | 
 
-capitulo: "capitulo" ID IPAR mecanica2 FPAR ICOR SALTO "titulo" "=" STRING SALTO ESTATUTO SALTO mecanica4 FCOR
+capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO TITULO IGUAL STRING SALTO ESTATUTO SALTO mecanica4 FCOR
 
 expresion: exp | exp g
 g: exp | "<" exp | ">" exp | NOT_EQUAL exp
@@ -75,25 +83,3 @@ arreglo3: , val arreglo 3 |
 val: ID | INUM | FNUM | STRING
 
 tipo: NUM | ENUNCIADO | BOOL | ARREGLO
-
-programa: PROGRAM ID ";" vars bloque | PROGRAM ID ";" bloque
-vars: VAR vars2
-vars2: vars3 ":" tipo ";" vars4
-vars3: ID | ID "," vars3
-vars4: vars2 |
-tipo: INT | FLOAT
-bloque: ICOR estatuto FCOR
-estatuto: asignacion | condicion | escritura
-asignacion: ID "=" expresion ";"
-escritura: PRINT IPAR d FPAR ";"
-d: expresion | STRING | expresion "," d | STRING "," d
-expresion: exp | exp g
-g: exp | "<" exp | ">" exp | NOT_EQUAL exp
-condicion: IF IPAR expresion FPAR bloque condicion2
-condicion2: ELSE bloque |
-exp: termino | e
-e: "+" exp | "-" exp
-termino: factor | f
-f: "*" termino | "/" termino
-factor: ICOR expresion FCOR | varcte | "+" varcte | "-" varcte
-varcte: ID | INUM | FNUM
