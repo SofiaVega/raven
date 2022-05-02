@@ -13,30 +13,25 @@ habiaUnaVez Patito
 	capitulo inicio() {
 		titulo = "Inicio"
 		-> "Estás perdido en un bosque"
-		opciones: ["Avanzas", capitulo capDos();
-			    "Pierdes", mecanica perderPuntos()]
+		opciones : ["Avanzas", capDos() ; "Pierdes", perderPuntos()]
 		
-		fin
 	}
 
-	capitulo inicio() {
+	capitulo uno() {
 		titulo = "Un nuevo viaje"
 		-> "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor."
 		-> "Estás perdido en un bosque"
-		opciones: ["Avanzas", capitulo capDos();
-			    "Pierdes", mecanica perderPuntos()]
+		opciones: ["Avanzas", capDos();
+			    "Pierdes", perderPuntos()]
 		
-		fin
 	}
 
 	capitulo capDos() {
 		titulo = "Capítulo 2"
 		si (versionLimpia) {
-			-> nombre + "Hechas, pues, estas prevenciones, no quiso aguardar más tiempo a poner en efeto su pensamiento, apretándole a ello la falta que él pensaba que hacía en el mundo su tardanza, según eran los agravios que pensaba deshacer, tuertos que enderezar, sinrazones que enmendar, y abusos que mejorar, y deudas que satisfacer." 
+			-> "Hechas, pues, estas prevenciones, no quiso aguardar más tiempo a poner en efeto su pensamiento, apretándole a ello la falta que él pensaba que hacía en el mundo su tardanza, según eran los agravios que pensaba deshacer, tuertos que enderezar, sinrazones que enmendar, y abusos que mejorar, y deudas que satisfacer." 
 		} sino {
 			-> "Y así, sin dar parte a persona alguna de su intención, y sin que nadie le viese, una mañana, antes del día, que era uno de los calurosos del mes de julio, se armó de todas sus armas, subió sobre Rocinante, puesta su mal compuesta celada, embrazó su adarga, tomó su lanza, y, por la puerta falsa de un corral, salió al campo con grandísimo contento y alborozo de ver con cuánta facilidad había dado principio a su buen deseo."
 		}
 		
-		
-		fin
 	}

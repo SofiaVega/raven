@@ -1,9 +1,11 @@
+
+OPCIONES: "opciones"
 %import common.ESCAPED_STRING   -> STRING
 %import common.WS
 %ignore WS
 
 IF: "si"
-ELSE: "si no"
+ELSE: "sino"
 HUV: "habiaUnaVez"
 PRINT: "->"
 SALTO: /\n+/
@@ -17,7 +19,6 @@ MECANICA: "mecanica"
 TITULO: "titulo"
 REGRESA: "regresa"
 VACIO: "vacia"
-OPCIONES: "opciones"
 
 COMENTARIO: "//" /[^\n]*/ SALTO
 %ignore COMENTARIO
@@ -38,10 +39,16 @@ FNUM: /[0-9]*\.?[0-9]+((E|e)(\+|-)?[0-9]+)?/
 
 start: programa
 programa: HUV ID SALTO importarloop TITULO IGUAL STRING SALTO varsloop mecanicaloop capituloloop
-importarloop: importar | importar importarloop |
-varsloop: vars | vars varsloop |
-mecanicaloop: mecanica | mecanica mecanicaloop |
-capituloloop: capitulo | capitulo capituloloop
+importarloop: importar | importarloop importar|
+varsloop: vars | varsloop vars |
+mecanicaloop: mecanica | mecanicaloop  mecanica |
+capituloloop: capitulo | capituloloop capitulo 
+
+
+opciones: OPCIONES ":" "[" opciones2 "]"
+opciones2: opcion opciones3
+opciones3: ";" opcion opciones3 | 
+opcion: STRING "," ID IPAR estatuto2 FPAR
 
 vars: tipo vars3 vars2 SALTO
 vars2: "," vars3 vars2 |
@@ -68,16 +75,17 @@ f: "*" termino | "/" termino
 factor: ICOR expresion FCOR | varcte | "+" varcte | "-" varcte
 varcte: ID | INUM | FNUM | STRING
 
-estatuto: asignacion | condicion | escritura | ID IPAR estatuto2 FPAR
+estatuto: asignacion | condicion | escritura | ID IPAR estatuto2 FPAR | opciones
 estatuto2: ID estatuto3 |
 estatuto3: "," ID estatuto3 |
 
-condicion: IF IPAR expresion FPAR ICOR estatuto SALTO mecanica4 FCOR sino
-sino: ELSE ICOR estatuto SALTO mecanica4 FCOR | 
+condicion: IF IPAR expresion FPAR ICOR estatuto condicion2 FCOR sino
+sino: ELSE ICOR estatuto condicion2 FCOR | 
+condicion2: estatuto condicion2 |
 
 asignacion: ID "=" expresion
 
-escritura: PRINT STRING  | PRINT ID "[" INUM "]" SALTO
+escritura: PRINT STRING | PRINT ID "[" INUM "]" SALTO
 
 arreglo: ARREGLO tipo ID "=" "[" arreglo2 "]"
 arreglo2: val arreglo3 |
@@ -85,8 +93,3 @@ arreglo3: "," val arreglo3 |
 val: ID | INUM | FNUM | STRING
 
 tipo: NUM | ENUNCIADO | BOOL | ARREGLO | VACIO
-
-opciones: OPCIONES ":" "[" opciones2 "]"
-opciones2: opcion opciones3
-opciones3: ";" opcion opciones3 | 
-opcion: STRING "," capitulo ID IPAR estatuto2 FPAR | STRING "," mecanica ID IPAR estatuto2 FPAR
