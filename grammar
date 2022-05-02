@@ -37,7 +37,7 @@ importar: "importar" STRING "como" ID
 mecanica: "mecanica" tipo ID IPAR mecanica2 FPAR ICOR SALTO ESTATUTO SALTO mecanica4 mecanica5 FCOR
 mecanica2: tipo ID mecanica3 |
 mecanica3: , tipo ID mecanica3 | 
-mecanica4: ESTATUTO SALTO mecanica4 |
+mecanica4: estatuto SALTO mecanica4 |
 mecanica5: "regresa" varcte | 
 
 capitulo: "capitulo" ID IPAR mecanica2 FPAR ICOR SALTO "titulo" "=" STRING SALTO ESTATUTO SALTO mecanica4 FCOR
@@ -52,4 +52,22 @@ termino: factor | f
 f: "*" termino | "/" termino
 factor: ICOR expresion FCOR | varcte | "+" varcte | "-" varcte
 varcte: ID | INUM | FNUM
+
+estatuto: asignacion | condicion | escritura | idMecanica IPAR estatuto2 FPAR
+estatuto2: ID estatuto3 |
+estatuto3: "," ID estatuto3 |
+
+condicion: "si" IPAR expresion FPAR ICOR estatuto SALTO mecanica4 FCOR sino
+sino: "si no" ICOR estatuto SALTO mecanica4 FCOR | 
+
+asignacion: ID "=" EXPRESION
+
+escritura: PRINT STRING SALTO | PRINT ID "[" INUM "]" SALTO
+
+arreglo: "arreglo" tipo ID "=" "[" arreglo2 "]"
+arreglo2: val arreglo3 |
+arreglo3: , val arreglo 3 |
+val: ID | INUM | FNUM | STRING
+
+tipo: "num" | "enunciado" | "bool" | "arreglo"
 
