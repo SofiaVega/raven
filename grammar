@@ -42,3 +42,14 @@ mecanica5: "regresa" varcte |
 
 capitulo: "capitulo" ID IPAR mecanica2 FPAR ICOR SALTO "titulo" "=" STRING SALTO ESTATUTO SALTO mecanica4 FCOR
 
+expresion: exp | exp g
+g: exp | "<" exp | ">" exp | NOT_EQUAL exp
+
+exp: termino | e
+e: "+" exp | "-" exp
+
+termino: factor | f
+f: "*" termino | "/" termino
+factor: ICOR expresion FCOR | varcte | "+" varcte | "-" varcte
+varcte: ID | INUM | FNUM
+
