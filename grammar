@@ -42,18 +42,18 @@ mecanicaloop: mecanica | mecanica mecanicaloop
 capituloloop: capitulo | capitulo capituloloop
 
 vars: tipo vars3 vars2 SALTO
-vars2: , vars3 vars2 |
-vars3: ID | ID = expresion
+vars2: "," vars3 vars2 |
+vars3: ID | ID "=" expresion
 
 importar: IMPORTAR STRING COMO ID
 
-mecanica: MECANICA tipo ID IPAR mecanica2 FPAR ICOR SALTO ESTATUTO SALTO mecanica4 mecanica5 FCOR
+mecanica: MECANICA tipo ID IPAR mecanica2 FPAR ICOR SALTO estatuto SALTO mecanica4 mecanica5 FCOR
 mecanica2: tipo ID mecanica3 |
-mecanica3: , tipo ID mecanica3 | 
+mecanica3: "," tipo ID mecanica3 | 
 mecanica4: estatuto SALTO mecanica4 |
 mecanica5: REGRESA varcte | 
 
-capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO TITULO IGUAL STRING SALTO ESTATUTO SALTO mecanica4 FCOR
+capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO TITULO IGUAL STRING SALTO estatuto SALTO mecanica4 FCOR
 
 expresion: exp | exp g
 g: exp | "<" exp | ">" exp | NOT_EQUAL exp
@@ -66,20 +66,20 @@ f: "*" termino | "/" termino
 factor: ICOR expresion FCOR | varcte | "+" varcte | "-" varcte
 varcte: ID | INUM | FNUM
 
-estatuto: asignacion | condicion | escritura | idMecanica IPAR estatuto2 FPAR
+estatuto: asignacion | condicion | escritura | ID IPAR estatuto2 FPAR
 estatuto2: ID estatuto3 |
 estatuto3: "," ID estatuto3 |
 
 condicion: IF IPAR expresion FPAR ICOR estatuto SALTO mecanica4 FCOR sino
 sino: ELSE ICOR estatuto SALTO mecanica4 FCOR | 
 
-asignacion: ID "=" EXPRESION
+asignacion: ID "=" expresion
 
 escritura: PRINT STRING SALTO | PRINT ID "[" INUM "]" SALTO
 
 arreglo: ARREGLO tipo ID "=" "[" arreglo2 "]"
 arreglo2: val arreglo3 |
-arreglo3: , val arreglo 3 |
+arreglo3: "," val arreglo3 |
 val: ID | INUM | FNUM | STRING
 
 tipo: NUM | ENUNCIADO | BOOL | ARREGLO
