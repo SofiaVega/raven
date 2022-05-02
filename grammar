@@ -7,8 +7,9 @@ ELSE: "else"
 VAR: "var"
 INT: "int"
 FLOAT: "float"
-PROGRAM: "program"
+HUV: "habiaUnaVez"
 PRINT: "->"
+SALTO: "\n"
 
 ICOR: "{"
 FCOR: "}"
@@ -21,24 +22,14 @@ INUM: /^[-+]?[0-9]+$/
 FNUM: /[0-9]*\.?[0-9]+((E|e)(\+|-)?[0-9]+)?/
 
 start: programa
-programa: PROGRAM ID ";" vars bloque | PROGRAM ID ";" bloque
-vars: VAR vars2
-vars2: vars3 ":" tipo ";" vars4
-vars3: ID | ID "," vars3
-vars4: vars2 |
-tipo: INT | FLOAT
-bloque: ICOR estatuto FCOR
-estatuto: asignacion | condicion | escritura
-asignacion: ID "=" expresion ";"
-escritura: PRINT IPAR d FPAR ";"
-d: expresion | STRING | expresion "," d | STRING "," d
-expresion: exp | exp g
-g: exp | "<" exp | ">" exp | NOT_EQUAL exp
-condicion: IF IPAR expresion FPAR bloque condicion2
-condicion2: ELSE bloque |
-exp: termino | e
-e: "+" exp | "-" exp
-termino: factor | f
-f: "*" termino | "/" termino
-factor: ICOR expresion FCOR | varcte | "+" varcte | "-" varcte
-varcte: ID | INUM | FNUM
+programa: HUV ID SALTO importarloop "titulo" "=" ID SALTO varsloop mecanicaloop capituloloop
+importarloop: importar | importar importarloop
+varsloop: vars | vars varsloop
+mecanicaloop: mecanica | mecanica mecanicaloop
+capituloloop: capitulo | capitulo capituloloop
+
+vars: tipo vars3 vars2 SALTO
+vars2: , vars3 vars2 |
+vars3: ID | ID = expresion
+
+importar: "importar" STRING "como" ID
