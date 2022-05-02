@@ -2,14 +2,19 @@
 %import common.WS
 %ignore WS
 
-IF: "if"
-ELSE: "else"
+IF: "si"
+ELSE: "si no"
 VAR: "var"
 INT: "int"
 FLOAT: "float"
 HUV: "habiaUnaVez"
 PRINT: "->"
 SALTO: "\n"
+
+NUM: "num"
+ENUNCIADO: "enunciado"
+BOOL: "bool"
+ARREGLO: "arreglo"
 
 ICOR: "{"
 FCOR: "}"
@@ -57,17 +62,38 @@ estatuto: asignacion | condicion | escritura | idMecanica IPAR estatuto2 FPAR
 estatuto2: ID estatuto3 |
 estatuto3: "," ID estatuto3 |
 
-condicion: "si" IPAR expresion FPAR ICOR estatuto SALTO mecanica4 FCOR sino
-sino: "si no" ICOR estatuto SALTO mecanica4 FCOR | 
+condicion: IF IPAR expresion FPAR ICOR estatuto SALTO mecanica4 FCOR sino
+sino: ELSE ICOR estatuto SALTO mecanica4 FCOR | 
 
 asignacion: ID "=" EXPRESION
 
 escritura: PRINT STRING SALTO | PRINT ID "[" INUM "]" SALTO
 
-arreglo: "arreglo" tipo ID "=" "[" arreglo2 "]"
+arreglo: ARREGLO tipo ID "=" "[" arreglo2 "]"
 arreglo2: val arreglo3 |
 arreglo3: , val arreglo 3 |
 val: ID | INUM | FNUM | STRING
 
-tipo: "num" | "enunciado" | "bool" | "arreglo"
+tipo: NUM | ENUNCIADO | BOOL | ARREGLO
 
+programa: PROGRAM ID ";" vars bloque | PROGRAM ID ";" bloque
+vars: VAR vars2
+vars2: vars3 ":" tipo ";" vars4
+vars3: ID | ID "," vars3
+vars4: vars2 |
+tipo: INT | FLOAT
+bloque: ICOR estatuto FCOR
+estatuto: asignacion | condicion | escritura
+asignacion: ID "=" expresion ";"
+escritura: PRINT IPAR d FPAR ";"
+d: expresion | STRING | expresion "," d | STRING "," d
+expresion: exp | exp g
+g: exp | "<" exp | ">" exp | NOT_EQUAL exp
+condicion: IF IPAR expresion FPAR bloque condicion2
+condicion2: ELSE bloque |
+exp: termino | e
+e: "+" exp | "-" exp
+termino: factor | f
+f: "*" termino | "/" termino
+factor: ICOR expresion FCOR | varcte | "+" varcte | "-" varcte
+varcte: ID | INUM | FNUM
