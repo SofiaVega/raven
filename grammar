@@ -33,3 +33,12 @@ vars2: , vars3 vars2 |
 vars3: ID | ID = expresion
 
 importar: "importar" STRING "como" ID
+
+mecanica: "mecanica" tipo ID IPAR mecanica2 FPAR ICOR SALTO ESTATUTO SALTO mecanica4 mecanica5 FCOR
+mecanica2: tipo ID mecanica3 |
+mecanica3: , tipo ID mecanica3 | 
+mecanica4: ESTATUTO SALTO mecanica4 |
+mecanica5: "regresa" varcte | 
+
+capitulo: "capitulo" ID IPAR mecanica2 FPAR ICOR SALTO "titulo" "=" STRING SALTO ESTATUTO SALTO mecanica4 FCOR
+
