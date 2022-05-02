@@ -1,21 +1,19 @@
-habiaUnaVez Patito {
+habiaUnaVez Patito
 	titulo = "La Historia del Patito"
 	//Variables globales
 	enunciado nombre = "Nadia"
 	num puntos = 0
 	bool versionLimpia
 	
-	mecanica perderPuntos(num puntosAPerder) {
+	mecanica vacia perderPuntos(num puntosAPerder) {
 		puntos = 0
 		puntos = puntosAPerder * 50
 	}
 	
 	capitulo inicio() {
 		titulo = "Inicio"
-		-> "¿Cuál es tu nombre?"
-		<- nombre
 		-> "Estás perdido en un bosque"
-		opciones : ["Avanzas", capitulo capDos();
+		opciones: ["Avanzas", capitulo capDos();
 			    "Pierdes", mecanica perderPuntos()]
 		
 		fin
@@ -25,7 +23,7 @@ habiaUnaVez Patito {
 		titulo = "Un nuevo viaje"
 		-> "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor."
 		-> "Estás perdido en un bosque"
-		opciones : ["Avanzas", capitulo capDos();
+		opciones: ["Avanzas", capitulo capDos();
 			    "Pierdes", mecanica perderPuntos()]
 		
 		fin
@@ -42,4 +40,3 @@ habiaUnaVez Patito {
 		
 		fin
 	}
-}

@@ -6,7 +6,7 @@ IF: "si"
 ELSE: "si no"
 HUV: "habiaUnaVez"
 PRINT: "->"
-SALTO: "\n"
+SALTO: /\n+/
 
 NUM: "num"
 ENUNCIADO: "enunciado"
@@ -16,6 +16,8 @@ CAPITULO: "capitulo"
 MECANICA: "mecanica"
 TITULO: "titulo"
 REGRESA: "regresa"
+VACIO: "vacia"
+OPCIONES: "opciones"
 
 COMENTARIO: "//" /[^\n]*/ SALTO
 %ignore COMENTARIO
@@ -35,10 +37,10 @@ INUM: /^[-+]?[0-9]+$/
 FNUM: /[0-9]*\.?[0-9]+((E|e)(\+|-)?[0-9]+)?/
 
 start: programa
-programa: HUV ID SALTO importarloop TITULO IGUAL ID SALTO varsloop mecanicaloop capituloloop
-importarloop: importar | importar importarloop
-varsloop: vars | vars varsloop
-mecanicaloop: mecanica | mecanica mecanicaloop
+programa: HUV ID SALTO importarloop TITULO IGUAL STRING SALTO varsloop mecanicaloop capituloloop
+importarloop: importar | importar importarloop |
+varsloop: vars | vars varsloop |
+mecanicaloop: mecanica | mecanica mecanicaloop |
 capituloloop: capitulo | capitulo capituloloop
 
 vars: tipo vars3 vars2 SALTO
@@ -64,7 +66,7 @@ e: "+" exp | "-" exp
 termino: factor | f
 f: "*" termino | "/" termino
 factor: ICOR expresion FCOR | varcte | "+" varcte | "-" varcte
-varcte: ID | INUM | FNUM
+varcte: ID | INUM | FNUM | STRING
 
 estatuto: asignacion | condicion | escritura | ID IPAR estatuto2 FPAR
 estatuto2: ID estatuto3 |
@@ -75,11 +77,16 @@ sino: ELSE ICOR estatuto SALTO mecanica4 FCOR |
 
 asignacion: ID "=" expresion
 
-escritura: PRINT STRING SALTO | PRINT ID "[" INUM "]" SALTO
+escritura: PRINT STRING  | PRINT ID "[" INUM "]" SALTO
 
 arreglo: ARREGLO tipo ID "=" "[" arreglo2 "]"
 arreglo2: val arreglo3 |
 arreglo3: "," val arreglo3 |
 val: ID | INUM | FNUM | STRING
 
-tipo: NUM | ENUNCIADO | BOOL | ARREGLO
+tipo: NUM | ENUNCIADO | BOOL | ARREGLO | VACIO
+
+opciones: OPCIONES ":" "[" opciones2 "]"
+opciones2: opcion opciones3
+opciones3: ";" opcion opciones3 | 
+opcion: STRING "," capitulo ID IPAR estatuto2 FPAR | STRING "," mecanica ID IPAR estatuto2 FPAR
