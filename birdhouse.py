@@ -3,7 +3,10 @@
 # Tabla de variables
 
 # Clase Variable para la creación de variables y sus atributos
-class VariableClass:
+from lark import Visitor
+
+
+class VariableClass(Visitor):
     '''
     Constructor de Variable
 
@@ -81,3 +84,8 @@ class ProcDirectory:
         for item in self.procDirectory.items():
             print(item)
             item[1].printfunc()
+
+
+class Test(Visitor):
+    def printTree(self, tree):
+        print(tree.pretty())

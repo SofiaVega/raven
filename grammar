@@ -1,4 +1,3 @@
-
 OPCIONES: "opciones"
 %import common.ESCAPED_STRING   -> STRING
 %import common.WS
@@ -56,7 +55,7 @@ vars3: ID | ID "=" expresion
 
 importar: IMPORTAR STRING COMO ID
 
-mecanica: MECANICA tipo ID IPAR mecanica2 FPAR ICOR SALTO estatuto SALTO mecanica4 mecanica5 FCOR
+mecanica: MECANICA tipo ID IPAR mecanica2 FPAR ICOR SALTO estatuto SALTO mecanica4 mecanica5 FCOR np_hola
 mecanica2: tipo ID mecanica3 |
 mecanica3: "," tipo ID mecanica3 | 
 mecanica4: estatuto SALTO mecanica4 |
