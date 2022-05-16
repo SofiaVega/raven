@@ -19,7 +19,7 @@ Puntos neuralgicos en pseudocodigo en los diagramas. Ya sabemos como ponerlos en
 
   - Jueves 4 de Mayo
 
-- [ ] Puntos neurálgicos para operaciones aritméticas
+- [x] Puntos neurálgicos para operaciones aritméticas
 
   - Domingo 7 de Mayo
 
@@ -34,3 +34,7 @@ Puntos neuralgicos en pseudocodigo en los diagramas. Ya sabemos como ponerlos en
 ## Miercoles 4 de Mayo
 
 Añadimos el cubo semantico. Es un diccionario de diccionarios de diccionarios. En nuestra carpeta de drive hay un excel con la misma información para poder visualizarlo mejor. [Link.](https://docs.google.com/spreadsheets/d/17O1yEIGW2DZGPSVYCjtUNRyiWTKE5tLADRxhTVDiijg/edit#gid=1187907093)
+
+## Lunes 16 de Mayo
+
+Agregamos los puntos neuralgicos para operaciones aritmeticas y algunas expresiones booleanas (>, <>, <, ==)
