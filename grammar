@@ -72,7 +72,7 @@ mecanica5: REGRESA varcte |
 capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO TITULO IGUAL STRING SALTO estatuto SALTO mecanica4 FCOR
 
 expresion: exp | exp g
-g: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expresion | NOT_EQUAL exp cuadruplo_expresion
+g: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expresion | NOT_EQUAL exp cuadruplo_expresion | IGUAL_A exp cuadruplo_expresion
 cuadruplo_expresion:
 
 exp: termino  | termino e
