@@ -103,7 +103,7 @@ class VariableClass(Visitor):
         print("arbol en id")
         print(tree)
         print(tree.children)
-        miid = tree.children[1].value
+        miid = tree.children[-1].value
         print("mi id")
         print(miid)
         pilaO.append(miid)
@@ -113,7 +113,7 @@ class VariableClass(Visitor):
         print("arbol en entero")
         print(tree)
         print(tree.children)
-        miid = tree.children[0].value
+        miid = tree.children[-1].value
         print("mi id")
         print(miid)
         pilaO.append(miid)
@@ -171,7 +171,6 @@ class VariableClass(Visitor):
                     exit()
     
     def cuadruplo2(self, tree):
-        pass
         '''
         If POper.top() == ‘+’ or ‘-‘ then
             right_operand= PilaO.Pop() left_operand=PilaO.Pop() let_Type=PTypes.Pop() operator= POper.Pop()
@@ -196,6 +195,7 @@ class VariableClass(Visitor):
                 left_operand = pilaO.pop()
                 operator = pOper.pop()
                 #TO-DO: agregar validacion semantica
+                #TO-DO: validar division entre 0
                 result_type = "no error"
                 if result_type != "error":
                     global avail
@@ -207,6 +207,39 @@ class VariableClass(Visitor):
                 else:
                     print("Error: error de tipos")
                     exit()
+        
+    def g(self, tree):
+        #poper.push <, >, etc
+        print("hijos de g")
+        print(tree.children)
+        signo = tree.children[0].value
+        pOper.append(signo)
+
+    def cuadruplo_expresion(self, tree):
+        print("llegamos a cuadruplo expresion")
+        if pOper:
+            if (pOper[-1] == ">") or (pOper[-1] == "<"):
+                right_operand = pilaO.pop()
+                left_operand = pilaO.pop()
+                operator = pOper.pop()
+                #TO-DO: agregar validacion semantica
+                #TO-DO: validar division entre 0
+                result_type = "no error"
+                if result_type != "error":
+                    global avail
+                    result = temporales[avail]
+                    avail = avail+1
+                    generate_quad(operator, left_operand, right_operand, result)
+                    pilaO.append(result)
+                    #revisar si uno de los operandos era un temporal
+                else:
+                    print("Error: error de tipos")
+                    exit()
+
+    
+    
+
+            
         
 
     
