@@ -19,6 +19,11 @@ TITULO: "titulo"
 REGRESA: "regresa"
 VACIO: "vacia"
 
+MULT: /\*/
+SUMA: /\+/
+DIV: /\//
+RESTA: /\-/
+
 COMENTARIO: "//" /[^\n]*/ SALTO
 %ignore COMENTARIO
 
@@ -37,7 +42,8 @@ INUM: /^[-+]?[0-9]+$/
 FNUM: /[0-9]*\.?[0-9]+((E|e)(\+|-)?[0-9]+)?/
 
 start: programa
-programa: HUV ID SALTO importarloop TITULO IGUAL STRING SALTO varsloop mecanicaloop capituloloop
+programa: HUV ID np_hola SALTO importarloop TITULO IGUAL STRING SALTO varsloop mecanicaloop capituloloop
+np_hola:
 importarloop: importar | importarloop importar|
 varsloop: vars | varsloop vars |
 mecanicaloop: mecanica | mecanicaloop  mecanica |
@@ -66,13 +72,21 @@ capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO TITULO IGUAL STRING SALTO e
 expresion: exp | exp g
 g: exp | "<" exp | ">" exp | NOT_EQUAL exp
 
-exp: termino | e
-e: "+" exp | "-" exp
+exp: termino | termino e
+e: SUMA exp | RESTA exp
 
-termino: factor | f
-f: "*" termino | "/" termino
-factor: ICOR expresion FCOR | varcte | "+" varcte | "-" varcte
-varcte: ID | INUM | FNUM | STRING
+termino: factor | factor f
+f: MULT termino
+        | DIV termino
+        
+
+factor: IPAR expresion FPAR | varcte | SUMA varcte | RESTA varcte
+varcte:  ID ->idd
+        | INUM -> entero
+        | FNUM -> flotante
+        | STRING -> stringg
+np_asignacion1:
+np_asignacion2:
 
 estatuto: asignacion | condicion | escritura | ID IPAR estatuto2 FPAR | opciones
 estatuto2: ID estatuto3 |
@@ -82,7 +96,7 @@ condicion: IF IPAR expresion FPAR ICOR estatuto condicion2 FCOR sino
 sino: ELSE ICOR estatuto condicion2 FCOR | 
 condicion2: estatuto condicion2 |
 
-asignacion: ID "=" expresion
+asignacion: np_asignacion1 ID "=" expresion
 
 escritura: PRINT STRING | PRINT ID "[" INUM "]" SALTO
 
