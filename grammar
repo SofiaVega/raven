@@ -76,19 +76,20 @@ g: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expres
 cuadruplo_expresion:
 
 exp: termino  | termino e
-cuadruplo:
-e: SUMA exp cuadruplo | RESTA exp cuadruplo
+e: SUMA exp cuadruplo_suma | RESTA exp cuadruplo_suma
+cuadruplo_suma:
 
 termino: factor | factor f
-f: MULT termino cuadruplo2
-        | DIV termino cuadruplo2
-cuadruplo2: 
+f: MULT termino cuadruplo_mult_div
+        | DIV termino cuadruplo_mult_div
+cuadruplo_mult_div: 
         
 
 factor: IPAR expresion FPAR | varcte | SUMA varcte | RESTA varcte
-varcte:  ID ->idd
-        | NUM -> entero
-        | STRING -> stringg
+varcte:  ID -> guardar_id
+        | NUM -> guardar_num
+        | STRING -> guardar_string
+        | BOOL -> guardar_bool
 np_asignacion1:
 np_asignacion2:
 

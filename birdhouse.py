@@ -4,14 +4,17 @@
 
 # Clase Variable para la creación de variables y sus atributos
 from lark import Visitor
+from cubo_semantico import cubo as cubo_semantico
 
 id_Asignar = ""
 pilaO = []
 pOper = []
+pilaT = []
 pSaltos = []
 temporales = []
 avail = 0
 cuadruplos = []
+
 
 for i in range(0, 20):
     temporales.append("t" + str(i))
@@ -44,7 +47,6 @@ class VariableTable:
 
 #pilaO y poper
 tabla_variables = VariableTable()
-
 
 
 class VariableClass(Visitor):
@@ -98,7 +100,7 @@ class VariableClass(Visitor):
         #print(tree.children[0])
     '''
     
-    def idd(self, tree):
+    def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
         print("arbol en id")
         print(tree)
@@ -107,8 +109,10 @@ class VariableClass(Visitor):
         print("mi id")
         print(miid)
         pilaO.append(miid)
+        tipo = tabla_variables.tablaVar[miid].tipo
+        pilaT.append(tipo)
 
-    def entero(self, tree):
+    def guardar_num(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
         print("arbol en entero")
         print(tree)
@@ -117,6 +121,30 @@ class VariableClass(Visitor):
         print("mi id")
         print(miid)
         pilaO.append(miid)
+        pilaT.append("num")
+
+    def guardar_string(self, tree):
+        # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
+        print("arbol en entero")
+        print(tree)
+        print(tree.children)
+        miid = tree.children[-1].value
+        print("mi id")
+        print(miid)
+        pilaO.append(miid)
+        pilaT.append("enunciado")
+
+    
+    def guardar_bool(self, tree):
+        # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
+        print("arbol en entero")
+        print(tree)
+        print(tree.children)
+        miid = tree.children[-1].value
+        print("mi id")
+        print(miid)
+        pilaO.append(miid)
+        pilaT.append("bool")
     
     def f(self, tree):
         #2.- POper.Push(* or /)
@@ -132,11 +160,11 @@ class VariableClass(Visitor):
         signo = tree.children[0].value
         pOper.append(signo)
     
-    def cuadruplo(self, tree):
-        pass
+    def cuadruplo_suma(self, tree):
         '''
         If POper.top() == ‘+’ or ‘-‘ then
-            right_operand= PilaO.Pop() left_operand=PilaO.Pop() let_Type=PTypes.Pop() operator= POper.Pop()
+            right_operand= PilaO.Pop() left_operand=PilaO.Pop() 
+            let_Type=PTypes.Pop() operator= POper.Pop()
             result_Type= Semantics[left_Type,
             right_Type, operator] 
             if (result_Type != ERROR)
@@ -156,9 +184,11 @@ class VariableClass(Visitor):
             if (pOper[-1] == "+") or (pOper[-1] == "-"):
                 right_operand = pilaO.pop()
                 left_operand = pilaO.pop()
+                right_type = pilaT.pop()
+                left_type = pilaT.pop()
                 operator = pOper.pop()
                 #TO-DO: agregar validacion semantica
-                result_type = "no error"
+                result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global avail
                     result = temporales[avail]
@@ -170,7 +200,7 @@ class VariableClass(Visitor):
                     print("Error: error de tipos")
                     exit()
     
-    def cuadruplo2(self, tree):
+    def cuadruplo_mult_div(self, tree):
         '''
         If POper.top() == ‘+’ or ‘-‘ then
             right_operand= PilaO.Pop() left_operand=PilaO.Pop() let_Type=PTypes.Pop() operator= POper.Pop()
@@ -184,7 +214,6 @@ class VariableClass(Visitor):
             Else
                 ERROR (“Type mismatch”)
         '''
-        
         print("hijos de exp")
         print(pOper)
         print(pilaO)
@@ -193,10 +222,16 @@ class VariableClass(Visitor):
             if (pOper[-1] == "*") or (pOper[-1] == "/"):
                 right_operand = pilaO.pop()
                 left_operand = pilaO.pop()
+                right_type = pilaT.pop()
+                left_type = pilaT.pop()
                 operator = pOper.pop()
+                if operator == "/":
+                    if right_operand == "0" or tabla_variables.tablaVar[right_operand].value == 0:
+                        print("Error: no se puede dividir entre 0")
+                        exit()
+
                 #TO-DO: agregar validacion semantica
-                #TO-DO: validar division entre 0
-                result_type = "no error"
+                result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global avail
                     result = temporales[avail]
@@ -221,10 +256,11 @@ class VariableClass(Visitor):
             if (pOper[-1] == ">") or (pOper[-1] == "<"):
                 right_operand = pilaO.pop()
                 left_operand = pilaO.pop()
+                right_type = pilaT.pop()
+                left_type = pilaT.pop()
                 operator = pOper.pop()
                 #TO-DO: agregar validacion semantica
-                #TO-DO: validar division entre 0
-                result_type = "no error"
+                result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global avail
                     result = temporales[avail]
