@@ -9,6 +9,18 @@ id_Asignar = ""
 pilaO = []
 pOper = []
 pSaltos = []
+temporales = []
+avail = 0
+cuadruplos = []
+
+for i in range(0, 20):
+    temporales.append("t" + str(i))
+
+def generate_quad(operator, left, right, result):
+    cuadruplo = {"operator":operator, "left": left, "right": right, "result": result}
+    cuadruplos.append(cuadruplo)
+    print("cuadruplo agregado")
+    print(cuadruplo)
 
 
 
@@ -95,6 +107,16 @@ class VariableClass(Visitor):
         print("mi id")
         print(miid)
         pilaO.append(miid)
+
+    def entero(self, tree):
+        # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
+        print("arbol en entero")
+        print(tree)
+        print(tree.children)
+        miid = tree.children[0].value
+        print("mi id")
+        print(miid)
+        pilaO.append(miid)
     
     def f(self, tree):
         #2.- POper.Push(* or /)
@@ -109,6 +131,93 @@ class VariableClass(Visitor):
         print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
+    
+    def cuadruplo(self, tree):
+        pass
+        '''
+        If POper.top() == ‘+’ or ‘-‘ then
+            right_operand= PilaO.Pop() left_operand=PilaO.Pop() let_Type=PTypes.Pop() operator= POper.Pop()
+            result_Type= Semantics[left_Type,
+            right_Type, operator] 
+            if (result_Type != ERROR)
+                result ßAVAIL.next() generate quad
+                (operator, left_operand, right_operand, result) Quad.Push(quad)
+                PilaO.Push(result) PTypes.Push(result_Type) If any operand were a temporal space,
+                return it to AVAIL
+            Else
+                ERROR (“Type mismatch”)
+        '''
+        
+        print("hijos de exp")
+        print(pOper)
+        print(pilaO)
+        print(tree.children)
+        if pOper:
+            if (pOper[-1] == "+") or (pOper[-1] == "-"):
+                right_operand = pilaO.pop()
+                left_operand = pilaO.pop()
+                operator = pOper.pop()
+                #TO-DO: agregar validacion semantica
+                result_type = "no error"
+                if result_type != "error":
+                    global avail
+                    result = temporales[avail]
+                    avail = avail+1
+                    generate_quad(operator, left_operand, right_operand, result)
+                    pilaO.append(result)
+                    #revisar si uno de los operandos era un temporal
+                else:
+                    print("Error: error de tipos")
+                    exit()
+    
+    def cuadruplo2(self, tree):
+        pass
+        '''
+        If POper.top() == ‘+’ or ‘-‘ then
+            right_operand= PilaO.Pop() left_operand=PilaO.Pop() let_Type=PTypes.Pop() operator= POper.Pop()
+            result_Type= Semantics[left_Type,
+            right_Type, operator] 
+            if (result_Type != ERROR)
+                result ßAVAIL.next() generate quad
+                (operator, left_operand, right_operand, result) Quad.Push(quad)
+                PilaO.Push(result) PTypes.Push(result_Type) If any operand were a temporal space,
+                return it to AVAIL
+            Else
+                ERROR (“Type mismatch”)
+        '''
+        
+        print("hijos de exp")
+        print(pOper)
+        print(pilaO)
+        print(tree.children)
+        if pOper:
+            if (pOper[-1] == "*") or (pOper[-1] == "/"):
+                right_operand = pilaO.pop()
+                left_operand = pilaO.pop()
+                operator = pOper.pop()
+                #TO-DO: agregar validacion semantica
+                result_type = "no error"
+                if result_type != "error":
+                    global avail
+                    result = temporales[avail]
+                    avail = avail+1
+                    generate_quad(operator, left_operand, right_operand, result)
+                    pilaO.append(result)
+                    #revisar si uno de los operandos era un temporal
+                else:
+                    print("Error: error de tipos")
+                    exit()
+        
+
+    
+
+            
+        
+
+    
+
+            
+
 
 
 
