@@ -15,9 +15,9 @@ for x in result.iter_subtrees_topdown():
     print(x.data)
 print("------ Input Dificil --------")
 #result = parser.parse(badInput)
-#print(result.pretty())
+# print(result.pretty())
 
-VariableClass().visit_topdown(result)
+PuntosNeuralgicos().visit_topdown(result)
 print("pila o")
 print(pilaO)
 print("pila oper")
