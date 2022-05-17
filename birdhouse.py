@@ -324,6 +324,28 @@ class PuntosNeuralgicos(Visitor):
         fill_quad(falso, quad_pointer)
 
     #Puntos neuralgicos para un while
+    #Falta probarlos
+
+    def np_while_1(self, tree):
+        pSaltos.append(quad_pointer)
+
+    def np_while_2(self, tree):
+        global quad_pointer
+        exp_type = pilaT.pop()
+        if exp_type != "bool":
+            print("Type mismatch")
+            exit()
+        else:
+            result = pilaO.pop()
+            generate_quad("GOTOF", result, None, "blank")
+            pSaltos.append(quad_pointer - 1)
+
+    def np_while_3(self, tree):
+        end = pSaltos.pop()
+        regreso = pSaltos.pop()
+        generate_quad("GOTO", None, None, regreso)
+        fill_quad(end, quad_pointer)
+
 
 class VariableClass():
     '''
