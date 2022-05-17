@@ -109,8 +109,8 @@ class VariableClass(Visitor):
         print("mi id")
         print(miid)
         pilaO.append(miid)
-        tipo = tabla_variables.tablaVar[miid].tipo
-        pilaT.append(tipo)
+        #tipo = tabla_variables.tablaVar[miid].tipo
+        #pilaT.append(tipo)
 
     def guardar_num(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
@@ -146,14 +146,14 @@ class VariableClass(Visitor):
         pilaO.append(miid)
         pilaT.append("bool")
     
-    def f(self, tree):
+    def termino_mult(self, tree):
         #2.- POper.Push(* or /)
         print("hijos de f")
         print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
 
-    def e(self, tree):
+    def exp_suma(self, tree):
         # 3.- POper.Push(+ or - )
         print("hijos de e")
         print(tree.children)
@@ -243,7 +243,7 @@ class VariableClass(Visitor):
                     print("Error: error de tipos")
                     exit()
         
-    def g(self, tree):
+    def expresion_mayor(self, tree):
         #poper.push <, >, etc
         print("hijos de g")
         print(tree.children)
@@ -271,6 +271,24 @@ class VariableClass(Visitor):
                 else:
                     print("Error: error de tipos")
                     exit()
+    def print_string(self, tree):
+        print("Escritura")
+        print(tree.children)
+        print(tree.children[-1].value)
+        my_str = tree.children[-1].value
+        pilaO.append(my_str)
+        pilaT.append("enunciado")
+        if pilaO:
+            if pilaT.pop() == "enunciado":
+                result = pilaO.pop()
+                generate_quad("PRINT", None, None, result)
+
+    def np_print_expresion(self, tree):
+        if pilaO:
+            result = pilaO.pop()
+            if pilaT:
+                pilaT.pop()
+            generate_quad("PRINT", None, None, result)
 
     
     

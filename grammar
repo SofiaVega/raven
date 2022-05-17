@@ -71,16 +71,16 @@ mecanica5: REGRESA varcte |
 
 capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO TITULO IGUAL STRING SALTO estatuto SALTO mecanica4 FCOR
 
-expresion: exp | exp g
-g: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expresion | NOT_EQUAL exp cuadruplo_expresion | IGUAL_A exp cuadruplo_expresion
+expresion: exp | exp expresion_mayor
+expresion_mayor: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expresion | NOT_EQUAL exp cuadruplo_expresion | IGUAL_A exp cuadruplo_expresion
 cuadruplo_expresion:
 
-exp: termino  | termino e
-e: SUMA exp cuadruplo_suma | RESTA exp cuadruplo_suma
+exp: termino  | termino exp_suma
+exp_suma: SUMA exp cuadruplo_suma | RESTA exp cuadruplo_suma
 cuadruplo_suma:
 
-termino: factor | factor f
-f: MULT termino cuadruplo_mult_div
+termino: factor | factor termino_mult
+termino_mult: MULT termino cuadruplo_mult_div
         | DIV termino cuadruplo_mult_div
 cuadruplo_mult_div: 
         
@@ -103,7 +103,10 @@ condicion2: estatuto condicion2 |
 
 asignacion: np_asignacion1 ID "=" expresion
 
-escritura: PRINT STRING | PRINT ID "[" NUM "]" SALTO
+escritura: PRINT STRING -> print_string
+        | PRINT expresion np_print_expresion -> print_expresion
+        | PRINT ID "[" NUM "]" SALTO -> print_import
+np_print_expresion: 
 
 arreglo: ARREGLO tipo ID "=" "[" arreglo2 "]"
 arreglo2: val arreglo3 |
