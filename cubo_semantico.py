@@ -1,5 +1,5 @@
 cubo = {
-    "suma": {
+    "+": {
         "num": {
             "num":"num",
             "enunciado":"error",
@@ -17,7 +17,7 @@ cubo = {
             "bool":"num"
         }
     },
-    "resta": {
+    "-": {
         "num": {
             "num":"num",
             "enunciado":"error",
@@ -35,7 +35,7 @@ cubo = {
             "bool":"num"
         }
     },
-    "multiplicacion": {
+    "*": {
         "num": {
             "num":"num",
             "enunciado":"error",
@@ -54,7 +54,7 @@ cubo = {
         }
     },
 
-    "division": {
+    "/": {
         "num": {
             "num":"num",
             "enunciado":"error",

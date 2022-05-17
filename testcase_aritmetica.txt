@@ -9,5 +9,6 @@ capitulo uno () {
     z = x > y
 
     -> "Habia una vez un cuervo"
+    -> 2 * 3
 
 }
