@@ -20,7 +20,7 @@ REGRESA: "regresa"
 VACIO: "vacia"
 WHILE: "mientras"
 POR: "por"
-EN: "en
+EN: "en"
 
 MULT: /\*/
 SUMA: /\+/
@@ -109,6 +109,7 @@ np_if:
 np_if_2:
 sino: ELSE np_if_3 ICOR estatuto condicion2 FCOR | 
 condicion2: estatuto condicion2 |
+np_if_3: 
 
 asignacion: np_asignacion1 ID "=" expresion
 
@@ -124,8 +125,8 @@ val: ID | NUM | NUM | STRING
 
 tipo: NUMTIPO | ENUNCIADO | BOOL | ARREGLO | VACIO
 
-ciclo_por: POR ID EN ID ICOR estatuto ciclo2 FCOR
-ciclo_por2: estatuto ciclo2 | 
+ciclo_por: POR ID EN ID ICOR estatuto ciclo_por2 FCOR
+ciclo_por2: estatuto ciclo_por2 | 
 
 ciclo_while: WHILE IPAR expresion FPAR ICOR estatuto ciclo_while2 FCOR
 ciclo_while2: estatuto ciclo_while2 | 
