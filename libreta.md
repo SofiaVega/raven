@@ -15,7 +15,7 @@ Puntos neuralgicos en pseudocodigo en los diagramas. Ya sabemos como ponerlos en
   - [ ] Código
   - Jueves 4 de Mayo
 
-- [ ] Hacer cubo semántico
+- [x] Hacer cubo semántico
 
   - Jueves 4 de Mayo
 
@@ -28,7 +28,7 @@ Puntos neuralgicos en pseudocodigo en los diagramas. Ya sabemos como ponerlos en
   - Esto se hace a través de Visitor importado de Lark
   - Lunes 8 de Mayo
 
-- [ ] Lógica para generar cuadruplos
+- [x] Lógica para generar cuadruplos
   - Lunes 8 de Mayo
 
 ## Miercoles 4 de Mayo
@@ -37,4 +37,9 @@ Añadimos el cubo semantico. Es un diccionario de diccionarios de diccionarios. 
 
 ## Lunes 16 de Mayo
 
-Agregamos los puntos neuralgicos para operaciones aritmeticas y algunas expresiones booleanas (>, <>, <, ==)
+Agregamos los puntos neuralgicos para operaciones aritmeticas, algunas expresiones booleanas (>, <>, <, ==) y condicionales
+Tambien agregamos validacion semantica y division por cero
+
+## Martes 17 de Mayo
+
+Agregamos puntos neuralgicos para ciclos
