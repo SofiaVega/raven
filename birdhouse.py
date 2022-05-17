@@ -320,7 +320,7 @@ class VariableClass(Visitor):
         falso = pSaltos.pop()
         fill_quad(falso, quad_pointer)
 
-    #
+    #Puntos neuralgicos para un while
 
     
     

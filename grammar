@@ -18,6 +18,9 @@ MECANICA: "mecanica"
 TITULO: "titulo"
 REGRESA: "regresa"
 VACIO: "vacia"
+WHILE: "mientras"
+POR: "por"
+EN: "en
 
 MULT: /\*/
 SUMA: /\+/
@@ -118,3 +121,9 @@ arreglo3: "," val arreglo3 |
 val: ID | NUM | NUM | STRING
 
 tipo: NUMTIPO | ENUNCIADO | BOOL | ARREGLO | VACIO
+
+ciclo_por: POR ID EN ID ICOR estatuto ciclo2 FCOR
+ciclo_por2: estatuto ciclo2 | 
+
+ciclo_while: WHILE IPAR expresion FPAR ICOR estatuto ciclo_while2 FCOR
+ciclo_while2: estatuto ciclo_while2 | 
