@@ -128,5 +128,8 @@ tipo: NUMTIPO | ENUNCIADO | BOOL | ARREGLO | VACIO
 ciclo_por: POR ID EN ID ICOR estatuto ciclo_por2 FCOR
 ciclo_por2: estatuto ciclo_por2 | 
 
-ciclo_while: WHILE IPAR expresion FPAR ICOR estatuto ciclo_while2 FCOR
+ciclo_while: WHILE np_while_1 IPAR expresion FPAR np_while_2 ICOR estatuto ciclo_while2 FCOR np_while_3
 ciclo_while2: estatuto ciclo_while2 | 
+np_while_1: 
+np_while_2: 
+np_while_3: 
