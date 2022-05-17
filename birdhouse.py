@@ -115,8 +115,8 @@ class PuntosNeuralgicos(Visitor):
         #print("mi id")
         # print(miid)
         pilaO.append(miid)
-        #tipo = tabla_variables.tablaVar[miid].tipo
-        # pilaT.append(tipo)
+        tipo = tabla_variables.tablaVar[miid].typeVar
+        pilaT.append(tipo)
 
 
     def guardar_num(self, tree):
@@ -202,6 +202,7 @@ class PuntosNeuralgicos(Visitor):
                     generate_quad(operator, left_operand,
                                   right_operand, result)
                     pilaO.append(result)
+                    pilaT.append(result_type)
                     # revisar si uno de los operandos era un temporal
                 else:
                     print("Error: error de tipos")
@@ -246,6 +247,7 @@ class PuntosNeuralgicos(Visitor):
                     generate_quad(operator, left_operand,
                                   right_operand, result)
                     pilaO.append(result)
+                    pilaT.append(result_type)
                     # revisar si uno de los operandos era un temporal
                 else:
                     print("Error: error de tipos")
@@ -276,6 +278,7 @@ class PuntosNeuralgicos(Visitor):
                     generate_quad(operator, left_operand,
                                   right_operand, result)
                     pilaO.append(result)
+                    pilaT.append(result_type)
                     # revisar si uno de los operandos era un temporal
                 else:
                     print("Error: error de tipos")
@@ -306,6 +309,9 @@ class PuntosNeuralgicos(Visitor):
     def np_if(self, tree):
         global quad_pointer
         exp_type = pilaT.pop()
+        print("np if")
+        print(exp_type)
+        print(pilaO[-1])
         if exp_type != "bool":
             print("Type mismatch")
             exit()

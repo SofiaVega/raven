@@ -4,7 +4,7 @@ from birdhouse import *
 
 
 parser = Lark(open("grammar", 'r').read())
-goodInput = open("testcase_aritmetica.txt", 'r').read()
+goodInput = open("testcase_numeros.txt", 'r').read()
 badInput = open("testcase_good.txt", 'r').read()
 
 print("------ Good Input --------")
