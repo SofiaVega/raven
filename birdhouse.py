@@ -35,8 +35,9 @@ class VariableTable:
         self.tablaVar = {}
 
     def addVar(self, varObject):
-        self.tablaVar[varObject.nameVar] = varObject
-        print("Variable added")
+        if not (self.checkDuplicate(varObject.nameVar)):
+            self.tablaVar[varObject.nameVar] = varObject
+            print("Variable added")
 
     def asignar(self, name, new_value):
         self.tablaVar[name]
@@ -45,6 +46,13 @@ class VariableTable:
         for item in self.tablaVar.items():
             print(item)
             item[1].printvar()
+
+    def checkDuplicate(self, key):
+        if key in self.tablaVar:
+            print('Syntax error: redeclaration of variable' + key)
+            return True
+        else:
+            return False
 
 
 # pilaO y poper
@@ -62,7 +70,7 @@ class PuntosNeuralgicos(Visitor):
         # Logica para tambien agregar variables que se declaran en la misma linea
         # print(tree.children[2].children[0].children)
 
-        var = VariableClass(name, type, 0, "local", "1000")
+        var = VariableClass(name, type)
         tabla_variables.addVar(var)
         tabla_variables.printTable()
 
@@ -299,16 +307,15 @@ class VariableClass():
     - addressVar : int -> direccion de memoria virtual
     '''
 
-    def __init__(self, nameVar, typeVar, valueVar, scopeVar, addressVar):
+    def __init__(self, nameVar, typeVar, valueVar='', addressVar=''):
         self.nameVar = nameVar
         self.typeVar = typeVar
         self.valueVar = valueVar
-        self.scopeVar = scopeVar
         self.addressVar = addressVar
 
     def printvar(self):
-        print("[nameVar: {} typeVar: {} valueVar: {} scopeVar: {} addressVar: {}]".format(
-            self.nameVar, self.typeVar, self.valueVar, self.scopeVar, self.addressVar))
+        print("[nameVar: {} typeVar: {} valueVar: {} addressVar: {}]".format(
+            self.nameVar, self.typeVar, self.valueVar, self.addressVar))
 
 
 # Clase Funcion para la creación de funciones y sus atributos
