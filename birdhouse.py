@@ -309,9 +309,6 @@ class PuntosNeuralgicos(Visitor):
     def np_if(self, tree):
         global quad_pointer
         exp_type = pilaT.pop()
-        print("np if")
-        print(exp_type)
-        print(pilaO[-1])
         if exp_type != "bool":
             print("Type mismatch")
             exit()
