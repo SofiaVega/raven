@@ -32,6 +32,9 @@ class PuntosNeuralgicos(Visitor):
     def np_hola(self, tree):
         print("hola")
 
+    def np_addVars(self, tree):
+        print("I will start adding variables to the table")
+
     def np_asignacion_1(self, tree):
         # revisar si existe en la tabla de variables
         id = tree.children[0].value
