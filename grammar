@@ -59,8 +59,9 @@ opcion: STRING "," ID IPAR estatuto2 FPAR
 
 vars: tipo vars3 vars2 SALTO
 vars2: "," vars3 vars2 |
-vars3: ID np_addVars | ID "=" expresion np_addVars
-np_addVars: 
+vars3: ID | ID "=" expresion 
+np_addvars: 
+
 
 importar: IMPORTAR STRING COMO ID
 

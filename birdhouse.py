@@ -27,13 +27,44 @@ def generate_quad(operator, left, right, result):
     print("cuadruplo agregado")
     print(cuadruplo)
 
+# Tabla de Variables
+
+
+class VariableTable:
+    def __init__(self):
+        self.tablaVar = {}
+
+    def addVar(self, varObject):
+        self.tablaVar[varObject.nameVar] = varObject
+        print("Variable added")
+
+    def asignar(self, name, new_value):
+        self.tablaVar[name]
+
+    def printTable(self):
+        for item in self.tablaVar.items():
+            print(item)
+            item[1].printvar()
+
+
+# pilaO y poper
+tabla_variables = VariableTable()
+
 
 class PuntosNeuralgicos(Visitor):
     def np_hola(self, tree):
         print("hola")
 
-    def np_addVars(self, tree):
-        print("I will start adding variables to the table")
+    def vars(self, tree):
+        print("-----I will start adding variables to the table")
+        type = tree.children[0].children[0].value
+        name = tree.children[1].children[0].value
+        # Logica para tambien agregar variables que se declaran en la misma linea
+        # print(tree.children[2].children[0].children)
+
+        var = VariableClass(name, type, 0, "local", "1000")
+        tabla_variables.addVar(var)
+        tabla_variables.printTable()
 
     def np_asignacion_1(self, tree):
         # revisar si existe en la tabla de variables
@@ -49,75 +80,75 @@ class PuntosNeuralgicos(Visitor):
 
     def np_asignacion_2(self, tree):
         # actualizar el valor
-        print("np 2")
-        print(tree.children[0].value)
+        # print("np 2")
+        # print(tree.children[0].value)
         # tabla_variables.tablaVar[id_Asignar]. tree.children[0.value]
-    '''
-    def asignacion(self, tree):
-        print("ASIGNACION")
-        print(tree)
-        print(tree.children[0].value)
-        print(tree.children[0].line)
-        print(tree.children[0])
-        #print(tree.children[0])
-    '''
+        '''
+        def asignacion(self, tree):
+            print("ASIGNACION")
+            print(tree)
+            print(tree.children[0].value)
+            print(tree.children[0].line)
+            print(tree.children[0])
+            #print(tree.children[0])
+        '''
 
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        print("arbol en id")
-        print(tree)
-        print(tree.children)
+        # print("arbol en id")
+        # print(tree)
+        # print(tree.children)
         miid = tree.children[-1].value
-        print("mi id")
-        print(miid)
+        #print("mi id")
+        # print(miid)
         pilaO.append(miid)
         #tipo = tabla_variables.tablaVar[miid].tipo
         # pilaT.append(tipo)
 
     def guardar_num(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        print("arbol en entero")
-        print(tree)
-        print(tree.children)
+        # print("arbol en entero")
+        # print(tree)
+        # print(tree.children)
         miid = tree.children[-1].value
-        print("mi id")
-        print(miid)
+        #print("mi id")
+        # print(miid)
         pilaO.append(miid)
         pilaT.append("num")
 
     def guardar_string(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        print("arbol en entero")
-        print(tree)
-        print(tree.children)
+        #print("arbol en entero")
+        # print(tree)
+        # print(tree.children)
         miid = tree.children[-1].value
-        print("mi id")
-        print(miid)
+        #print("mi id")
+        # print(miid)
         pilaO.append(miid)
         pilaT.append("enunciado")
 
     def guardar_bool(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        print("arbol en entero")
-        print(tree)
-        print(tree.children)
+        #print("arbol en entero")
+        # print(tree)
+        # print(tree.children)
         miid = tree.children[-1].value
-        print("mi id")
-        print(miid)
+        #print("mi id")
+        # print(miid)
         pilaO.append(miid)
         pilaT.append("bool")
 
     def termino_mult(self, tree):
         # 2.- POper.Push(* or /)
-        print("hijos de f")
-        print(tree.children)
+        #print("hijos de f")
+        # print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
 
     def exp_suma(self, tree):
         # 3.- POper.Push(+ or - )
-        print("hijos de e")
-        print(tree.children)
+        #print("hijos de e")
+        # print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
 
@@ -137,10 +168,10 @@ class PuntosNeuralgicos(Visitor):
                 ERROR (“Type mismatch”)
         '''
 
-        print("hijos de exp")
-        print(pOper)
-        print(pilaO)
-        print(tree.children)
+        # print("hijos de exp")
+        # print(pOper)
+        # print(pilaO)
+        # print(tree.children)
         if pOper:
             if (pOper[-1] == "+") or (pOper[-1] == "-"):
                 right_operand = pilaO.pop()
@@ -176,10 +207,10 @@ class PuntosNeuralgicos(Visitor):
             Else
                 ERROR (“Type mismatch”)
         '''
-        print("hijos de exp")
-        print(pOper)
-        print(pilaO)
-        print(tree.children)
+        #print("hijos de exp")
+        # print(pOper)
+        # print(pilaO)
+        # print(tree.children)
         if pOper:
             if (pOper[-1] == "*") or (pOper[-1] == "/"):
                 right_operand = pilaO.pop()
@@ -208,13 +239,13 @@ class PuntosNeuralgicos(Visitor):
 
     def expresion_mayor(self, tree):
         # poper.push <, >, etc
-        print("hijos de g")
-        print(tree.children)
+        #print("hijos de g")
+        # print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
 
     def cuadruplo_expresion(self, tree):
-        print("llegamos a cuadruplo expresion")
+        #print("llegamos a cuadruplo expresion")
         if pOper:
             if (pOper[-1] == ">") or (pOper[-1] == "<"):
                 right_operand = pilaO.pop()
@@ -237,9 +268,9 @@ class PuntosNeuralgicos(Visitor):
                     exit()
 
     def print_string(self, tree):
-        print("Escritura")
-        print(tree.children)
-        print(tree.children[-1].value)
+        # print("Escritura")
+        # print(tree.children)
+        # print(tree.children[-1].value)
         my_str = tree.children[-1].value
         pilaO.append(my_str)
         pilaT.append("enunciado")
@@ -256,28 +287,6 @@ class PuntosNeuralgicos(Visitor):
             generate_quad("PRINT", None, None, result)
 
 
-# Tabla de Variables
-class VariableTable:
-    def __init__(self):
-        self.tablaVar = {}
-
-    def addVar(self, varObject):
-        self.tablaVar[varObject.nameVar] = varObject
-        print("Variable added")
-
-    def asignar(self, name, new_value):
-        self.tablaVar[name]
-
-    def printTable(self):
-        for item in self.tablaVar.items():
-            print(item)
-            item[1].printvar()
-
-
-# pilaO y poper
-tabla_variables = VariableTable()
-
-
 class VariableClass():
     '''
     Constructor de Variable
@@ -289,14 +298,13 @@ class VariableClass():
     - scopeVar : string -> scope de la variable
     - addressVar : int -> direccion de memoria virtual
     '''
-    '''
+
     def __init__(self, nameVar, typeVar, valueVar, scopeVar, addressVar):
         self.nameVar = nameVar
         self.typeVar = typeVar
         self.valueVar = valueVar
         self.scopeVar = scopeVar
         self.addressVar = addressVar
-        '''
 
     def printvar(self):
         print("[nameVar: {} typeVar: {} valueVar: {} scopeVar: {} addressVar: {}]".format(
