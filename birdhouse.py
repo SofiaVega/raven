@@ -13,6 +13,7 @@ pilaT = []
 pSaltos = []
 temporales = []
 avail = 0
+quad_pointer = 0
 cuadruplos = []
 
 
@@ -21,11 +22,15 @@ for i in range(0, 20):
 
 
 def generate_quad(operator, left, right, result):
-    cuadruplo = {"operator": operator, "left": left,
-                 "right": right, "result": result}
+    global quad_pointer
+    cuadruplo = {"operator":operator, "left": left, "right": right, "result": result}
     cuadruplos.append(cuadruplo)
     print("cuadruplo agregado")
     print(cuadruplo)
+    quad_pointer = quad_pointer + 1
+
+def fill_quad(end, cont):
+    cuadruplos[end]["result"] = cont
 
 # Tabla de Variables
 
@@ -104,6 +109,7 @@ class PuntosNeuralgicos(Visitor):
         pilaO.append(miid)
         #tipo = tabla_variables.tablaVar[miid].tipo
         # pilaT.append(tipo)
+
 
     def guardar_num(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
@@ -285,7 +291,31 @@ class PuntosNeuralgicos(Visitor):
             if pilaT:
                 pilaT.pop()
             generate_quad("PRINT", None, None, result)
+            
+            # Puntos neuralgicos del if
+    # To do: probarlos con un ejemplo, necesitamos la tabla de variables
 
+    def np_if(self, tree):
+        global quad_pointer
+        exp_type = pilaT.pop()
+        if exp_type != "bool":
+            print("Type mismatch")
+            exit()
+        else:
+            result = pilaO.pop()
+            generate_quad("GOTOF", result, None, "blank")
+            pSaltos.append(quad_pointer - 1)
+
+    def np_if_2(self, tree):
+        end = pSaltos.pop()
+        fill_quad(end, quad_pointer)
+    
+    def np_if_3(self, tree):
+        generate_quad("GOTO", None, None, "blank")
+        falso = pSaltos.pop()
+        fill_quad(falso, quad_pointer)
+
+    #
 
 class VariableClass():
     '''

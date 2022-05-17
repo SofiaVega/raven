@@ -30,7 +30,7 @@ COMENTARIO: "//" /[^\n]*/ SALTO
 
 ICOR: "{"
 FCOR: "}"
-IPAR: "("
+IPAR: /\(/
 FPAR: ")"
 NOT_EQUAL: "<>"
 GREATER_THEN: ">"
@@ -57,7 +57,8 @@ opciones2: opcion opciones3
 opciones3: ";" opcion opciones3 | 
 opcion: STRING "," ID IPAR estatuto2 FPAR
 
-vars: tipo vars3 vars2 SALTO
+vars: tipo vars3 np_add_vars vars2 SALTO
+np_add_vars:
 vars2: "," vars3 vars2 |
 vars3: ID | ID "=" expresion 
 np_addvars: 
@@ -75,7 +76,8 @@ capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO TITULO IGUAL STRING SALTO e
 
 expresion: exp | exp expresion_mayor
 expresion_mayor: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expresion | NOT_EQUAL exp cuadruplo_expresion | IGUAL_A exp cuadruplo_expresion
-cuadruplo_expresion:
+cuadruplo_expresion: 
+
 
 exp: termino  | termino exp_suma
 exp_suma: SUMA exp cuadruplo_suma | RESTA exp cuadruplo_suma
@@ -99,8 +101,10 @@ estatuto: asignacion | condicion | escritura | ID IPAR estatuto2 FPAR | opciones
 estatuto2: ID estatuto3 |
 estatuto3: "," ID estatuto3 |
 
-condicion: IF IPAR expresion FPAR ICOR estatuto condicion2 FCOR sino
-sino: ELSE ICOR estatuto condicion2 FCOR | 
+condicion: IF IPAR expresion FPAR np_if ICOR estatuto condicion2 FCOR sino np_if_2
+np_if: 
+np_if_2:
+sino: ELSE np_if_3 ICOR estatuto condicion2 FCOR | 
 condicion2: estatuto condicion2 |
 
 asignacion: np_asignacion1 ID "=" expresion
