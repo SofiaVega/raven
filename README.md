@@ -18,6 +18,14 @@ Se genera el análisis léxico y de sintaxis sobre la gramática libre de contex
 
 Se genera la semántica básica de las variables a través del directorio de procedimientos y las tablas de variables.
 
+## Avance 5
+
+#### Lunes 16 de Mayo
+
+Agregamos los puntos neuralgicos para operaciones aritmeticas y algunas expresiones booleanas (>, <>, <, ==)
+
+Se agregan las variables a la tabla de variables
+
 ---
 
 ## Próximos avances
@@ -25,7 +33,7 @@ Se genera la semántica básica de las variables a través del directorio de pro
 - [x] **Avance 0:** Propuesta aprobada
 - [x] **Avance 1:** Análisis de léxico y sintaxis
 - [x] **Avance 2:** Semántica básica de variables. Directorio de procedimientos y tablas de variables
-- [ ] **Avance 3:** Semántica básica de expresiones. tabla de Consideraciones semánticas (Cubo semántico). Genración de código de expresiones aritméticas y estatutos secuenciales: Asignación, lectura, etc
+- [x] **Avance 3:** Semántica básica de expresiones. tabla de Consideraciones semánticas (Cubo semántico). Genración de código de expresiones aritméticas y estatutos secuenciales: Asignación, lectura, etc
 - [ ] **Avance 4:** Generación de código de estatutos condicionales (Decisiones, ciclos)
 - [ ] **Avance 5:** Generación de código de funciones
 - [ ] **Avance 6:** Mapa de memoria de ejecución para la máquina virtual. Máquina virtual: ejecución de expresiones aritméticas y estatutos secuenciales
