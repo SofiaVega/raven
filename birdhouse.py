@@ -20,6 +20,7 @@ cuadruplos = []
 for i in range(0, 20):
     temporales.append("t" + str(i))
 
+
 def generate_quad(operator, left, right, result):
     global quad_pointer
     cuadruplo = {"operator":operator, "left": left, "right": right, "result": result}
@@ -31,9 +32,9 @@ def generate_quad(operator, left, right, result):
 def fill_quad(end, cont):
     cuadruplos[end]["result"] = cont
 
-
-
 # Tabla de Variables
+
+
 class VariableTable:
     def __init__(self):
         self.tablaVar = {}
@@ -51,37 +52,27 @@ class VariableTable:
             item[1].printvar()
 
 
-#pilaO y poper
+# pilaO y poper
 tabla_variables = VariableTable()
 
 
-class VariableClass(Visitor):
-    '''
-    Constructor de Variable
-
-    Parámetros:
-    - nameVar : string -> nombre de la variable
-    - typeVar : string ->  tipo de la variable (numero, enunciado, bool, arreglo)
-    - valueVar : [numero, bool, enunciado, arreglo] -> valor de la variable de acuerdo a su tipo
-    - scopeVar : string -> scope de la variable
-    - addressVar : int -> direccion de memoria virtual
-    '''
-    '''
-    def __init__(self, nameVar, typeVar, valueVar, scopeVar, addressVar):
-        self.nameVar = nameVar
-        self.typeVar = typeVar
-        self.valueVar = valueVar
-        self.scopeVar = scopeVar
-        self.addressVar = addressVar
-        '''
-
-    def printvar(self):
-        print("[nameVar: {} typeVar: {} valueVar: {} scopeVar: {} addressVar: {}]".format(self.nameVar, self.typeVar, self.valueVar, self.scopeVar, self.addressVar))
+class PuntosNeuralgicos(Visitor):
     def np_hola(self, tree):
         print("hola")
 
+    def vars(self, tree):
+        print("-----I will start adding variables to the table")
+        type = tree.children[0].children[0].value
+        name = tree.children[1].children[0].value
+        # Logica para tambien agregar variables que se declaran en la misma linea
+        # print(tree.children[2].children[0].children)
+
+        var = VariableClass(name, type, 0, "local", "1000")
+        tabla_variables.addVar(var)
+        tabla_variables.printTable()
+
     def np_asignacion_1(self, tree):
-        #revisar si existe en la tabla de variables
+        # revisar si existe en la tabla de variables
         id = tree.children[0].value
         id_Asignar = id
         if id in tabla_variables.tablaVar.keys():
@@ -91,82 +82,82 @@ class VariableClass(Visitor):
             print("ERROR")
 
         print("np 1")
+
     def np_asignacion_2(self, tree):
-        #actualizar el valor
-        print("np 2")
-        print(tree.children[0].value)
-        #tabla_variables.tablaVar[id_Asignar]. tree.children[0.value]
-    '''
-    def asignacion(self, tree):
-        print("ASIGNACION")
-        print(tree)
-        print(tree.children[0].value)
-        print(tree.children[0].line)
-        print(tree.children[0])
-        #print(tree.children[0])
-    '''
-    
+        # actualizar el valor
+        # print("np 2")
+        # print(tree.children[0].value)
+        # tabla_variables.tablaVar[id_Asignar]. tree.children[0.value]
+        '''
+        def asignacion(self, tree):
+            print("ASIGNACION")
+            print(tree)
+            print(tree.children[0].value)
+            print(tree.children[0].line)
+            print(tree.children[0])
+            #print(tree.children[0])
+        '''
+
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        print("arbol en id")
-        print(tree)
-        print(tree.children)
+        # print("arbol en id")
+        # print(tree)
+        # print(tree.children)
         miid = tree.children[-1].value
-        print("mi id")
-        print(miid)
+        #print("mi id")
+        # print(miid)
         pilaO.append(miid)
         #tipo = tabla_variables.tablaVar[miid].tipo
-        #pilaT.append(tipo)
+        # pilaT.append(tipo)
 
 
     def guardar_num(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        print("arbol en entero")
-        print(tree)
-        print(tree.children)
+        # print("arbol en entero")
+        # print(tree)
+        # print(tree.children)
         miid = tree.children[-1].value
-        print("mi id")
-        print(miid)
+        #print("mi id")
+        # print(miid)
         pilaO.append(miid)
         pilaT.append("num")
 
     def guardar_string(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        print("arbol en entero")
-        print(tree)
-        print(tree.children)
+        #print("arbol en entero")
+        # print(tree)
+        # print(tree.children)
         miid = tree.children[-1].value
-        print("mi id")
-        print(miid)
+        #print("mi id")
+        # print(miid)
         pilaO.append(miid)
         pilaT.append("enunciado")
 
-    
     def guardar_bool(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        print("arbol en entero")
-        print(tree)
-        print(tree.children)
+        #print("arbol en entero")
+        # print(tree)
+        # print(tree.children)
         miid = tree.children[-1].value
-        print("mi id")
-        print(miid)
+        #print("mi id")
+        # print(miid)
         pilaO.append(miid)
         pilaT.append("bool")
-    
+
     def termino_mult(self, tree):
-        #2.- POper.Push(* or /)
-        print("hijos de f")
-        print(tree.children)
+        # 2.- POper.Push(* or /)
+        #print("hijos de f")
+        # print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
 
     def exp_suma(self, tree):
         # 3.- POper.Push(+ or - )
-        print("hijos de e")
-        print(tree.children)
+        #print("hijos de e")
+        # print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
-    
+
     def cuadruplo_suma(self, tree):
         '''
         If POper.top() == ‘+’ or ‘-‘ then
@@ -182,11 +173,11 @@ class VariableClass(Visitor):
             Else
                 ERROR (“Type mismatch”)
         '''
-        
-        print("hijos de exp")
-        print(pOper)
-        print(pilaO)
-        print(tree.children)
+
+        # print("hijos de exp")
+        # print(pOper)
+        # print(pilaO)
+        # print(tree.children)
         if pOper:
             if (pOper[-1] == "+") or (pOper[-1] == "-"):
                 right_operand = pilaO.pop()
@@ -194,19 +185,20 @@ class VariableClass(Visitor):
                 right_type = pilaT.pop()
                 left_type = pilaT.pop()
                 operator = pOper.pop()
-                #TO-DO: agregar validacion semantica
+                # TO-DO: agregar validacion semantica
                 result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global avail
                     result = temporales[avail]
                     avail = avail+1
-                    generate_quad(operator, left_operand, right_operand, result)
+                    generate_quad(operator, left_operand,
+                                  right_operand, result)
                     pilaO.append(result)
-                    #revisar si uno de los operandos era un temporal
+                    # revisar si uno de los operandos era un temporal
                 else:
                     print("Error: error de tipos")
                     exit()
-    
+
     def cuadruplo_mult_div(self, tree):
         '''
         If POper.top() == ‘+’ or ‘-‘ then
@@ -221,10 +213,10 @@ class VariableClass(Visitor):
             Else
                 ERROR (“Type mismatch”)
         '''
-        print("hijos de exp")
-        print(pOper)
-        print(pilaO)
-        print(tree.children)
+        #print("hijos de exp")
+        # print(pOper)
+        # print(pilaO)
+        # print(tree.children)
         if pOper:
             if (pOper[-1] == "*") or (pOper[-1] == "/"):
                 right_operand = pilaO.pop()
@@ -237,28 +229,29 @@ class VariableClass(Visitor):
                         print("Error: no se puede dividir entre 0")
                         exit()
 
-                #TO-DO: agregar validacion semantica
+                # TO-DO: agregar validacion semantica
                 result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global avail
                     result = temporales[avail]
                     avail = avail+1
-                    generate_quad(operator, left_operand, right_operand, result)
+                    generate_quad(operator, left_operand,
+                                  right_operand, result)
                     pilaO.append(result)
-                    #revisar si uno de los operandos era un temporal
+                    # revisar si uno de los operandos era un temporal
                 else:
                     print("Error: error de tipos")
                     exit()
-        
+
     def expresion_mayor(self, tree):
-        #poper.push <, >, etc
-        print("hijos de g")
-        print(tree.children)
+        # poper.push <, >, etc
+        #print("hijos de g")
+        # print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
 
     def cuadruplo_expresion(self, tree):
-        print("llegamos a cuadruplo expresion")
+        #print("llegamos a cuadruplo expresion")
         if pOper:
             if (pOper[-1] == ">") or (pOper[-1] == "<"):
                 right_operand = pilaO.pop()
@@ -266,22 +259,24 @@ class VariableClass(Visitor):
                 right_type = pilaT.pop()
                 left_type = pilaT.pop()
                 operator = pOper.pop()
-                #TO-DO: agregar validacion semantica
+                # TO-DO: agregar validacion semantica
                 result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global avail
                     result = temporales[avail]
                     avail = avail+1
-                    generate_quad(operator, left_operand, right_operand, result)
+                    generate_quad(operator, left_operand,
+                                  right_operand, result)
                     pilaO.append(result)
-                    #revisar si uno de los operandos era un temporal
+                    # revisar si uno de los operandos era un temporal
                 else:
                     print("Error: error de tipos")
                     exit()
+
     def print_string(self, tree):
-        print("Escritura")
-        print(tree.children)
-        print(tree.children[-1].value)
+        # print("Escritura")
+        # print(tree.children)
+        # print(tree.children[-1].value)
         my_str = tree.children[-1].value
         pilaO.append(my_str)
         pilaT.append("enunciado")
@@ -296,8 +291,8 @@ class VariableClass(Visitor):
             if pilaT:
                 pilaT.pop()
             generate_quad("PRINT", None, None, result)
-
-    # Puntos neuralgicos del if
+            
+            # Puntos neuralgicos del if
     # To do: probarlos con un ejemplo, necesitamos la tabla de variables
 
     def np_if(self, tree):
@@ -322,23 +317,28 @@ class VariableClass(Visitor):
 
     #
 
-    
-    
+class VariableClass():
+    '''
+    Constructor de Variable
 
-            
-        
+    Parámetros:
+    - nameVar : string -> nombre de la variable
+    - typeVar : string ->  tipo de la variable (numero, enunciado, bool, arreglo)
+    - valueVar : [numero, bool, enunciado, arreglo] -> valor de la variable de acuerdo a su tipo
+    - scopeVar : string -> scope de la variable
+    - addressVar : int -> direccion de memoria virtual
+    '''
 
-    
+    def __init__(self, nameVar, typeVar, valueVar, scopeVar, addressVar):
+        self.nameVar = nameVar
+        self.typeVar = typeVar
+        self.valueVar = valueVar
+        self.scopeVar = scopeVar
+        self.addressVar = addressVar
 
-            
-        
-
-    
-
-            
-
-
-
+    def printvar(self):
+        print("[nameVar: {} typeVar: {} valueVar: {} scopeVar: {} addressVar: {}]".format(
+            self.nameVar, self.typeVar, self.valueVar, self.scopeVar, self.addressVar))
 
 
 # Clase Funcion para la creación de funciones y sus atributos
@@ -368,6 +368,8 @@ class FunctionClass:
 
 # x = 5
 # Directorio de procedimientos
+
+
 class ProcDirectory:
     def __init__(self):
         self.procDirectory = {}
