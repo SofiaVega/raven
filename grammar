@@ -100,7 +100,7 @@ varcte:  ID -> guardar_id
 np_asignacion1:
 np_asignacion2:
 
-estatuto: asignacion | condicion | escritura | ID IPAR estatuto2 FPAR | opciones
+estatuto: asignacion | condicion | ciclo_while | ciclo_por | escritura | ID IPAR estatuto2 FPAR | opciones
 estatuto2: ID estatuto3 |
 estatuto3: "," ID estatuto3 |
 
