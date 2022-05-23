@@ -59,9 +59,50 @@ class VariableTable:
         else:
             return False
 
+'''
+class FunctionTable:
+    def __init__(self):
+        self.tablaFunc = {}
+    def addFunction(self, funcObject):
+        if not (self.checkDuplicate(funcObject.nameFunc)):
+            self.tablaFunc[funcObject.nameFunc] = funcObject
+            print("Function added")
+    def checkDuplicate(self, key):
+        if key in self.tablaFunc:
+            print('Syntax error: redeclaration of function' + key)
+            return True
+        else:
+            return False
+'''
+    
+# Directorio de procedimientos
+
+
+class ProcDirectory:
+    def __init__(self):
+        self.procDirectory = {}
+
+    def addFunc(self, funcObject):
+        if not (self.checkDuplicate(funcObject.nameFunc)):
+            self.procDirectory[funcObject.nameFunc] = funcObject
+            print("Function added")
+
+    def printTable(self):
+        for item in self.procDirectory.items():
+            print(item)
+            item[1].printfunc()
+
+    def checkDuplicate(self, key):
+        if key in self.procDirectory:
+            print('Syntax error: redeclaration of function' + key)
+            return True
+        else:
+            return False
+
 
 # pilaO y poper
 tabla_variables = VariableTable()
+tabla_funciones = ProcDirectory()
 
 
 class PuntosNeuralgicos(Visitor):
@@ -108,12 +149,7 @@ class PuntosNeuralgicos(Visitor):
 
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        # print("arbol en id")
-        # print(tree)
-        # print(tree.children)
         miid = tree.children[-1].value
-        #print("mi id")
-        # print(miid)
         pilaO.append(miid)
         tipo = tabla_variables.tablaVar[miid].typeVar
         pilaT.append(tipo)
@@ -121,71 +157,32 @@ class PuntosNeuralgicos(Visitor):
 
     def guardar_num(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        # print("arbol en entero")
-        # print(tree)
-        # print(tree.children)
         miid = tree.children[-1].value
-        #print("mi id")
-        # print(miid)
         pilaO.append(miid)
         pilaT.append("num")
 
     def guardar_string(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        #print("arbol en entero")
-        # print(tree)
-        # print(tree.children)
         miid = tree.children[-1].value
-        #print("mi id")
-        # print(miid)
         pilaO.append(miid)
         pilaT.append("enunciado")
 
     def guardar_bool(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        #print("arbol en entero")
-        # print(tree)
-        # print(tree.children)
         miid = tree.children[-1].value
-        #print("mi id")
-        # print(miid)
         pilaO.append(miid)
         pilaT.append("bool")
 
     def termino_mult(self, tree):
-        # 2.- POper.Push(* or /)
-        #print("hijos de f")
-        # print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
 
     def exp_suma(self, tree):
-        # 3.- POper.Push(+ or - )
-        #print("hijos de e")
-        # print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
 
     def cuadruplo_suma(self, tree):
-        '''
-        If POper.top() == ‘+’ or ‘-‘ then
-            right_operand= PilaO.Pop() left_operand=PilaO.Pop() 
-            let_Type=PTypes.Pop() operator= POper.Pop()
-            result_Type= Semantics[left_Type,
-            right_Type, operator] 
-            if (result_Type != ERROR)
-                result ßAVAIL.next() generate quad
-                (operator, left_operand, right_operand, result) Quad.Push(quad)
-                PilaO.Push(result) PTypes.Push(result_Type) If any operand were a temporal space,
-                return it to AVAIL
-            Else
-                ERROR (“Type mismatch”)
-        '''
-
-        # print("hijos de exp")
-        # print(pOper)
-        # print(pilaO)
-        # print(tree.children)
+        
         if pOper:
             if (pOper[-1] == "+") or (pOper[-1] == "-"):
                 right_operand = pilaO.pop()
@@ -349,6 +346,20 @@ class PuntosNeuralgicos(Visitor):
         generate_quad("GOTO", None, None, regreso)
         fill_quad(end, quad_pointer)
 
+    #Puntos neuralgicos funciones
+
+    def np_funciones_1(self, tree):
+        # Insert Function name into the DirFunc table (and its type, if any), verify semantics.
+        print("children mecanica")
+        print(tree.children[0].children[0])
+        tipo_funcion = tree.children[0].children[0]
+        nombre_funcion = tree.children[1]
+        func = FunctionClass(nombre_funcion, tipo_funcion)
+        tabla_funciones.addFunc(func)
+        tabla_funciones.printTable()
+        
+
+
 
 class VariableClass():
     '''
@@ -386,34 +397,21 @@ class FunctionClass:
     - addressFunc : int -> numero de cuadruplo donde inicia la funcion
     '''
 
-    def __init__(self, nameFunc, typeFunc, paramsFunc, scopeFunc, addressFunc):
+    def __init__(self, nameFunc, typeFunc, paramsFunc = "", scopeFunc = "", addressFunc = ""):
         self.nameFunc = nameFunc
         self.typeFunc = typeFunc
         self.paramsFunc = paramsFunc
         self.scopeFunc = scopeFunc
         self.addressFunc = addressFunc
         self.varsFunc = VariableTable()
+    
 
     def printfunc(self):
         print("[nameFunc: {} typeFunc: {} paramsFunc: {} scopeFunc: {} addressFunc: {}]".format(
             self.nameFunc, self.typeFunc, self.paramsFunc, self.scopeFunc, self.addressFunc))
 
 # x = 5
-# Directorio de procedimientos
 
-
-class ProcDirectory:
-    def __init__(self):
-        self.procDirectory = {}
-
-    def addFunc(self, funcObject):
-        self.procDirectory[funcObject.nameFunc] = funcObject
-        print("Function added")
-
-    def printTable(self):
-        for item in self.procDirectory.items():
-            print(item)
-            item[1].printfunc()
 
 
 class Test(Visitor):
