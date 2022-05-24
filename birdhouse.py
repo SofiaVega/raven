@@ -5,6 +5,7 @@
 # Clase Variable para la creación de variables y sus atributos
 from lark import Visitor
 from cubo_semantico import cubo as cubo_semantico
+from clases import *
 
 id_Asignar = ""
 pilaO = []
@@ -15,6 +16,8 @@ temporales = []
 avail = 0
 quad_pointer = 0
 cuadruplos = []
+pilaFunciones = []
+pilaFunciones.append("global")
 
 
 for i in range(0, 20):
@@ -25,48 +28,20 @@ def generate_quad(operator, left, right, result):
     global quad_pointer
     cuadruplo = {"operator":operator, "left": left, "right": right, "result": result}
     cuadruplos.append(cuadruplo)
-    print("cuadruplo agregado")
     print(cuadruplo)
     quad_pointer = quad_pointer + 1
 
 def fill_quad(end, cont):
     cuadruplos[end]["result"] = cont
 
-# Tabla de Variables
-
-
-class VariableTable:
-    def __init__(self):
-        self.tablaVar = {}
-
-    def addVar(self, varObject):
-        if not (self.checkDuplicate(varObject.nameVar)):
-            self.tablaVar[varObject.nameVar] = varObject
-            print("Variable added")
-
-    def asignar(self, name, new_value):
-        self.tablaVar[name]
-
-    def printTable(self):
-        for item in self.tablaVar.items():
-            print(item)
-            item[1].printvar()
-
-    def checkDuplicate(self, key):
-        if key in self.tablaVar:
-            print('Syntax error: redeclaration of variable' + key)
-            return True
-        else:
-            return False
 
 
 # pilaO y poper
 tabla_variables = VariableTable()
+tabla_funciones = ProcDirectory()
 
 
 class PuntosNeuralgicos(Visitor):
-    def np_hola(self, tree):
-        print("hola")
 
     def vars(self, tree):
         print("-----I will start adding variables to the table")
@@ -76,44 +51,17 @@ class PuntosNeuralgicos(Visitor):
         # print(tree.children[2].children[0].children)
 
         var = VariableClass(name, type)
-        tabla_variables.addVar(var)
-        tabla_variables.printTable()
-
-    def np_asignacion_1(self, tree):
-        # revisar si existe en la tabla de variables
-        id = tree.children[0].value
-        id_Asignar = id
-        if id in tabla_variables.tablaVar.keys():
-            print("todo bien")
-
+        if pilaFunciones[-1] == "global":
+            tabla_variables.addVar(var)
+            tabla_variables.printTable()
         else:
-            print("ERROR")
+            tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
+            tabla_funciones.printTable()
 
-        print("np 1")
-
-    def np_asignacion_2(self, tree):
-        # actualizar el valor
-        # print("np 2")
-        # print(tree.children[0].value)
-        # tabla_variables.tablaVar[id_Asignar]. tree.children[0.value]
-        '''
-        def asignacion(self, tree):
-            print("ASIGNACION")
-            print(tree)
-            print(tree.children[0].value)
-            print(tree.children[0].line)
-            print(tree.children[0])
-            #print(tree.children[0])
-        '''
 
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        # print("arbol en id")
-        # print(tree)
-        # print(tree.children)
         miid = tree.children[-1].value
-        #print("mi id")
-        # print(miid)
         pilaO.append(miid)
         tipo = tabla_variables.tablaVar[miid].typeVar
         pilaT.append(tipo)
@@ -121,71 +69,32 @@ class PuntosNeuralgicos(Visitor):
 
     def guardar_num(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        # print("arbol en entero")
-        # print(tree)
-        # print(tree.children)
         miid = tree.children[-1].value
-        #print("mi id")
-        # print(miid)
         pilaO.append(miid)
         pilaT.append("num")
 
     def guardar_string(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        #print("arbol en entero")
-        # print(tree)
-        # print(tree.children)
         miid = tree.children[-1].value
-        #print("mi id")
-        # print(miid)
         pilaO.append(miid)
         pilaT.append("enunciado")
 
     def guardar_bool(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        #print("arbol en entero")
-        # print(tree)
-        # print(tree.children)
         miid = tree.children[-1].value
-        #print("mi id")
-        # print(miid)
         pilaO.append(miid)
         pilaT.append("bool")
 
     def termino_mult(self, tree):
-        # 2.- POper.Push(* or /)
-        #print("hijos de f")
-        # print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
 
     def exp_suma(self, tree):
-        # 3.- POper.Push(+ or - )
-        #print("hijos de e")
-        # print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
 
     def cuadruplo_suma(self, tree):
-        '''
-        If POper.top() == ‘+’ or ‘-‘ then
-            right_operand= PilaO.Pop() left_operand=PilaO.Pop() 
-            let_Type=PTypes.Pop() operator= POper.Pop()
-            result_Type= Semantics[left_Type,
-            right_Type, operator] 
-            if (result_Type != ERROR)
-                result ßAVAIL.next() generate quad
-                (operator, left_operand, right_operand, result) Quad.Push(quad)
-                PilaO.Push(result) PTypes.Push(result_Type) If any operand were a temporal space,
-                return it to AVAIL
-            Else
-                ERROR (“Type mismatch”)
-        '''
-
-        # print("hijos de exp")
-        # print(pOper)
-        # print(pilaO)
-        # print(tree.children)
+        
         if pOper:
             if (pOper[-1] == "+") or (pOper[-1] == "-"):
                 right_operand = pilaO.pop()
@@ -349,73 +258,50 @@ class PuntosNeuralgicos(Visitor):
         generate_quad("GOTO", None, None, regreso)
         fill_quad(end, quad_pointer)
 
+    #Puntos neuralgicos funciones
 
-class VariableClass():
-    '''
-    Constructor de Variable
+    def np_funciones_1(self, tree):
+        # Insert Function name into the DirFunc table (and its type, if any), verify semantics.
+        print("children mecanica")
+        print(tree.children[0].children[0])
+        tipo_funcion = tree.children[0].children[0]
+        nombre_funcion = tree.children[1]
+        func = FunctionClass(nombre_funcion, tipo_funcion)
+        tabla_funciones.addFunc(func)
+        pilaFunciones.append(nombre_funcion)
+        tabla_funciones.printTable()
+        # to do: verificar semanticas
 
-    Parámetros:
-    - nameVar : string -> nombre de la variable
-    - typeVar : string ->  tipo de la variable (numero, enunciado, bool, arreglo)
-    - valueVar : [numero, bool, enunciado, arreglo] -> valor de la variable de acuerdo a su tipo
-    - scopeVar : string -> scope de la variable
-    - addressVar : int -> direccion de memoria virtual
-    '''
+    def mecanica2(self, tree):
+        # 2 - Insert every parameter into the current (local) VarTable.
+        if tree.children:
+            # esto solo funciona con un parametro
+            tipo = tree.children[0].children[0]
+            id_param = tree.children[1]
+            tabla_funciones.procDirectory[pilaFunciones[-1]].addParam(tipo, id_param)
+            tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
+            tabla_funciones.printTable()
 
-    def __init__(self, nameVar, typeVar, valueVar='', addressVar=''):
-        self.nameVar = nameVar
-        self.typeVar = typeVar
-        self.valueVar = valueVar
-        self.addressVar = addressVar
-
-    def printvar(self):
-        print("[nameVar: {} typeVar: {} valueVar: {} addressVar: {}]".format(
-            self.nameVar, self.typeVar, self.valueVar, self.addressVar))
-
-
-# Clase Funcion para la creación de funciones y sus atributos
-class FunctionClass:
-    '''
-    Constructor de Function
-
-    Parámetros:
-    - nameFunc : string -> nombre de la funcion
-    - typeFunc : string ->  tipo de retorno de la funcion (numero, enunciado, bool, arreglo, void)
-    - paramsFunc : [] -> arreglo de parametros de tipo variable, o constante
-    - scopeFunc : string -> scope de la funcion
-    - addressFunc : int -> numero de cuadruplo donde inicia la funcion
-    '''
-
-    def __init__(self, nameFunc, typeFunc, paramsFunc, scopeFunc, addressFunc):
-        self.nameFunc = nameFunc
-        self.typeFunc = typeFunc
-        self.paramsFunc = paramsFunc
-        self.scopeFunc = scopeFunc
-        self.addressFunc = addressFunc
-        self.varsFunc = VariableTable()
-
-    def printfunc(self):
-        print("[nameFunc: {} typeFunc: {} paramsFunc: {} scopeFunc: {} addressFunc: {}]".format(
-            self.nameFunc, self.typeFunc, self.paramsFunc, self.scopeFunc, self.addressFunc))
-
-# x = 5
-# Directorio de procedimientos
+    def mecanica3(self, tree):
+        if tree.children:
+            # otro parametro
+            tipo = tree.children[0].children[0]
+            id_param = tree.children[1]
+            tabla_funciones.procDirectory[pilaFunciones[-1]].addParam(tipo, id_param)
+            tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
+            tabla_funciones.printTable()
+    
+    def np_funciones_3(self, tree):
+        #- Insert the type to every parameter uploaded into the VarTable.
+        #At the same time into the ParameterTable (to create the Function’s signature)..
+        #creo que esto ya lo hice?
+        print("ni idea")
+    
+    def np_funciones_4(self, tree):
+        #Insert into DirFunc the number of parameters defined. 
+        # **to calculate the workspace required for execution
+        print("ni idea 2")
+    
+        
 
 
-class ProcDirectory:
-    def __init__(self):
-        self.procDirectory = {}
-
-    def addFunc(self, funcObject):
-        self.procDirectory[funcObject.nameFunc] = funcObject
-        print("Function added")
-
-    def printTable(self):
-        for item in self.procDirectory.items():
-            print(item)
-            item[1].printfunc()
-
-
-class Test(Visitor):
-    def printTree(self, tree):
-        print(tree.pretty())

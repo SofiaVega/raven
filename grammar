@@ -47,8 +47,7 @@ ID: /[a-zA-Z_][a-zA-Z_0-9]*/
 NUM: /\d+/
 
 start: programa
-programa: HUV ID np_hola SALTO importarloop TITULO IGUAL STRING SALTO varsloop mecanicaloop capituloloop
-np_hola:
+programa: HUV ID SALTO importarloop TITULO IGUAL STRING SALTO varsloop mecanicaloop capituloloop
 importarloop: importar | importarloop importar|
 varsloop: vars | varsloop vars |
 mecanicaloop: mecanica | mecanicaloop  mecanica |
@@ -69,11 +68,15 @@ np_addvars:
 
 importar: IMPORTAR STRING COMO ID
 
-mecanica: MECANICA tipo ID IPAR mecanica2 FPAR ICOR SALTO estatuto SALTO mecanica4 mecanica5 FCOR np_hola
+mecanica: MECANICA np_funciones_1 IPAR mecanica2 FPAR ICOR SALTO vars_mecanica_loop estatuto SALTO mecanica4 mecanica5 FCOR
+np_funciones_1: tipo ID
 mecanica2: tipo ID mecanica3 |
 mecanica3: "," tipo ID mecanica3 | 
 mecanica4: estatuto SALTO mecanica4 |
 mecanica5: REGRESA varcte | 
+
+vars_mecanica_loop: vars | vars_mecanica_loop vars |
+
 
 capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO TITULO IGUAL STRING SALTO estatuto SALTO mecanica4 FCOR
 
@@ -97,8 +100,6 @@ varcte:  ID -> guardar_id
         | NUM -> guardar_num
         | STRING -> guardar_string
         | BOOL -> guardar_bool
-np_asignacion1:
-np_asignacion2:
 
 estatuto: asignacion | condicion | ciclo_while | ciclo_por | escritura | ID IPAR estatuto2 FPAR | opciones
 estatuto2: ID estatuto3 |
@@ -111,7 +112,7 @@ sino: ELSE np_if_3 ICOR estatuto condicion2 FCOR |
 condicion2: estatuto condicion2 |
 np_if_3: 
 
-asignacion: np_asignacion1 ID "=" expresion
+asignacion: ID "=" expresion
 
 escritura: PRINT STRING -> print_string
         | PRINT expresion np_print_expresion -> print_expresion
