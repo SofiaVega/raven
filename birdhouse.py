@@ -15,6 +15,8 @@ temporales = []
 avail = 0
 quad_pointer = 0
 cuadruplos = []
+pilaFunciones = []
+pilaFunciones.append("global")
 
 
 for i in range(0, 20):
@@ -356,7 +358,26 @@ class PuntosNeuralgicos(Visitor):
         nombre_funcion = tree.children[1]
         func = FunctionClass(nombre_funcion, tipo_funcion)
         tabla_funciones.addFunc(func)
+        pilaFunciones.append(nombre_funcion)
         tabla_funciones.printTable()
+        # to do: verificar semanticas
+
+    def mecanica2(self, tree):
+        # 2 - Insert every parameter into the current (local) VarTable.
+        if tree.children:
+            # esto solo funciona con un parametro
+            tipo = tree.children[0].children[0]
+            id_param = tree.children[1]
+            tabla_funciones.procDirectory[pilaFunciones[-1]].addParam(tipo, id_param)
+            tabla_funciones.printTable()
+
+    def mecanica3(self, tree):
+        if tree.children:
+            # otro parametro
+            tipo = tree.children[0].children[0]
+            id_param = tree.children[1]
+            tabla_funciones.procDirectory[pilaFunciones[-1]].addParam(tipo, id_param)
+            tabla_funciones.printTable()
         
 
 
@@ -397,13 +418,18 @@ class FunctionClass:
     - addressFunc : int -> numero de cuadruplo donde inicia la funcion
     '''
 
-    def __init__(self, nameFunc, typeFunc, paramsFunc = "", scopeFunc = "", addressFunc = ""):
+    def __init__(self, nameFunc, typeFunc, paramsFunc = [], scopeFunc = "", addressFunc = ""):
         self.nameFunc = nameFunc
         self.typeFunc = typeFunc
         self.paramsFunc = paramsFunc
         self.scopeFunc = scopeFunc
         self.addressFunc = addressFunc
         self.varsFunc = VariableTable()
+
+    def addParam(self, tipo, id_param):
+        # to do: los parametros se agregan como variables?
+        var = VariableClass(id_param, tipo)
+        self.paramsFunc.append(var)
     
 
     def printfunc(self):

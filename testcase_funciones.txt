@@ -1,6 +1,6 @@
 habiaUnaVez Raven
 titulo = "Raven"
-mecanica vacia volar () {
+mecanica vacia volar (num x, num y) {
     -> "hola estoy volando"
 }
 capitulo uno () {
