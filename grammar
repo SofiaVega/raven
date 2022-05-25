@@ -108,11 +108,15 @@ estatuto: asignacion
                 | ciclo_while 
                 | ciclo_por 
                 | escritura 
-                | ID IPAR np_llamada_funcion_2 estatuto2 FPAR -> np_llamada_funcion_1
+                | ID IPAR np_llamada_funcion_2 estatuto2 np_llamada_funcion_5 FPAR np_llamada_funcion_6 -> np_llamada_funcion_1
                 | opciones
 np_llamada_funcion_2: 
-estatuto2: val estatuto3 |
-estatuto3: "," val estatuto3 |
+np_llamada_funcion_5:
+np_llamada_funcion_4:
+np_llamada_funcion_3:
+np_llamada_funcion_6:
+estatuto2: expresion np_llamada_funcion_3 estatuto3 |
+estatuto3: "," np_llamada_funcion_4 expresion np_llamada_funcion_3 estatuto3 |
 
 condicion: IF IPAR expresion FPAR np_if ICOR estatuto condicion2 FCOR sino np_if_2
 np_if: 
