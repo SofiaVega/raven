@@ -18,6 +18,9 @@ quad_pointer = 0
 cuadruplos = []
 pilaFunciones = []
 pilaFunciones.append("global")
+pilaLlamadas = []
+# parameter counter
+pilaK = []
 
 
 for i in range(0, 20):
@@ -312,6 +315,28 @@ class PuntosNeuralgicos(Visitor):
         # insert the number of temps
 
     # puntos neuralgicos para llamadas a funciones
+
+    def np_llamada_funcion_1(self, tree):
+        #verify that the function exists
+        print("llamada funcion")
+        if tabla_funciones.findFunction(tree.children[0]):
+            print("Si existe la funcion")
+            pilaLlamadas.append(tree.children[0])
+        else:
+            print("Error, esa funcion no existe")
+            exit()
+
+    def np_llamada_funcion_2(self, tree):
+        generate_quad("ERA", pilaLlamadas[-1], None, None)
+        pilaK.append(0)
+
+    def np_llamada_funcion_3(self, tree):
+        #Argument= PilaO.Pop() ArgumentType= PTypes.Pop().
+        #Verify ArgumentType against current Parameter (#k) in ParameterTable.
+        #Generate action PARAMETER, Argument, Argument#k
+        print("verify argument type")
+
+
     
         
 

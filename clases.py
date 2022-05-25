@@ -81,6 +81,12 @@ class ProcDirectory:
             print(item)
             item[1].printfunc()
 
+    def findFunction(self, key):
+        if key in self.procDirectory:
+            return True
+        else:
+            return False
+
     def checkDuplicate(self, key):
         if key in self.procDirectory:
             print('Syntax error: redeclaration of function' + key)

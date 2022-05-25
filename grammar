@@ -103,9 +103,16 @@ varcte:  ID -> guardar_id
         | STRING -> guardar_string
         | BOOL -> guardar_bool
 
-estatuto: asignacion | condicion | ciclo_while | ciclo_por | escritura | ID IPAR estatuto2 FPAR | opciones
-estatuto2: ID estatuto3 |
-estatuto3: "," ID estatuto3 |
+estatuto: asignacion 
+                | condicion 
+                | ciclo_while 
+                | ciclo_por 
+                | escritura 
+                | ID IPAR np_llamada_funcion_2 estatuto2 FPAR -> np_llamada_funcion_1
+                | opciones
+np_llamada_funcion_2: 
+estatuto2: val estatuto3 |
+estatuto3: "," val estatuto3 |
 
 condicion: IF IPAR expresion FPAR np_if ICOR estatuto condicion2 FCOR sino np_if_2
 np_if: 
