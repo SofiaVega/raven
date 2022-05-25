@@ -49,7 +49,7 @@ Ya genera cuadruplos de condicionales y ciclos
 - [x] **Avance 2:** Semántica básica de variables. Directorio de procedimientos y tablas de variables
 - [x] **Avance 3:** Semántica básica de expresiones. tabla de Consideraciones semánticas (Cubo semántico). Genración de código de expresiones aritméticas y estatutos secuenciales: Asignación, lectura, etc
 - [x] **Avance 4:** Generación de código de estatutos condicionales (Decisiones, ciclos)
-- [x] **Avance 5:** Generación de código de funciones (a medias)
+- [x] **Avance 5:** Generación de código de funciones
 - [ ] **Avance 6:** Mapa de memoria de ejecución para la máquina virtual. Máquina virtual: ejecución de expresiones aritméticas y estatutos secuenciales
 - [ ] **Avance 7:** Generación de código de arreglos y tipos estruturados. Máquina virtual: ejecución de estatutos condicionales
 - [ ] **Avance 8:** Primera versión de la documentación. Generación de código y máuina virtual para una parte de la aplicación particular
