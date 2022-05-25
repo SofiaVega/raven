@@ -26,6 +26,20 @@ Agregamos los puntos neuralgicos para operaciones aritmeticas y algunas expresio
 
 Se agregan las variables a la tabla de variables
 
+Tambien agregamos validacion semantica y division por cero
+
+## Martes 17 de Mayo
+
+Agregamos puntos neuralgicos para ciclos
+Ya genera cuadruplos de condicionales y ciclos
+
+## Lunes 24 de Mayo
+
+- Agregamos puntos neurálgicos para declaracion de funciones
+- Algunos puntos neuralgicos para llamadas de funciones
+- Refactorizamos codigo
+
+
 ---
 
 ## Próximos avances
@@ -34,8 +48,8 @@ Se agregan las variables a la tabla de variables
 - [x] **Avance 1:** Análisis de léxico y sintaxis
 - [x] **Avance 2:** Semántica básica de variables. Directorio de procedimientos y tablas de variables
 - [x] **Avance 3:** Semántica básica de expresiones. tabla de Consideraciones semánticas (Cubo semántico). Genración de código de expresiones aritméticas y estatutos secuenciales: Asignación, lectura, etc
-- [ ] **Avance 4:** Generación de código de estatutos condicionales (Decisiones, ciclos)
-- [ ] **Avance 5:** Generación de código de funciones
+- [x] **Avance 4:** Generación de código de estatutos condicionales (Decisiones, ciclos)
+- [x] **Avance 5:** Generación de código de funciones (a medias)
 - [ ] **Avance 6:** Mapa de memoria de ejecución para la máquina virtual. Máquina virtual: ejecución de expresiones aritméticas y estatutos secuenciales
 - [ ] **Avance 7:** Generación de código de arreglos y tipos estruturados. Máquina virtual: ejecución de estatutos condicionales
 - [ ] **Avance 8:** Primera versión de la documentación. Generación de código y máuina virtual para una parte de la aplicación particular
