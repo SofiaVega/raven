@@ -4,7 +4,7 @@
 
 - [ ] Poner puntos neurálgicos en la gramática para funciones y procesos
 
-- [ ] Generación de código para ciclos/decisiones y funciones
+- [x] Generación de código para ciclos/decisiones y funciones
   - Esto se hace a través de Visitor importado de Lark
   - Lunes 8 de Mayo
 
@@ -37,3 +37,8 @@ Tambien agregamos validacion semantica y division por cero
 
 Agregamos puntos neuralgicos para ciclos
 Ya genera cuadruplos de condicionales
+
+## Lunes 24 de Mayo
+
+- Agregamos puntos neurálgicos para declaracion de funciones
+- Refactorizamos codigo
