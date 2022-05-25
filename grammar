@@ -68,7 +68,9 @@ np_addvars:
 
 importar: IMPORTAR STRING COMO ID
 
-mecanica: MECANICA np_funciones_1 IPAR mecanica2 FPAR ICOR SALTO vars_mecanica_loop estatuto SALTO mecanica4 mecanica5 FCOR
+mecanica: MECANICA np_funciones_1 IPAR mecanica2 FPAR ICOR SALTO vars_mecanica_loop cambiar_quad_pointer estatuto SALTO mecanica4 mecanica5 FCOR fin_mecanica
+fin_mecanica: 
+cambiar_quad_pointer: 
 np_funciones_1: tipo ID
 mecanica2: tipo ID mecanica3 |
 mecanica3: "," tipo ID mecanica3 | 

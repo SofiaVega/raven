@@ -34,22 +34,27 @@ class FunctionClass:
     - addressFunc : int -> numero de cuadruplo donde inicia la funcion
     '''
 
-    def __init__(self, nameFunc, typeFunc, paramTipos = [], scopeFunc = "", addressFunc = ""):
+    def __init__(self, nameFunc, typeFunc, paramTipos = [], scopeFunc = "", addressFunc = "", numParam = 0, numVar = 0, quad_inicial = 0):
         self.nameFunc = nameFunc
         self.typeFunc = typeFunc
         self.paramTipos = paramTipos
         self.scopeFunc = scopeFunc
         self.addressFunc = addressFunc
         self.varsFunc = VariableTable()
+        self.numParam = numParam
+        self.numVar = numVar
+        self.quad_inicial = quad_inicial
 
     def addParam(self, tipo, id_param):
         # to do: los parametros se agregan como variables?
         var = VariableClass(id_param, tipo)
         self.varsFunc.addVar(var)
+        self.numParam = self.numParam + 1
         #self.paramsFunc.append(var)
     
     def addVar(self, varObject):
         self.varsFunc.addVar(varObject)
+        self.numVar = self.numVar + 1
 
     def addTipo(self, tipo):
         self.paramTipos.append(tipo)
@@ -60,6 +65,7 @@ class FunctionClass:
             self.nameFunc, self.typeFunc, self.paramTipos, self.scopeFunc, self.addressFunc))
         print("variables")
         self.varsFunc.printTable()
+
 
 class ProcDirectory:
     def __init__(self):

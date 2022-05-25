@@ -301,6 +301,17 @@ class PuntosNeuralgicos(Visitor):
         #Insert into DirFunc the number of parameters defined. 
         # **to calculate the workspace required for execution
         print("ni idea 2")
+
+    def cambiar_quad_pointer(self, tree):
+        tabla_funciones.procDirectory[pilaFunciones[-1]].quad_inicial = quad_pointer
+
+    def fin_mecanica(self, tree):
+        #varias cosas
+        #release
+        generate_quad("ENDFunc", None, None, None)
+        # insert the number of temps
+
+    # puntos neuralgicos para llamadas a funciones
     
         
 
