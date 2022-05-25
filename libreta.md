@@ -36,9 +36,14 @@ Tambien agregamos validacion semantica y division por cero
 ## Martes 17 de Mayo
 
 Agregamos puntos neuralgicos para ciclos
-Ya genera cuadruplos de condicionales
+Ya genera cuadruplos de condicionales y ciclos
 
 ## Lunes 24 de Mayo
 
 - Agregamos puntos neurálgicos para declaracion de funciones
+- Algunos puntos neuralgicos para llamadas de funciones
 - Refactorizamos codigo
+
+## Martes 25 de Mayo
+
+- Terminamos funciones

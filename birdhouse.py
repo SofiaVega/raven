@@ -335,6 +335,27 @@ class PuntosNeuralgicos(Visitor):
         #Verify ArgumentType against current Parameter (#k) in ParameterTable.
         #Generate action PARAMETER, Argument, Argument#k
         print("verify argument type")
+        argument = pilaO[-1]
+        argumentType = pilaT[-1]
+        if argumentType == tabla_funciones.procDirectory[pilaLlamadas[-1]].paramTipos[pilaK[-1]]:
+            print("parametro tipo compatible")
+        else:
+            print("El parametro no es del tipo correcto")
+            exit()
+
+    def np_llamada_funcion_4(self, tree):
+        pilaK[-1] = pilaK[-1] + 1
+
+    def np_llamada_funcion_5(self, tree):
+        if pilaK[-1] == (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam - 1):
+            print("right amount of params")
+        else:
+            print("Faltan parametros")
+            exit()
+
+    def np_llamada_funcion_6(self, tree):
+        #to do: falta initial-address
+        generate_quad("GOSUB", pilaLlamadas[-1], None, None)
 
 
     
