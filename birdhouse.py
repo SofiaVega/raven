@@ -1,6 +1,6 @@
 # birdhouse.py
 # por Nadia Garcia y Sofia Vega (2022)
-# Tabla de variables
+# Compilador
 
 # Clase Variable para la creación de variables y sus atributos
 from lark import Visitor
@@ -29,14 +29,15 @@ for i in range(0, 20):
 
 def generate_quad(operator, left, right, result):
     global quad_pointer
-    cuadruplo = {"operator":operator, "left": left, "right": right, "result": result}
+    cuadruplo = {"operator": operator, "left": left,
+                 "right": right, "result": result}
     cuadruplos.append(cuadruplo)
     print(cuadruplo)
     quad_pointer = quad_pointer + 1
 
+
 def fill_quad(end, cont):
     cuadruplos[end]["result"] = cont
-
 
 
 # pilaO y poper
@@ -61,14 +62,12 @@ class PuntosNeuralgicos(Visitor):
             tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
             tabla_funciones.printTable()
 
-
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
         miid = tree.children[-1].value
         pilaO.append(miid)
         tipo = tabla_variables.tablaVar[miid].typeVar
         pilaT.append(tipo)
-
 
     def guardar_num(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
@@ -97,7 +96,7 @@ class PuntosNeuralgicos(Visitor):
         pOper.append(signo)
 
     def cuadruplo_suma(self, tree):
-        
+
         if pOper:
             if (pOper[-1] == "+") or (pOper[-1] == "-"):
                 right_operand = pilaO.pop()
@@ -214,7 +213,7 @@ class PuntosNeuralgicos(Visitor):
             if pilaT:
                 pilaT.pop()
             generate_quad("PRINT", None, None, result)
-            
+
             # Puntos neuralgicos del if
     # To do: probarlos con un ejemplo, necesitamos la tabla de variables
 
@@ -232,14 +231,14 @@ class PuntosNeuralgicos(Visitor):
     def np_if_2(self, tree):
         end = pSaltos.pop()
         fill_quad(end, quad_pointer)
-    
+
     def np_if_3(self, tree):
         generate_quad("GOTO", None, None, "blank")
         falso = pSaltos.pop()
         fill_quad(falso, quad_pointer)
 
-    #Puntos neuralgicos para un while
-    #Falta probarlos
+    # Puntos neuralgicos para un while
+    # Falta probarlos
 
     def np_while_1(self, tree):
         pSaltos.append(quad_pointer)
@@ -261,7 +260,7 @@ class PuntosNeuralgicos(Visitor):
         generate_quad("GOTO", None, None, regreso)
         fill_quad(end, quad_pointer)
 
-    #Puntos neuralgicos funciones
+    # Puntos neuralgicos funciones
 
     def np_funciones_1(self, tree):
         # Insert Function name into the DirFunc table (and its type, if any), verify semantics.
@@ -281,7 +280,8 @@ class PuntosNeuralgicos(Visitor):
             # esto solo funciona con un parametro
             tipo = tree.children[0].children[0]
             id_param = tree.children[1]
-            tabla_funciones.procDirectory[pilaFunciones[-1]].addParam(tipo, id_param)
+            tabla_funciones.procDirectory[pilaFunciones[-1]
+                                          ].addParam(tipo, id_param)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
             tabla_funciones.printTable()
 
@@ -290,34 +290,36 @@ class PuntosNeuralgicos(Visitor):
             # otro parametro
             tipo = tree.children[0].children[0]
             id_param = tree.children[1]
-            tabla_funciones.procDirectory[pilaFunciones[-1]].addParam(tipo, id_param)
+            tabla_funciones.procDirectory[pilaFunciones[-1]
+                                          ].addParam(tipo, id_param)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
             tabla_funciones.printTable()
-    
+
     def np_funciones_3(self, tree):
-        #- Insert the type to every parameter uploaded into the VarTable.
-        #At the same time into the ParameterTable (to create the Function’s signature)..
-        #creo que esto ya lo hice?
+        # - Insert the type to every parameter uploaded into the VarTable.
+        # At the same time into the ParameterTable (to create the Function’s signature)..
+        # creo que esto ya lo hice?
         print("ni idea")
-    
+
     def np_funciones_4(self, tree):
-        #Insert into DirFunc the number of parameters defined. 
+        # Insert into DirFunc the number of parameters defined.
         # **to calculate the workspace required for execution
         print("ni idea 2")
 
     def cambiar_quad_pointer(self, tree):
-        tabla_funciones.procDirectory[pilaFunciones[-1]].quad_inicial = quad_pointer
+        tabla_funciones.procDirectory[pilaFunciones[-1]
+                                      ].quad_inicial = quad_pointer
 
     def fin_mecanica(self, tree):
-        #varias cosas
-        #release
+        # varias cosas
+        # release
         generate_quad("ENDFunc", None, None, None)
         # insert the number of temps
 
     # puntos neuralgicos para llamadas a funciones
 
     def np_llamada_funcion_1(self, tree):
-        #verify that the function exists
+        # verify that the function exists
         print("llamada funcion")
         if tabla_funciones.findFunction(tree.children[0]):
             print("Si existe la funcion")
@@ -331,9 +333,9 @@ class PuntosNeuralgicos(Visitor):
         pilaK.append(0)
 
     def np_llamada_funcion_3(self, tree):
-        #Argument= PilaO.Pop() ArgumentType= PTypes.Pop().
-        #Verify ArgumentType against current Parameter (#k) in ParameterTable.
-        #Generate action PARAMETER, Argument, Argument#k
+        # Argument= PilaO.Pop() ArgumentType= PTypes.Pop().
+        # Verify ArgumentType against current Parameter (#k) in ParameterTable.
+        # Generate action PARAMETER, Argument, Argument#k
         print("verify argument type")
         argument = pilaO[-1]
         argumentType = pilaT[-1]
@@ -354,11 +356,5 @@ class PuntosNeuralgicos(Visitor):
             exit()
 
     def np_llamada_funcion_6(self, tree):
-        #to do: falta initial-address
+        # to do: falta initial-address
         generate_quad("GOSUB", pilaLlamadas[-1], None, None)
-
-
-    
-        
-
-
