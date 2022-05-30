@@ -8,8 +8,8 @@ from cubo_semantico import cubo as cubo_semantico
 from clases import *
 
 id_Asignar = ""
-pilaO = []
-pOper = []
+pilaO = []  # Numeros
+pOper = []  # Operadores
 pilaT = []
 pSaltos = []
 temporales = []
@@ -32,7 +32,7 @@ def generate_quad(operator, left, right, result):
     cuadruplo = {"operator": operator, "left": left,
                  "right": right, "result": result}
     cuadruplos.append(cuadruplo)
-    print(cuadruplo)
+    print(quad_pointer + 1, ' ', cuadruplo)
     quad_pointer = quad_pointer + 1
 
 
@@ -61,7 +61,6 @@ class PuntosNeuralgicos(Visitor):
             return
 
     def vars(self, tree):
-        print("-----Adding variable")
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
         # Logica para tambien agregar variables que se declaran en la misma linea
@@ -74,7 +73,27 @@ class PuntosNeuralgicos(Visitor):
             tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
             # tabla_funciones.printTable()
 
-        self.inlineVar(tree.children[3].children, type)
+        self.inlineVar(tree.children[2].children, type)
+
+    # Agrega ID a pila de operandos
+    def np_asig(self, tree):
+        if (tabla_variables.checkExists(tree.children[0].value)):
+            pilaO.append(tree.children[0].value)
+        else:
+            exit()
+
+    def np_asig_quad(self, tree):
+        operator = "="
+        left_operand = pilaO.pop()
+        right_operand = None
+        result = pilaO.pop()
+        generate_quad(operator, left_operand,
+                      right_operand, result)
+
+        #generate_quad("=", "value", None, tree.children[0].value)
+    ''' 
+    Guardado de constantes
+    '''
 
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)

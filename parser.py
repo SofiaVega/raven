@@ -25,5 +25,5 @@ print(pOper)
 
 # print("Tabla de Variables")
 # tabla_funciones.printTable()
-print("Cuadruplos")
-print(cuadruplos)
+# print("Cuadruplos")
+# print(cuadruplos)

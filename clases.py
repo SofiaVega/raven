@@ -101,7 +101,6 @@ class VariableTable:
     def addVar(self, varObject):
         if not (self.checkDuplicate(varObject.nameVar)):
             self.tablaVar[varObject.nameVar] = varObject
-            print("Variable added")
 
     def asignar(self, name, new_value):
         self.tablaVar[name]
@@ -117,4 +116,11 @@ class VariableTable:
             print('Syntax error: redeclaration of variable' + key)
             return True
         else:
+            return False
+
+    def checkExists(self, key):
+        if key in self.tablaVar:
+            return True
+        else:
+            print('Syntax error: variable ' + key + ' does not exist')
             return False
