@@ -34,7 +34,7 @@ class FunctionClass:
     - addressFunc : int -> numero de cuadruplo donde inicia la funcion
     '''
 
-    def __init__(self, nameFunc, typeFunc, paramTipos = [], scopeFunc = "", addressFunc = "", numParam = 0, numVar = 0, quad_inicial = 0):
+    def __init__(self, nameFunc, typeFunc, paramTipos=[], scopeFunc="", addressFunc="", numParam=0, numVar=0, quad_inicial=0):
         self.nameFunc = nameFunc
         self.typeFunc = typeFunc
         self.paramTipos = paramTipos
@@ -50,15 +50,14 @@ class FunctionClass:
         var = VariableClass(id_param, tipo)
         self.varsFunc.addVar(var)
         self.numParam = self.numParam + 1
-        #self.paramsFunc.append(var)
-    
+        # self.paramsFunc.append(var)
+
     def addVar(self, varObject):
         self.varsFunc.addVar(varObject)
         self.numVar = self.numVar + 1
 
     def addTipo(self, tipo):
         self.paramTipos.append(tipo)
-    
 
     def printfunc(self):
         print("[nameFunc: {} typeFunc: {} paramTipos: {} scopeFunc: {} addressFunc: {}]".format(
@@ -108,6 +107,7 @@ class VariableTable:
         self.tablaVar[name]
 
     def printTable(self):
+        # print(len(self.tablaVar.items()))
         for item in self.tablaVar.items():
             print(item)
             item[1].printvar()

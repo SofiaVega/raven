@@ -46,21 +46,35 @@ tabla_funciones = ProcDirectory()
 
 
 class PuntosNeuralgicos(Visitor):
+    # Funcion ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
+    def inlineVar(self, inlineT, type):
+        if(inlineT != []):
+            name = inlineT[0].children[0].value
+            inlineT = inlineT[1].children
+            var = VariableClass(name, type)
+            if pilaFunciones[-1] == "global":
+                tabla_variables.addVar(var)
+            else:
+                tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
+            self.inlineVar(inlineT, type)
+        else:
+            return
 
     def vars(self, tree):
-        print("-----I will start adding variables to the table")
+        print("-----Adding variable")
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
         # Logica para tambien agregar variables que se declaran en la misma linea
-        # print(tree.children[2].children[0].children)
 
         var = VariableClass(name, type)
         if pilaFunciones[-1] == "global":
             tabla_variables.addVar(var)
-            tabla_variables.printTable()
+            # tabla_variables.printTable()
         else:
             tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
-            tabla_funciones.printTable()
+            # tabla_funciones.printTable()
+
+        self.inlineVar(tree.children[3].children, type)
 
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
