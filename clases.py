@@ -118,3 +118,31 @@ class VariableTable:
             return True
         else:
             return False
+
+
+class NodoArreglo():
+    """
+    Nodo arreglo
+        Limite inferior
+        Limite Superior
+        Dim
+        SiguenteNodo
+        val: mdim o -k
+        ultimoNodo: booleano
+
+    """
+    def __init__(self, li, ls, dim):
+        self.li = li
+        self.ls = ls
+        self.dim = dim
+        self.ultimoNodo = True
+        
+    def setNextNode(self, nodo):
+        self.ultimoNodo = False
+        self.siguienteNodo = nodo
+
+    def setVal(self, val):
+        self.val = val
+
+        
+

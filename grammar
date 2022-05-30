@@ -47,7 +47,8 @@ ID: /[a-zA-Z_][a-zA-Z_0-9]*/
 NUM: /\d+/
 
 start: programa
-programa: HUV ID SALTO importarloop TITULO IGUAL STRING SALTO varsloop mecanicaloop capituloloop
+programa: HUV ID SALTO importarloop TITULO IGUAL STRING SALTO varsloop mecanicaloop capituloloop np_fin
+np_fin: 
 importarloop: importar | importarloop importar|
 varsloop: vars | varsloop vars |
 mecanicaloop: mecanica | mecanicaloop  mecanica |

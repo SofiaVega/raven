@@ -358,3 +358,10 @@ class PuntosNeuralgicos(Visitor):
     def np_llamada_funcion_6(self, tree):
         # to do: falta initial-address
         generate_quad("GOSUB", pilaLlamadas[-1], None, None)
+
+    def np_fin(self, tree):
+        print("tabla de variables fin")
+        tabla_variables.printTable()
+
+    ## Arreglos
+    
