@@ -1,10 +1,7 @@
 habiaUnaVez Raven
 titulo = "Raven"
-mecanica vacia volar (num x) {
-    num z = 3
-    -> "hola estoy volando"
-}
+num lista [10]
 capitulo uno () {
     titulo = "el principio del fin"
-    volar(1)
+    -> "habia una vez"
 }

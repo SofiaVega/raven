@@ -21,6 +21,10 @@ pilaFunciones.append("global")
 pilaLlamadas = []
 # parameter counter
 pilaK = []
+tipo_arr_aux = ""
+r = 1
+currNodo = NodoArreglo()
+headNodo = NodoArreglo()
 
 
 for i in range(0, 20):
@@ -47,7 +51,7 @@ tabla_funciones = ProcDirectory()
 
 class PuntosNeuralgicos(Visitor):
 
-    def vars(self, tree):
+    def np_vars(self, tree):
         print("-----I will start adding variables to the table")
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
@@ -358,3 +362,106 @@ class PuntosNeuralgicos(Visitor):
     def np_llamada_funcion_6(self, tree):
         # to do: falta initial-address
         generate_quad("GOSUB", pilaLlamadas[-1], None, None)
+
+    def np_fin(self, tree):
+        print("tabla de variables fin")
+        tabla_variables.printTable()
+
+    ## Arreglos
+    def arreglo(self, tree):
+        #vartable.add(id, type)
+        tipo_arr_aux = tree.children[0].children[0].value
+        '''
+        print(tree.children)
+        tipo = tree.children[0].children[0].value
+        thisID = tree.children[1]
+        var = VariableClass(thisID, tipo)
+        # np 2
+        var.isArray = True
+        #np 3
+        nodo = NodoArreglo(dim = 1, r = 1)
+        var.arrNode = nodo
+        if pilaFunciones[-1] == "global":
+            tabla_variables.addVar(var)
+            tabla_variables.printTable()
+        else:
+            tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
+            tabla_funciones.printTable()
+        '''
+    
+    def arr(self, tree):
+        global currNodo
+        global headNodo
+        global r
+        print("arr")
+        print(tree.children)
+        print(tree.children[1])
+        tipo = tipo_arr_aux
+        thisID = tree.children[0]
+        ls = tree.children[1]
+        var = VariableClass(thisID, tipo)
+        # np 2
+        var.isArray = True
+        #np 3
+        r = 1
+        currNodo = NodoArreglo(dim = 1, r = 1, ls = ls, var = thisID)
+        var.arrNode = currNodo
+        headNodo = var.arrNode
+        if pilaFunciones[-1] == "global":
+            tabla_variables.addVar(var)
+            tabla_variables.printTable()
+        else:
+            tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
+            tabla_funciones.printTable()
+        
+    def np_arr_5(self, tree):
+        global currNodo
+        currNodo.calcR()
+    
+    def np_arr_6(self, tree):
+        # to do: ver si la referencia al objeto te permite funcionar como una linked list
+        global currNodo
+        dim = currNodo.dim + 1
+        nuevoNodo = NodoArreglo(r = currNodo.r, var = currNodo.var, dim = dim)
+        currNodo.siguienteNodo = nuevoNodo
+        currNodo = nuevoNodo
+        '''
+        var = currNodo.var
+        if pilaFunciones[-1] == "global":
+            tabla_variables.tablaVar[var].arrNode = currNodo
+            currNodo.siguienteNodo = nuevoNodo
+        else:
+            tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.tablaVar[var].arrNode = currNodo
+            currNodo.siguienteNodo = nuevoNodo
+            #tabla_funciones.printTable()
+        '''
+    
+    def np_arr_7(self, tree):
+        global currNodo
+        global r
+        currNodo.ultimoNodo = True
+        #tener un headNode y un currNode
+        currNodo = headNodo
+        dim = 1
+        offset = 0
+        size = currNodo.r
+        #pasar r a variable global
+        while currNodo != None:
+            m = r / (currNodo.ls + 1)
+            currNodo.val = m
+            r = m
+            if currNodo.ultimoNodo == True:
+                currNodo.val = 0
+            currNodo = currNodo.siguienteNodo
+        
+    # el siguiente cuadruplo es guardar una direccion virtual
+
+
+    
+    
+
+
+
+
+
+        

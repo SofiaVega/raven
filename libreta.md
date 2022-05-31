@@ -48,4 +48,6 @@ Ya genera cuadruplos de condicionales y ciclos
 
 - Terminamos funciones
 
+## Lunes 30 de Mayo
 
+- Puntos neuralgicos de declaracion de arreglos
