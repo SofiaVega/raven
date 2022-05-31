@@ -63,7 +63,7 @@ vars: tipo vars3 np_add_vars vars2 SALTO -> np_vars
         | arreglo
 np_add_vars:
 vars2: "," vars3 vars2 |
-vars3: ID | ID "=" expresion np_asig_quad -> np_asig
+vars3: ID | ID IGUAL expresion np_asig_quad -> np_asig
 np_asig:
 np_asig_quad:
 
