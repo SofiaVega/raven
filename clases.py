@@ -1,3 +1,36 @@
+class NodoArreglo():
+    """
+    Nodo arreglo
+        Limite inferior
+        Limite Superior
+        Dim
+        SiguenteNodo
+        val: mdim o -k
+        ultimoNodo: booleano
+        r
+
+    """
+    def __init__(self, r = 1, var = "", ls = 0, dim = 1):
+        self.li = 0
+        self.ls = int(ls)
+        self.dim = dim
+        self.ultimoNodo = True
+        self.r = r
+        self.var = var
+        self.siguienteNodo = None
+
+    def setNextNode(self, nodo):
+        self.ultimoNodo = False
+        self.siguienteNodo = nodo
+
+    def calcR(self):
+        print(self.ls)
+        print(type(self.ls))
+        self.r = (self.ls + 1) * self.r
+
+    def setVal(self, val):
+        self.val = val
+
 class VariableClass():
     '''
     Constructor de Variable
@@ -8,6 +41,7 @@ class VariableClass():
     - valueVar : [numero, bool, enunciado, arreglo] -> valor de la variable de acuerdo a su tipo
     - scopeVar : string -> scope de la variable
     - addressVar : int -> direccion de memoria virtual
+    - isArray : bool
     '''
 
     def __init__(self, nameVar, typeVar, valueVar='', addressVar=''):
@@ -15,6 +49,9 @@ class VariableClass():
         self.typeVar = typeVar
         self.valueVar = valueVar
         self.addressVar = addressVar
+        self.isArray = False
+        self.arrNode = None
+
 
     def printvar(self):
         print("[nameVar: {} typeVar: {} valueVar: {} addressVar: {}]".format(
@@ -120,29 +157,6 @@ class VariableTable:
             return False
 
 
-class NodoArreglo():
-    """
-    Nodo arreglo
-        Limite inferior
-        Limite Superior
-        Dim
-        SiguenteNodo
-        val: mdim o -k
-        ultimoNodo: booleano
-
-    """
-    def __init__(self, li, ls, dim):
-        self.li = li
-        self.ls = ls
-        self.dim = dim
-        self.ultimoNodo = True
-        
-    def setNextNode(self, nodo):
-        self.ultimoNodo = False
-        self.siguienteNodo = nodo
-
-    def setVal(self, val):
-        self.val = val
 
         
 

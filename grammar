@@ -12,7 +12,6 @@ SALTO: /\n+/
 NUMTIPO: "num"
 ENUNCIADO: "enunciado"
 BOOL: "bool"
-ARREGLO: "arreglo"
 CAPITULO: "capitulo"
 MECANICA: "mecanica"
 TITULO: "titulo"
@@ -60,7 +59,8 @@ opciones2: opcion opciones3
 opciones3: ";" opcion opciones3 | 
 opcion: STRING "," ID IPAR estatuto2 FPAR
 
-vars: tipo vars3 np_add_vars vars2 SALTO
+vars: tipo vars3 np_add_vars vars2 SALTO -> np_vars
+        | arreglo
 np_add_vars:
 vars2: "," vars3 vars2 |
 vars3: ID | ID "=" expresion 
@@ -133,12 +133,16 @@ escritura: PRINT STRING -> print_string
         | PRINT ID "[" NUM "]" SALTO -> print_import
 np_print_expresion: 
 
-arreglo: ARREGLO tipo ID "=" "[" arreglo2 "]"
-arreglo2: val arreglo3 |
-arreglo3: "," val arreglo3 |
+arreglo: tipo arr arreglo3
+arr: ID "[" NUM np_arr_5 "]" arreglo2 np_arr_7
+arreglo2: "[" NUM np_arr_5 "]" | 
+np_arr_5: 
+np_arr_6:
+np_arr_7:
+arreglo3: "," np_arr_6 arr arreglo3 | 
 val: ID | NUM | NUM | STRING
 
-tipo: NUMTIPO | ENUNCIADO | BOOL | ARREGLO | VACIO
+tipo: NUMTIPO | ENUNCIADO | BOOL | VACIO
 
 ciclo_por: POR ID EN ID ICOR estatuto ciclo_por2 FCOR
 ciclo_por2: estatuto ciclo_por2 | 
