@@ -239,9 +239,6 @@ class PuntosNeuralgicos(Visitor):
                     exit()
 
     def print_string(self, tree):
-        # print("Escritura")
-        # print(tree.children)
-        # print(tree.children[-1].value)
         my_str = tree.children[-1].value
         pilaO.append(my_str)
         pilaT.append("enunciado")
@@ -257,7 +254,7 @@ class PuntosNeuralgicos(Visitor):
                 pilaT.pop()
             generate_quad("PRINT", None, None, result)
 
-            # Puntos neuralgicos del if
+    # Puntos neuralgicos del if
     # To do: probarlos con un ejemplo, necesitamos la tabla de variables
 
     def np_if(self, tree):
@@ -281,12 +278,14 @@ class PuntosNeuralgicos(Visitor):
         fill_quad(falso, quad_pointer)
 
     # Puntos neuralgicos para un while
-    # Falta probarlos
 
     def np_while_1(self, tree):
+        # Migaja de pan
+        # En cuanto encuentras el while
         pSaltos.append(quad_pointer)
 
     def np_while_2(self, tree):
+        # Revisar que el tipo sea booleano
         global quad_pointer
         exp_type = pilaT.pop()
         if exp_type != "bool":
@@ -298,6 +297,8 @@ class PuntosNeuralgicos(Visitor):
             pSaltos.append(quad_pointer - 1)
 
     def np_while_3(self, tree):
+        # Hacer un goto de regreso a la condicion del while
+        # Llenar el gotoF vacio
         end = pSaltos.pop()
         regreso = pSaltos.pop()
         generate_quad("GOTO", None, None, regreso)
