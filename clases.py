@@ -124,3 +124,10 @@ class VariableTable:
         else:
             print('Syntax error: variable ' + key + ' does not exist')
             return False
+
+    def getType(self, key):
+        if key in self.tablaVar:
+            return self.tablaVar[key].typeVar
+        else:
+            print('Syntax error: variable ' + key + ' does not exist')
+            return False
