@@ -1,13 +1,8 @@
-habiaUnaVez Raven
-titulo = "Raven"
-num x = 2, y = 3, w = 0
-bool z
 capitulo uno () {
     titulo = "el principio del fin"
     x = 2 + 3
     y = 2 * 3
     z = x > y
-    k = 50
     si (x > y)
     {
         x = 2

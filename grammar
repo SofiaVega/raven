@@ -63,8 +63,9 @@ vars: tipo vars3 np_add_vars vars2 SALTO -> np_vars
         | arreglo
 np_add_vars:
 vars2: "," vars3 vars2 |
-vars3: ID | ID "=" expresion 
-np_addvars: 
+vars3: ID | ID "=" expresion np_asig_quad -> np_asig
+np_asig:
+np_asig_quad:
 
 
 importar: IMPORTAR STRING COMO ID
@@ -126,7 +127,7 @@ sino: ELSE np_if_3 ICOR estatuto condicion2 FCOR |
 condicion2: estatuto condicion2 |
 np_if_3: 
 
-asignacion: ID "=" expresion
+asignacion: ID "=" expresion np_asig_quad -> np_asig
 
 escritura: PRINT STRING -> print_string
         | PRINT expresion np_print_expresion -> print_expresion

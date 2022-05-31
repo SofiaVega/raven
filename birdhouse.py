@@ -8,8 +8,8 @@ from cubo_semantico import cubo as cubo_semantico
 from clases import *
 
 id_Asignar = ""
-pilaO = []
-pOper = []
+pilaO = []  # Numeros
+pOper = []  # Operadores
 pilaT = []
 pSaltos = []
 temporales = []
@@ -36,7 +36,7 @@ def generate_quad(operator, left, right, result):
     cuadruplo = {"operator": operator, "left": left,
                  "right": right, "result": result}
     cuadruplos.append(cuadruplo)
-    print(cuadruplo)
+    print(quad_pointer + 1, ' ', cuadruplo)
     quad_pointer = quad_pointer + 1
 
 
@@ -50,21 +50,54 @@ tabla_funciones = ProcDirectory()
 
 
 class PuntosNeuralgicos(Visitor):
+    # Funcion ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
+    def inlineVar(self, inlineT, type):
+        if(inlineT != []):
+            name = inlineT[0].children[0].value
+            inlineT = inlineT[1].children
+            var = VariableClass(name, type)
+            if pilaFunciones[-1] == "global":
+                tabla_variables.addVar(var)
+            else:
+                tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
+            self.inlineVar(inlineT, type)
+        else:
+            return
 
-    def np_vars(self, tree):
-        print("-----I will start adding variables to the table")
+    def vars(self, tree):
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
         # Logica para tambien agregar variables que se declaran en la misma linea
-        # print(tree.children[2].children[0].children)
 
         var = VariableClass(name, type)
         if pilaFunciones[-1] == "global":
             tabla_variables.addVar(var)
-            tabla_variables.printTable()
+            # tabla_variables.printTable()
         else:
             tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
-            tabla_funciones.printTable()
+            # tabla_funciones.printTable()
+
+        self.inlineVar(tree.children[2].children, type)
+
+    # Agrega ID a pila de operandos
+    def np_asig(self, tree):
+        if (tabla_variables.checkExists(tree.children[0].value)):
+            pilaO.append(tree.children[0].value)
+        else:
+            exit()
+
+    def np_asig_quad(self, tree):
+        operator = "="
+        left_operand = pilaO.pop()
+        right_operand = None
+        result = pilaO.pop()
+        generate_quad(operator, left_operand,
+                      right_operand, result)
+
+        #generate_quad("=", "value", None, tree.children[0].value)
+    ''' 
+    Guardado de constantes
+    '''
 
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
