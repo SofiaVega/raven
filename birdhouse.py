@@ -10,27 +10,33 @@ from clases import *
 id_Asignar = ""
 pilaO = []  # Numeros
 pOper = []  # Operadores
-pilaT = []
-pSaltos = []
-temporales = []
-avail = 0
-quad_pointer = 0
-cuadruplos = []
-pilaFunciones = []
+pilaT = [] # Tipos
+pSaltos = [] # Saltos (migaja de pan)
+temporales = [] # Temporales
+avail = 0 # Contador de temporales (empieza en t0)
+quad_pointer = 0 # Contador de cuadruplos
+cuadruplos = [] # Lista de cuadruplos
+pilaFunciones = [] # Pila de funciones: pilaFunciones[-1] es la funcion actual
 pilaFunciones.append("global")
+# pila de llamadas a funciones
+# pila[-1] es la llamada actual
 pilaLlamadas = []
 # parameter counter
 pilaK = []
-tipo_arr_aux = ""
-r = 1
-currNodo = NodoArreglo()
-headNodo = NodoArreglo()
+tipo_arr_aux = "" # Es el tipo con el que vamos a declarar un arreglo
+# Necesitamos un auxiliar porque lo declaramos en 2 puntos diferentes
+r = 1 # La r auxiliar para calcular las dimensiones de un arreglo
+currNodo = NodoArreglo() # Nodo auxiliar para recorrer los nodos de una matriz
+headNodo = NodoArreglo() # El primer nodo de la matriz que estamos declarando
 
-
-for i in range(0, 20):
+# Generacion de los temporales
+for i in range(0, 1000):
     temporales.append("t" + str(i))
 
-
+# Funcion para generar cuadruplos
+# Es posible moverla a un objeto para refactorizar
+# TO-DO: generar los mismos cuadruplos pero con memoria virtual
+# TO-DO: meter los cuadruplos a un archivo (txt?) en lugar de solo guardarlos aqui
 def generate_quad(operator, left, right, result):
     global quad_pointer
     cuadruplo = {"operator": operator, "left": left,
@@ -39,14 +45,14 @@ def generate_quad(operator, left, right, result):
     print(quad_pointer + 1, ' ', cuadruplo)
     quad_pointer = quad_pointer + 1
 
-
+# Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
+# Por lo general, para gotos
 def fill_quad(end, cont):
     cuadruplos[end]["result"] = cont
 
 
-# pilaO y poper
-tabla_variables = VariableTable()
-tabla_funciones = ProcDirectory()
+tabla_variables = VariableTable() # Tabla de variables
+tabla_funciones = ProcDirectory() # Tabla de funciones
 
 
 class PuntosNeuralgicos(Visitor):
@@ -366,6 +372,8 @@ class PuntosNeuralgicos(Visitor):
             exit()
 
     def np_llamada_funcion_2(self, tree):
+        # Generar cuadruplo ERA, nombreFuncion
+        # Cuando se llama a una funcion
         generate_quad("ERA", pilaLlamadas[-1], None, None)
         pilaK.append(0)
 
