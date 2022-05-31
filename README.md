@@ -28,6 +28,8 @@ Se agregan las variables a la tabla de variables
 
 Tambien agregamos validacion semantica y division por cero
 
+## Avance 7
+
 ## Martes 17 de Mayo
 
 Agregamos puntos neuralgicos para ciclos
@@ -39,6 +41,11 @@ Ya genera cuadruplos de condicionales y ciclos
 - Algunos puntos neuralgicos para llamadas de funciones
 - Refactorizamos codigo
 
+#### Lunes 30 de Mayo
+
+Se agregan puntos neuralgicos para la asignacion
+Se hacen correciones generales
+Se arregla codigo generador de funciones y de arreglos
 
 ---
 
