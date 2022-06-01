@@ -12,6 +12,7 @@ pilaO = []  # Numeros
 pOper = []  # Operadores
 pilaT = [] # Tipos
 pSaltos = [] # Saltos (migaja de pan)
+pilaDim = []
 temporales = [] # Temporales
 avail = 0 # Contador de temporales (empieza en t0)
 quad_pointer = 0 # Contador de cuadruplos
@@ -70,7 +71,8 @@ class PuntosNeuralgicos(Visitor):
         else:
             return
 
-    def vars(self, tree):
+    def np_vars(self, tree):
+        print(tree)
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
         # Logica para tambien agregar variables que se declaran en la misma linea
@@ -87,6 +89,7 @@ class PuntosNeuralgicos(Visitor):
 
     # Agrega ID a pila de operandos
     def np_asig(self, tree):
+        
         if (tabla_variables.checkExists(tree.children[0].value)):
             pilaO.append(tree.children[0].value)
         else:
@@ -497,6 +500,70 @@ class PuntosNeuralgicos(Visitor):
             currNodo = currNodo.siguienteNodo
         
     # el siguiente cuadruplo es guardar una direccion virtual
+
+    # cuadruplos de acceso a arreglos
+    def np_acc_arr_1(self, tree):
+        #pilaO.push(id) pilaT.push(tipo)
+        print("acceso arr")
+        print(tree)
+        print(tree.children)
+        print(tree.children[0].value)
+        idd = tree.children[0].value
+        pilaO.append(idd)
+        # to do: cambiar este tipo por el tipo del arreglo
+        pilaT.append("num")
+
+    def np_acc_arr_2(self, tree):
+        global currNodo
+        idd = pilaO.pop()
+        tipo = pilaT.pop()
+        dim = 1
+        pilaDim.append([idd, dim])
+        if tabla_variables.tablaVar[idd].isArray == False:
+            print(idd + "no es un arreglo")
+            exit()
+        currNodo = tabla_variables.tablaVar[idd].arrNode
+        #fondo falso
+        pOper.append("[")
+        print("curr nodo")
+        currNodo.imprimir()
+
+    def np_acc_arr_3(self, tree):
+        global currNodo
+        global avail
+        print("verificacion")
+        generate_quad("VER", pilaO[-1], 0, currNodo.ls)
+        if currNodo.ultimoNodo == False:
+            aux = pilaO.pop()
+            result = temporales[avail]
+            avail = avail+1
+            generate_quad("*", aux, currNodo.val, result)
+            pilaO.append(result)
+        dim = pilaDim[-1][1]
+        if dim > 1:
+            aux2 = pilaO.pop()
+            aux1 = pilaO.pop()
+            result = temporales[avail]
+            avail = avail+1
+            generate_quad("+", aux1, aux2, result)
+            pilaO.append(result)
+    
+    def np_acc_arr_4(self, tree):
+        global currNodo
+        pilaDim[-1][1] = pilaDim[-1][1] + 1
+        currNodo = currNodo.siguienteNodo
+
+    def np_acc_arr_5(self, tree):
+        aux = pilaO.pop()
+        result = temporales[avail]
+        avail = avail+1
+        generate_quad("+", aux, 0, result)
+        #TO DO cambiar esto al pointer de result
+        pilaO.append(result)
+        pOper.pop()
+    
+
+    
 
 
     

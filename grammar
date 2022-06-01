@@ -104,6 +104,12 @@ varcte:  ID -> guardar_id
         | NUM -> guardar_num
         | STRING -> guardar_string
         | BOOL -> guardar_bool
+        | ID accarr accarr2 -> np_acc_arr_1
+accarr2: accarr np_acc_arr_4 accarr2 | 
+accarr: "[" np_acc_arr_2 exp np_acc_arr_3 "]"
+np_acc_arr_2:
+np_acc_arr_3:
+np_acc_arr_4:
 
 estatuto: asignacion 
                 | condicion 
@@ -127,7 +133,9 @@ sino: ELSE np_if_3 ICOR estatuto condicion2 FCOR |
 condicion2: estatuto condicion2 |
 np_if_3: 
 
-asignacion: ID "=" expresion np_asig_quad -> np_asig
+asignacion: ID "=" expresion np_asig_quad -> np_asig |  np_acc_a "=" expresion np_asig_quad
+np_acc_a: ID accarr accarr2 -> np_acc_arr_1
+
 
 escritura: PRINT STRING -> print_string
         | PRINT expresion np_print_expresion -> print_expresion

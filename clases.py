@@ -31,6 +31,9 @@ class NodoArreglo():
     def setVal(self, val):
         self.val = val
 
+    def imprimir(self):
+        print("li " + str(self.li) + " ls " + str(self.ls) + " dim " + str(self.dim) + " ultimoNodo " + str(self.ultimoNodo))
+
 class VariableClass():
     '''
     Constructor de Variable
@@ -42,6 +45,7 @@ class VariableClass():
     - scopeVar : string -> scope de la variable
     - addressVar : int -> direccion de memoria virtual
     - isArray : bool
+    - arrNode : la primera dimension del arreglo
     '''
 
     def __init__(self, nameVar, typeVar, valueVar='', addressVar=''):
@@ -159,6 +163,7 @@ class VariableTable:
         if key in self.tablaVar:
             return True
         else:
+            print("aqui")
             print('Syntax error: variable ' + key + ' does not exist')
             return False
 
