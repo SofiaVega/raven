@@ -102,11 +102,13 @@ cuadruplo_mult_div:
         
 
 factor: IPAR expresion FPAR | varcte | SUMA varcte | RESTA varcte
-varcte:  ID -> guardar_id
+varcte:  ID arr_o_no -> guardar_id
         | NUM -> guardar_num
         | STRING -> guardar_string
         | BOOL -> guardar_bool
-        | ID accarr accarr2 -> np_acc_arr_1
+
+arr_o_no: accarr accarr2 -> np_acc_arr_1
+        | 
 accarr2: accarr np_acc_arr_4 accarr2 | 
 accarr: "[" np_acc_arr_2 exp np_acc_arr_3 "]"
 np_acc_arr_2:
@@ -135,8 +137,8 @@ sino: ELSE np_if_3 ICOR estatuto condicion2 FCOR |
 condicion2: estatuto condicion2 |
 np_if_3: 
 
-asignacion: ID IGUAL expresion np_asig_quad -> np_asig |  np_acc_a "=" expresion np_asig_quad
-np_acc_a: ID accarr accarr2 -> np_acc_arr_1
+
+asignacion: ID arr_o_no IGUAL expresion np_asig_quad -> np_asig
 
 
 escritura: PRINT STRING -> print_string

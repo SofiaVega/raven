@@ -1,12 +1,9 @@
 habiaUnaVez Raven
 titulo = "Raven"
-num lista [10]
+num lista [10][10]
 num x
-num y
 capitulo uno () {
     titulo = "el principio del fin"
-    y = x
-    x = lista[x]
-    lista[2] = y
+    x = lista[1][1]
     -> "habia una vez"
 }
