@@ -46,8 +46,9 @@ ID: /[a-zA-Z_][a-zA-Z_0-9]*/
 NUM: /\d+/
 
 start: programa
-programa: HUV ID SALTO importarloop titulo_asig np_asig_quad SALTO varsloop mecanicaloop capituloloop np_fin
+programa: huv_inicio  SALTO importarloop titulo_asig np_asig_quad SALTO varsloop mecanicaloop capituloloop np_fin
 np_fin: 
+huv_inicio: HUV ID
 titulo_asig: TITULO IGUAL STRING
 importarloop: importar | importarloop importar|
 varsloop: vars | varsloop vars |
@@ -83,7 +84,7 @@ mecanica5: REGRESA varcte |
 vars_mecanica_loop: vars | vars_mecanica_loop vars |
 
 
-capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO TITULO IGUAL STRING SALTO estatuto SALTO mecanica4 FCOR
+capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO estatuto SALTO mecanica4 FCOR
 
 expresion: exp | exp expresion_mayor
 expresion_mayor: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expresion | NOT_EQUAL exp cuadruplo_expresion | IGUAL_A exp cuadruplo_expresion
@@ -134,7 +135,7 @@ sino: ELSE np_if_3 ICOR estatuto condicion2 FCOR |
 condicion2: estatuto condicion2 |
 np_if_3: 
 
-asignacion: ID "=" expresion np_asig_quad -> np_asig |  np_acc_a "=" expresion np_asig_quad
+asignacion: ID IGUAL expresion np_asig_quad -> np_asig |  np_acc_a "=" expresion np_asig_quad
 np_acc_a: ID accarr accarr2 -> np_acc_arr_1
 
 
