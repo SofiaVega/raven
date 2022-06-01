@@ -79,16 +79,12 @@ class PuntosNeuralgicos(Visitor):
         # print(tree)
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
-        # Logica para tambien agregar variables que se declaran en la misma linea
-
         var = VariableClass(name, type)
         if pilaFunciones[-1] == "global":
             tabla_variables.addVar(var)
-            # tabla_variables.printTable()
         else:
             tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
-            # tabla_funciones.printTable()
-
+        # Logica para tambien agregar variables que se declaran en la misma linea
         self.inlineVar(tree.children[3].children, type)
 
     # Agrega ID a pila de operandos
@@ -96,11 +92,12 @@ class PuntosNeuralgicos(Visitor):
 
         if (tabla_variables.checkExists(tree.children[0].value)):
             pilaO.append(tree.children[0].value)
+            pOper.append(tree.children[1])
         else:
             exit()
 
     def np_asig_quad(self, tree):
-        operator = "="
+        operator = pOper.pop()
         left_operand = pilaO.pop()
         right_operand = None
         result = pilaO.pop()
