@@ -76,7 +76,7 @@ class PuntosNeuralgicos(Visitor):
             return
 
     def np_vars(self, tree):
-        print(tree)
+        # print(tree)
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
         # Logica para tambien agregar variables que se declaran en la misma linea
@@ -89,7 +89,7 @@ class PuntosNeuralgicos(Visitor):
             tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
             # tabla_funciones.printTable()
 
-        self.inlineVar(tree.children[2].children, type)
+        self.inlineVar(tree.children[3].children, type)
 
     # Agrega ID a pila de operandos
     def np_asig(self, tree):
