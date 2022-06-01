@@ -110,8 +110,14 @@ class PuntosNeuralgicos(Visitor):
 
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        miid = tree.children[-1].value
+        print("menos uno")
+        print(tree.children[-1])
+        # verificarlo con el len de children -1
+        # 0 o -1?
+        miid = tree.children[0].value
         pilaO.append(miid)
+        print("hizo push al arreglo? " + miid)
+        # to do cambiar a global o funcion
         tipo = tabla_variables.tablaVar[miid].typeVar
         pilaT.append(tipo)
 
@@ -503,6 +509,7 @@ class PuntosNeuralgicos(Visitor):
 
     # cuadruplos de acceso a arreglos
     def np_acc_arr_1(self, tree):
+        '''
         #pilaO.push(id) pilaT.push(tipo)
         print("acceso arr")
         print(tree)
@@ -512,6 +519,8 @@ class PuntosNeuralgicos(Visitor):
         pilaO.append(idd)
         # to do: cambiar este tipo por el tipo del arreglo
         pilaT.append("num")
+        '''
+        print("es un arreglo")
 
     def np_acc_arr_2(self, tree):
         global currNodo
