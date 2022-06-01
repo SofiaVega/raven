@@ -7,12 +7,10 @@ capitulo uno () {
     x = 2 + 3
     y = 2 * 3
     z = x > y
-    k = 50
     si (x > y)
     {
         x = 2
     }
-
     -> "Habia una vez un cuervo"
     -> 2 * 3
 

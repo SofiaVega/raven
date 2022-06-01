@@ -8,55 +8,71 @@ from cubo_semantico import cubo as cubo_semantico
 from clases import *
 
 id_Asignar = ""
-pilaO = []  # Numeros
+pilaO = []  # Operandos
 pOper = []  # Operadores
-pilaT = [] # Tipos
-pSaltos = [] # Saltos (migaja de pan)
+pilaT = []  # Tipos
+pSaltos = []  # Saltos (migaja de pan)
 pilaDim = []
-temporales = [] # Temporales
-avail = 0 # Contador de temporales (empieza en t0)
-quad_pointer = 0 # Contador de cuadruplos
-cuadruplos = [] # Lista de cuadruplos
-pilaFunciones = [] # Pila de funciones: pilaFunciones[-1] es la funcion actual
+temporales = []  # Temporales
+avail = 0  # Contador de temporales (empieza en t0)
+quad_pointer = 0  # Contador de cuadruplos
+cuadruplos = []  # Lista de cuadruplos
+pilaFunciones = []  # Pila de funciones: pilaFunciones[-1] es la funcion actual
 pilaFunciones.append("global")
 # pila de llamadas a funciones
 # pila[-1] es la llamada actual
 pilaLlamadas = []
 # parameter counter
 pilaK = []
-tipo_arr_aux = "" # Es el tipo con el que vamos a declarar un arreglo
+tipo_arr_aux = ""  # Es el tipo con el que vamos a declarar un arreglo
 # Necesitamos un auxiliar porque lo declaramos en 2 puntos diferentes
-r = 1 # La r auxiliar para calcular las dimensiones de un arreglo
-currNodo = NodoArreglo() # Nodo auxiliar para recorrer los nodos de una matriz
-headNodo = NodoArreglo() # El primer nodo de la matriz que estamos declarando
+r = 1  # La r auxiliar para calcular las dimensiones de un arreglo
+currNodo = NodoArreglo()  # Nodo auxiliar para recorrer los nodos de una matriz
+headNodo = NodoArreglo()  # El primer nodo de la matriz que estamos declarando
 
-# Generacion de los temporales
+# Generacion de los temporales de numero
 for i in range(0, 1000):
     temporales.append("t" + str(i))
+
 
 # Funcion para generar cuadruplos
 # Es posible moverla a un objeto para refactorizar
 # TO-DO: generar los mismos cuadruplos pero con memoria virtual
 # TO-DO: meter los cuadruplos a un archivo (txt?) en lugar de solo guardarlos aqui
+
+
 def generate_quad(operator, left, right, result):
     global quad_pointer
     cuadruplo = {"operator": operator, "left": left,
                  "right": right, "result": result}
     cuadruplos.append(cuadruplo)
-    print(quad_pointer + 1, ' ', cuadruplo)
+    #print(quad_pointer + 1, ' ', cuadruplo)
+    print(quad_pointer + 1, ' ', operator, left, right, result)
     quad_pointer = quad_pointer + 1
 
 # Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
 # Por lo general, para gotos
+
+
 def fill_quad(end, cont):
     cuadruplos[end]["result"] = cont
 
 
-tabla_variables = VariableTable() # Tabla de variables
-tabla_funciones = ProcDirectory() # Tabla de funciones
+tabla_variables = VariableTable()  # Tabla de variables
+tabla_funciones = ProcDirectory()  # Tabla de funciones
 
 
 class PuntosNeuralgicos(Visitor):
+    def huv_inicio(self, tree):
+        print("Habia una vez", tree.children[1])
+        generate_quad("GOTO", tree.children[1].value, None, "blank")
+        pSaltos.append(quad_pointer)
+
+    def titulo_asig(self, tree):
+        pilaO.append(tree.children[0].value)
+        pOper.append(tree.children[1].value)
+        pilaO.append(tree.children[2].value)
+
     # Funcion ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
     def inlineVar(self, inlineT, type):
         if(inlineT != []):
@@ -72,31 +88,27 @@ class PuntosNeuralgicos(Visitor):
             return
 
     def np_vars(self, tree):
-        print(tree)
+        # print(tree)
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
-        # Logica para tambien agregar variables que se declaran en la misma linea
-
         var = VariableClass(name, type)
         if pilaFunciones[-1] == "global":
             tabla_variables.addVar(var)
-            # tabla_variables.printTable()
         else:
             tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
-            # tabla_funciones.printTable()
-
-        self.inlineVar(tree.children[2].children, type)
+        # Logica para tambien agregar variables que se declaran en la misma linea
+        self.inlineVar(tree.children[3].children, type)
 
     # Agrega ID a pila de operandos
     def np_asig(self, tree):
-        
         if (tabla_variables.checkExists(tree.children[0].value)):
             pilaO.append(tree.children[0].value)
+            pOper.append(tree.children[1].value)
         else:
             exit()
 
     def np_asig_quad(self, tree):
-        operator = "="
+        operator = pOper.pop()
         left_operand = pilaO.pop()
         right_operand = None
         result = pilaO.pop()
@@ -348,17 +360,6 @@ class PuntosNeuralgicos(Visitor):
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
             tabla_funciones.printTable()
 
-    def np_funciones_3(self, tree):
-        # - Insert the type to every parameter uploaded into the VarTable.
-        # At the same time into the ParameterTable (to create the Function’s signature)..
-        # creo que esto ya lo hice?
-        print("ni idea")
-
-    def np_funciones_4(self, tree):
-        # Insert into DirFunc the number of parameters defined.
-        # **to calculate the workspace required for execution
-        print("ni idea 2")
-
     def cambiar_quad_pointer(self, tree):
         tabla_funciones.procDirectory[pilaFunciones[-1]
                                       ].quad_inicial = quad_pointer
@@ -418,7 +419,7 @@ class PuntosNeuralgicos(Visitor):
         print("tabla de variables fin")
         tabla_variables.printTable()
 
-    ## Arreglos
+    # Arreglos
     def arreglo(self, tree):
         #vartable.add(id, type)
         tipo_arr_aux = tree.children[0].children[0].value
@@ -439,7 +440,7 @@ class PuntosNeuralgicos(Visitor):
             tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
             tabla_funciones.printTable()
         '''
-    
+
     def arr(self, tree):
         global currNodo
         global headNodo
@@ -453,9 +454,9 @@ class PuntosNeuralgicos(Visitor):
         var = VariableClass(thisID, tipo)
         # np 2
         var.isArray = True
-        #np 3
+        # np 3
         r = 1
-        currNodo = NodoArreglo(dim = 1, r = 1, ls = ls, var = thisID)
+        currNodo = NodoArreglo(dim=1, r=1, ls=ls, var=thisID)
         var.arrNode = currNodo
         headNodo = var.arrNode
         if pilaFunciones[-1] == "global":
@@ -464,16 +465,16 @@ class PuntosNeuralgicos(Visitor):
         else:
             tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
             tabla_funciones.printTable()
-        
+
     def np_arr_5(self, tree):
         global currNodo
         currNodo.calcR()
-    
+
     def np_arr_6(self, tree):
         # to do: ver si la referencia al objeto te permite funcionar como una linked list
         global currNodo
         dim = currNodo.dim + 1
-        nuevoNodo = NodoArreglo(r = currNodo.r, var = currNodo.var, dim = dim)
+        nuevoNodo = NodoArreglo(r=currNodo.r, var=currNodo.var, dim=dim)
         currNodo.siguienteNodo = nuevoNodo
         currNodo = nuevoNodo
         '''
@@ -486,17 +487,17 @@ class PuntosNeuralgicos(Visitor):
             currNodo.siguienteNodo = nuevoNodo
             #tabla_funciones.printTable()
         '''
-    
+
     def np_arr_7(self, tree):
         global currNodo
         global r
         currNodo.ultimoNodo = True
-        #tener un headNode y un currNode
+        # tener un headNode y un currNode
         currNodo = headNodo
         dim = 1
         offset = 0
         size = currNodo.r
-        #pasar r a variable global
+        # pasar r a variable global
         while currNodo != None:
             m = r / (currNodo.ls + 1)
             currNodo.val = m
@@ -504,7 +505,7 @@ class PuntosNeuralgicos(Visitor):
             if currNodo.ultimoNodo == True:
                 currNodo.val = 0
             currNodo = currNodo.siguienteNodo
-        
+
     # el siguiente cuadruplo es guardar una direccion virtual
 
     # cuadruplos de acceso a arreglos
@@ -532,7 +533,7 @@ class PuntosNeuralgicos(Visitor):
             print(idd + "no es un arreglo")
             exit()
         currNodo = tabla_variables.tablaVar[idd].arrNode
-        #fondo falso
+        # fondo falso
         pOper.append("[")
         print("curr nodo")
         currNodo.imprimir()
@@ -556,7 +557,7 @@ class PuntosNeuralgicos(Visitor):
             avail = avail+1
             generate_quad("+", aux1, aux2, result)
             pilaO.append(result)
-    
+
     def np_acc_arr_4(self, tree):
         global currNodo
         pilaDim[-1][1] = pilaDim[-1][1] + 1
@@ -567,19 +568,6 @@ class PuntosNeuralgicos(Visitor):
         result = temporales[avail]
         avail = avail+1
         generate_quad("+", aux, 0, result)
-        #TO DO cambiar esto al pointer de result
+        # TO DO cambiar esto al pointer de result
         pilaO.append(result)
         pOper.pop()
-    
-
-    
-
-
-    
-    
-
-
-
-
-
-        
