@@ -22,7 +22,3 @@ print("pila o")
 print(pilaO)
 print("pila oper")
 print(pOper)
-
-print("tabla variables")
-tabla_variables.printTable()
-tabla_funciones.printTable()

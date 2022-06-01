@@ -1,0 +1,18 @@
+{'operator': 'GOTO', 'left': 'Raven', 'right': None, 'result': 'blank'}
+{'operator': '=', 'left': '"Raven"', 'right': None, 'result': 'titulo'}
+{'operator': '=', 'left': '2', 'right': None, 'result': 'x'}
+{'operator': '=', 'left': '3', 'right': None, 'result': 'y'}
+{'operator': '=', 'left': '0', 'right': None, 'result': 'w'}
+{'operator': '=', 'left': '"el principio del fin"', 'right': None, 'result': 'titulo'}
+{'operator': '+', 'left': '2', 'right': '3', 'result': 't0'}
+{'operator': '=', 'left': 't0', 'right': None, 'result': 'x'}
+{'operator': '*', 'left': '2', 'right': '3', 'result': 't1'}
+{'operator': '=', 'left': 't1', 'right': None, 'result': 'y'}
+{'operator': '>', 'left': 'x', 'right': 'y', 'result': 'tB0'}
+{'operator': '=', 'left': 'tB0', 'right': None, 'result': 'z'}
+{'operator': '>', 'left': 'x', 'right': 'y', 'result': 'tB1'}
+{'operator': 'GOTOF', 'left': 'tB1', 'right': None, 'result': 15}
+{'operator': '=', 'left': '2', 'right': None, 'result': 'x'}
+{'operator': 'PRINT', 'left': None, 'right': None, 'result': '"Habia una vez un cuervo"'}
+{'operator': '*', 'left': '2', 'right': '3', 'result': 't2'}
+{'operator': 'PRINT', 'left': None, 'right': None, 'result': 't2'}

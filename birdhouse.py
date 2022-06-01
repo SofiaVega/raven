@@ -17,6 +17,7 @@ temporales = []  # Temporales
 temporalesBool = []  # Temporales booleanos
 temporalesString = []  # Temporales de string
 avail = 0  # Contador de temporales (empieza en t0)
+availBool = 0
 quad_pointer = 0  # Contador de cuadruplos
 cuadruplos = []  # Lista de cuadruplos
 pilaFunciones = []  # Pila de funciones: pilaFunciones[-1] es la funcion actual
@@ -35,7 +36,7 @@ headNodo = NodoArreglo()  # El primer nodo de la matriz que estamos declarando
 # Generacion de los temporales
 for i in range(0, 1000):
     temporales.append("t" + str(i))
-    temporales.append("tB" + str(i))
+    temporalesBool.append("tB" + str(i))
 
 
 # Funcion para generar cuadruplos
@@ -43,8 +44,9 @@ for i in range(0, 1000):
 # TO-DO: generar los mismos cuadruplos pero con memoria virtual
 # TO-DO: meter los cuadruplos a un archivo (txt?) en lugar de solo guardarlos aqui
 def quad_ids(cuadruplos):
-    f = open("demofile2.txt", "a")
-    f.write("Now the file has more content!")
+    f = open("cuadruplosID.txt", "w")
+    for quad in cuadruplos:
+        f.write(str(quad)+'\n')
     f.close()
 
 
@@ -114,7 +116,6 @@ class PuntosNeuralgicos(Visitor):
                 pOper.append(tree.children[1].value)
             except:
                 pOper.append(tree.children[2].value)
-
         else:
             exit()
 
@@ -179,10 +180,10 @@ class PuntosNeuralgicos(Visitor):
                 right_type = pilaT.pop()
                 left_type = pilaT.pop()
                 operator = pOper.pop()
-                # TO-DO: agregar validacion semantica
                 result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global avail
+                    print("Result Type", result_type)
                     result = temporales[avail]
                     avail = avail+1
                     generate_quad(operator, left_operand,
@@ -195,23 +196,6 @@ class PuntosNeuralgicos(Visitor):
                     exit()
 
     def cuadruplo_mult_div(self, tree):
-        '''
-        If POper.top() == ‘+’ or ‘-‘ then
-            right_operand= PilaO.Pop() left_operand=PilaO.Pop() let_Type=PTypes.Pop() operator= POper.Pop()
-            result_Type= Semantics[left_Type,
-            right_Type, operator] 
-            if (result_Type != ERROR)
-                result ßAVAIL.next() generate quad
-                (operator, left_operand, right_operand, result) Quad.Push(quad)
-                PilaO.Push(result) PTypes.Push(result_Type) If any operand were a temporal space,
-                return it to AVAIL
-            Else
-                ERROR (“Type mismatch”)
-        '''
-        #print("hijos de exp")
-        # print(pOper)
-        # print(pilaO)
-        # print(tree.children)
         if pOper:
             if (pOper[-1] == "*") or (pOper[-1] == "/"):
                 right_operand = pilaO.pop()
@@ -223,8 +207,6 @@ class PuntosNeuralgicos(Visitor):
                     if right_operand == "0" or tabla_variables.tablaVar[right_operand].value == 0:
                         print("Error: no se puede dividir entre 0")
                         exit()
-
-                # TO-DO: agregar validacion semantica
                 result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global avail
@@ -255,12 +237,11 @@ class PuntosNeuralgicos(Visitor):
                 right_type = pilaT.pop()
                 left_type = pilaT.pop()
                 operator = pOper.pop()
-                # TO-DO: agregar validacion semantica
                 result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
-                    global avail
-                    result = temporales[avail]
-                    avail = avail+1
+                    global availBool
+                    result = temporalesBool[availBool]
+                    availBool = availBool+1
                     generate_quad(operator, left_operand,
                                   right_operand, result)
                     pilaO.append(result)
@@ -429,7 +410,7 @@ class PuntosNeuralgicos(Visitor):
     def np_fin(self, tree):
         print("tabla de variables fin")
         tabla_variables.printTable()
-        # quad_ids(cuadruplos)
+        quad_ids(cuadruplos)
 
     # Arreglos
     def arreglo(self, tree):
