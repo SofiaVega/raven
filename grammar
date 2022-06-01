@@ -109,11 +109,12 @@ varcte:  ID arr_o_no -> guardar_id
 
 arr_o_no: accarr accarr2 -> np_acc_arr_1
         | 
-accarr2: accarr np_acc_arr_4 accarr2 | 
+accarr2: accarr np_acc_arr_4 accarr2 | np_acc_arr_5
 accarr: "[" np_acc_arr_2 exp np_acc_arr_3 "]"
 np_acc_arr_2:
 np_acc_arr_3:
 np_acc_arr_4:
+np_acc_arr_5:
 
 estatuto: asignacion 
                 | condicion 

@@ -8,5 +8,6 @@ capitulo uno () {
     y = x
     x = lista[x]
     lista[2] = y
+    lista[3] = y
     -> "habia una vez"
 }

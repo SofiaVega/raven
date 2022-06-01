@@ -120,6 +120,7 @@ class PuntosNeuralgicos(Visitor):
             exit()
 
     def np_asig_quad(self, tree):
+        print("asig quad")
         operator = pOper.pop()
         left_operand = pilaO.pop()
         right_operand = None
@@ -557,10 +558,14 @@ class PuntosNeuralgicos(Visitor):
         currNodo = currNodo.siguienteNodo
 
     def np_acc_arr_5(self, tree):
+        global temporales
+        global avail
+        print("ultimo arr")
         aux = pilaO.pop()
         result = temporales[avail]
         avail = avail+1
         generate_quad("+", aux, 0, result)
         # TO DO cambiar esto al pointer de result
+        # esto tiene que pasar antes de asig quad
         pilaO.append(result)
         pOper.pop()
