@@ -8,7 +8,7 @@ from cubo_semantico import cubo as cubo_semantico
 from clases import *
 
 id_Asignar = ""
-pilaO = []  # Numeros
+pilaO = []  # Operandos
 pOper = []  # Operadores
 pilaT = []  # Tipos
 pSaltos = []  # Saltos (migaja de pan)
@@ -61,6 +61,13 @@ tabla_funciones = ProcDirectory()  # Tabla de funciones
 
 
 class PuntosNeuralgicos(Visitor):
+    def titulo_asig(self, tree):
+        print("TITULO")
+        print(tree.children[2])
+        pilaO.append(tree.children[0].value)
+        pOper.append(tree.children[1])
+        pilaO.append(tree.children[2].value)
+
     # Funcion ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
     def inlineVar(self, inlineT, type):
         if(inlineT != []):
