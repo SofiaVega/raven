@@ -14,6 +14,8 @@ pilaT = []  # Tipos
 pSaltos = []  # Saltos (migaja de pan)
 pilaDim = []
 temporales = []  # Temporales
+temporalesBool = []  # Temporales booleanos
+temporalesString = []  # Temporales de string
 avail = 0  # Contador de temporales (empieza en t0)
 quad_pointer = 0  # Contador de cuadruplos
 cuadruplos = []  # Lista de cuadruplos
@@ -30,15 +32,20 @@ r = 1  # La r auxiliar para calcular las dimensiones de un arreglo
 currNodo = NodoArreglo()  # Nodo auxiliar para recorrer los nodos de una matriz
 headNodo = NodoArreglo()  # El primer nodo de la matriz que estamos declarando
 
-# Generacion de los temporales de numero
+# Generacion de los temporales
 for i in range(0, 1000):
     temporales.append("t" + str(i))
+    temporales.append("tB" + str(i))
 
 
 # Funcion para generar cuadruplos
 # Es posible moverla a un objeto para refactorizar
 # TO-DO: generar los mismos cuadruplos pero con memoria virtual
 # TO-DO: meter los cuadruplos a un archivo (txt?) en lugar de solo guardarlos aqui
+def quad_ids(cuadruplos):
+    f = open("demofile2.txt", "a")
+    f.write("Now the file has more content!")
+    f.close()
 
 
 def generate_quad(operator, left, right, result):
@@ -103,7 +110,11 @@ class PuntosNeuralgicos(Visitor):
     def np_asig(self, tree):
         if (tabla_variables.checkExists(tree.children[0].value)):
             pilaO.append(tree.children[0].value)
-            pOper.append(tree.children[1].value)
+            try:
+                pOper.append(tree.children[1].value)
+            except:
+                pOper.append(tree.children[2].value)
+
         else:
             exit()
 
@@ -418,6 +429,7 @@ class PuntosNeuralgicos(Visitor):
     def np_fin(self, tree):
         print("tabla de variables fin")
         tabla_variables.printTable()
+        # quad_ids(cuadruplos)
 
     # Arreglos
     def arreglo(self, tree):
