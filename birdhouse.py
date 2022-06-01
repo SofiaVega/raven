@@ -30,9 +30,10 @@ r = 1  # La r auxiliar para calcular las dimensiones de un arreglo
 currNodo = NodoArreglo()  # Nodo auxiliar para recorrer los nodos de una matriz
 headNodo = NodoArreglo()  # El primer nodo de la matriz que estamos declarando
 
-# Generacion de los temporales
+# Generacion de los temporales de numero
 for i in range(0, 1000):
     temporales.append("t" + str(i))
+
 
 # Funcion para generar cuadruplos
 # Es posible moverla a un objeto para refactorizar
@@ -45,7 +46,8 @@ def generate_quad(operator, left, right, result):
     cuadruplo = {"operator": operator, "left": left,
                  "right": right, "result": result}
     cuadruplos.append(cuadruplo)
-    print(quad_pointer + 1, ' ', cuadruplo)
+    #print(quad_pointer + 1, ' ', cuadruplo)
+    print(quad_pointer + 1, ' ', operator, left, right, result)
     quad_pointer = quad_pointer + 1
 
 # Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
@@ -61,11 +63,14 @@ tabla_funciones = ProcDirectory()  # Tabla de funciones
 
 
 class PuntosNeuralgicos(Visitor):
+    def huv_inicio(self, tree):
+        print("Habia una vez", tree.children[1])
+        generate_quad("GOTO", tree.children[1].value, None, "blank")
+        pSaltos.append(quad_pointer)
+
     def titulo_asig(self, tree):
-        print("TITULO")
-        print(tree.children[2])
         pilaO.append(tree.children[0].value)
-        pOper.append(tree.children[1])
+        pOper.append(tree.children[1].value)
         pilaO.append(tree.children[2].value)
 
     # Funcion ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
@@ -96,10 +101,9 @@ class PuntosNeuralgicos(Visitor):
 
     # Agrega ID a pila de operandos
     def np_asig(self, tree):
-
         if (tabla_variables.checkExists(tree.children[0].value)):
             pilaO.append(tree.children[0].value)
-            pOper.append(tree.children[1])
+            pOper.append(tree.children[1].value)
         else:
             exit()
 
