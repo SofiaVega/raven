@@ -13,11 +13,14 @@ pOper = []  # Operadores
 pilaT = []  # Tipos
 pSaltos = []  # Saltos (migaja de pan)
 pilaDim = []
-temporales = []  # Temporales
+temporalesNum = []  # Temporales
 temporalesBool = []  # Temporales booleanos
 temporalesString = []  # Temporales de string
-avail = 0  # Contador de temporales (empieza en t0)
+temporalesPointer = []  # Temporales para Instruction Pointer
+availNum = 0  # Contador de temporales (empieza en t0)
 availBool = 0
+availString = 0
+availPointer = 0
 quad_pointer = 0  # Contador de cuadruplos
 cuadruplos = []  # Lista de cuadruplos
 pilaFunciones = []  # Pila de funciones: pilaFunciones[-1] es la funcion actual
@@ -35,8 +38,9 @@ headNodo = NodoArreglo()  # El primer nodo de la matriz que estamos declarando
 
 # Generacion de los temporales
 for i in range(0, 1000):
-    temporales.append("t" + str(i))
+    temporalesNum.append("tN" + str(i))
     temporalesBool.append("tB" + str(i))
+    temporalesString.append("tS" + str(i))
 
 
 # Funcion para generar cuadruplos
@@ -183,10 +187,14 @@ class PuntosNeuralgicos(Visitor):
                 operator = pOper.pop()
                 result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
-                    global avail
-                    print("Result Type", result_type)
-                    result = temporales[avail]
-                    avail = avail+1
+                    if result_type == "num":
+                        global availNum
+                        result = temporalesNum[availNum]
+                        availNum = availNum+1
+                    elif result_type == "enunciado":
+                        global availString
+                        result = temporalesString[availNum]
+                        availString = availString+1
                     generate_quad(operator, left_operand,
                                   right_operand, result)
                     pilaO.append(result)
@@ -210,9 +218,9 @@ class PuntosNeuralgicos(Visitor):
                         exit()
                 result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
-                    global avail
-                    result = temporales[avail]
-                    avail = avail+1
+                    global availNum
+                    result = temporalesNum[avail]
+                    availNum = availNum+1
                     generate_quad(operator, left_operand,
                                   right_operand, result)
                     pilaO.append(result)
@@ -534,21 +542,21 @@ class PuntosNeuralgicos(Visitor):
 
     def np_acc_arr_3(self, tree):
         global currNodo
-        global avail
+        global availNum
         print("verificacion")
         generate_quad("VER", pilaO[-1], 0, currNodo.ls)
         if currNodo.ultimoNodo == False:
             aux = pilaO.pop()
-            result = temporales[avail]
-            avail = avail+1
+            result = temporalesNum[availNum]
+            availNum = availNum+1
             generate_quad("*", aux, currNodo.val, result)
             pilaO.append(result)
         dim = pilaDim[-1][1]
         if dim > 1:
             aux2 = pilaO.pop()
             aux1 = pilaO.pop()
-            result = temporales[avail]
-            avail = avail+1
+            result = temporalesNum[availNum]
+            availNum = availNum+1
             generate_quad("+", aux1, aux2, result)
             pilaO.append(result)
 
@@ -558,12 +566,12 @@ class PuntosNeuralgicos(Visitor):
         currNodo = currNodo.siguienteNodo
 
     def np_acc_arr_5(self, tree):
-        global temporales
-        global avail
+        global temporalesNum
+        global availPointer
         print("ultimo arr")
         aux = pilaO.pop()
-        result = temporales[avail]
-        avail = avail+1
+        result = temporalesPointer[availPointer]
+        availPointer = availPointer+1
         generate_quad("+", aux, 0, result)
         # TO DO cambiar esto al pointer de result
         # esto tiene que pasar antes de asig quad
