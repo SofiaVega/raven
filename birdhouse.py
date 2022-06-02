@@ -49,25 +49,28 @@ for i in range(0, 1000):
 
 # Funcion para generar cuadruplos
 # Es posible moverla a un objeto para refactorizar
-# TO-DO: generar los mismos cuadruplos pero con memoria virtual
 def quad_ids(cuadruplos):
     f = open("cuadruplosID.txt", "w")
     for quad in cuadruplos:
         f.write(str(quad)+'\n')
     f.close()
 
+# Pasa los cuadruplos con direcciones virtuales a un archivo de texto
 def quad_mem(cuadruplos):
     f = open("cuadruplosMem.txt", "w")
     for quad in cuadruplosMem:
         f.write(str(quad)+'\n')
     f.close()
 
+#Agrega una variable a la tabla de variables global o local
 def addVar(var):
     if pilaFunciones[-1] == "global":
                 tabla_variables.addVar(var)
     else:
         tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
 
+# Obtiene una variable a partir de su nombre y el contexto en el que estamos
+# (global o una funcion)
 def getVar(varID):
     if pilaFunciones[-1] == "global":
         var = tabla_variables.tablaVar[varID]
@@ -75,22 +78,23 @@ def getVar(varID):
         var = tabla_funciones.procDirectory[pilaFunciones[-1]].tablaVar[varID]
     return var
 
+# Revisa si el id corresponde a una variable del contexto actual
 def checkExists(val):
     if pilaFunciones[-1] == "global":
         tabla_variables.checkExists(val)
     else:
         tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
 
-
+#Genera cuadruplos con los ids
 def generate_quad(operator, left, right, result):
     global quad_pointer
     cuadruplo = {"operator": operator, "left": left,
                  "right": right, "result": result}
     cuadruplos.append(cuadruplo)
-    #print(quad_pointer + 1, ' ', cuadruplo)
     print(quad_pointer + 1, ' ', operator, left, right, result)
     quad_pointer = quad_pointer + 1
 
+# Genera cuadruplos con los valores de memoria
 def generate_quad_mem(operator, left, right, result):
     cuadruplo = {"operator": operator, "left": left,
                  "right": right, "result": result}
@@ -100,8 +104,6 @@ def generate_quad_mem(operator, left, right, result):
 
 # Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
 # Por lo general, para gotos
-
-
 def fill_quad(end, cont):
     cuadruplos[end]["result"] = cont
 
@@ -523,29 +525,14 @@ class PuntosNeuralgicos(Visitor):
     # Arreglos
     def arreglo(self, tree):
         #vartable.add(id, type)
+        global tipo_arr_aux
         tipo_arr_aux = tree.children[0].children[0].value
-        '''
-        print(tree.children)
-        tipo = tree.children[0].children[0].value
-        thisID = tree.children[1]
-        var = VariableClass(thisID, tipo)
-        # np 2
-        var.isArray = True
-        #np 3
-        nodo = NodoArreglo(dim = 1, r = 1)
-        var.arrNode = nodo
-        if pilaFunciones[-1] == "global":
-            tabla_variables.addVar(var)
-            tabla_variables.printTable()
-        else:
-            tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
-            tabla_funciones.printTable()
-        '''
 
     def arr(self, tree):
         global currNodo
         global headNodo
         global r
+        global tipo_arr_aux
         print("arr")
         print(tree.children)
         print(tree.children[1])
@@ -573,16 +560,6 @@ class PuntosNeuralgicos(Visitor):
         nuevoNodo = NodoArreglo(r=currNodo.r, var=currNodo.var, dim=dim)
         currNodo.siguienteNodo = nuevoNodo
         currNodo = nuevoNodo
-        '''
-        var = currNodo.var
-        if pilaFunciones[-1] == "global":
-            tabla_variables.tablaVar[var].arrNode = currNodo
-            currNodo.siguienteNodo = nuevoNodo
-        else:
-            tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.tablaVar[var].arrNode = currNodo
-            currNodo.siguienteNodo = nuevoNodo
-            #tabla_funciones.printTable()
-        '''
 
     def np_arr_7(self, tree):
         global currNodo
@@ -606,17 +583,7 @@ class PuntosNeuralgicos(Visitor):
 
     # cuadruplos de acceso a arreglos
     def np_acc_arr_1(self, tree):
-        '''
-        #pilaO.push(id) pilaT.push(tipo)
-        print("acceso arr")
-        print(tree)
-        print(tree.children)
-        print(tree.children[0].value)
-        idd = tree.children[0].value
-        pilaO.append(idd)
-        # to do: cambiar este tipo por el tipo del arreglo
-        pilaT.append("num")
-        '''
+        #este cuadruplo ya no hace nada
         print("es un arreglo")
 
     def np_acc_arr_2(self, tree):
