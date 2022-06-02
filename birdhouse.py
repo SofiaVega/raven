@@ -44,6 +44,7 @@ for i in range(0, 1000):
     temporalesNum.append("tN" + str(i))
     temporalesBool.append("tB" + str(i))
     temporalesString.append("tS" + str(i))
+    temporalesPointer.append("tP" + str(i))
 
 
 # Funcion para generar cuadruplos
@@ -98,6 +99,8 @@ class PuntosNeuralgicos(Visitor):
     def huv_inicio(self, tree):
         print("Habia una vez", tree.children[1])
         generate_quad("GOTO", tree.children[1].value, None, "blank")
+        # to do: poner memoria en vez de valor
+        generate_quad_mem("GOTO", tree.children[1].value, None, "blank")
         pSaltos.append(quad_pointer)
 
     def titulo_asig(self, tree):
@@ -399,6 +402,7 @@ class PuntosNeuralgicos(Visitor):
         end = pSaltos.pop()
         regreso = pSaltos.pop()
         generate_quad("GOTO", None, None, regreso)
+        generate_quad_mem("GOTO", None, None, regreso)
         fill_quad(end, quad_pointer)
         fill_quad_mem(end, quad_pointer)
 
@@ -445,6 +449,7 @@ class PuntosNeuralgicos(Visitor):
         # varias cosas
         # release
         generate_quad("ENDFunc", None, None, None)
+        generate_quad_mem("ENDFunc", None, None, None)
         # insert the number of temps
 
     # puntos neuralgicos para llamadas a funciones
@@ -463,6 +468,7 @@ class PuntosNeuralgicos(Visitor):
         # Generar cuadruplo ERA, nombreFuncion
         # Cuando se llama a una funcion
         generate_quad("ERA", pilaLlamadas[-1], None, None)
+        generate_quad_mem("ERA", pilaLlamadas[-1], None, None)
         pilaK.append(0)
 
     def np_llamada_funcion_3(self, tree):
@@ -491,6 +497,7 @@ class PuntosNeuralgicos(Visitor):
     def np_llamada_funcion_6(self, tree):
         # to do: falta initial-address
         generate_quad("GOSUB", pilaLlamadas[-1], None, None)
+        generate_quad_mem("GOSUB", pilaLlamadas[-1], None, None)
 
     def np_fin(self, tree):
         print("tabla de variables fin")
@@ -616,26 +623,47 @@ class PuntosNeuralgicos(Visitor):
         pOper.append("[")
         print("curr nodo")
         currNodo.imprimir()
-
+        
     def np_acc_arr_3(self, tree):
         global currNodo
         global availNum
         print("verificacion")
         generate_quad("VER", pilaO[-1], 0, currNodo.ls)
+        generate_quad_mem("VER", pilaMem[-1], 0, currNodo.ls)
         if currNodo.ultimoNodo == False:
             aux = pilaO.pop()
+            tipo = pilaT.pop()
+            mem = pilaMem.pop()
+
             result = temporalesNum[availNum]
             availNum = availNum+1
+            result_mem = memoria["temp"]["num"]
+            memoria["temp"]["num"] +=1
+
             generate_quad("*", aux, currNodo.val, result)
+            generate_quad_mem("*", mem, currNodo.val, result_mem)
             pilaO.append(result)
+            pilaT.append("num")
+            pilaMem.append(result_mem)
         dim = pilaDim[-1][1]
         if dim > 1:
             aux2 = pilaO.pop()
+            t = pilaT.pop()
+            mem2 = pilaMem.pop()
             aux1 = pilaO.pop()
+            t = pilaT.pop()
+            mem1 = pilaMem.pop()
+
             result = temporalesNum[availNum]
             availNum = availNum+1
+            result_mem = memoria["temp"]["num"]
+            memoria["temp"]["num"] +=1
+
             generate_quad("+", aux1, aux2, result)
+            generate_quad_mem("*", mem, currNodo.val, result_mem)
             pilaO.append(result)
+            pilaT.append("num")
+            pilaMem.append(result_mem)
 
     def np_acc_arr_4(self, tree):
         global currNodo
@@ -647,10 +675,18 @@ class PuntosNeuralgicos(Visitor):
         global availPointer
         print("ultimo arr")
         aux = pilaO.pop()
+        t = pilaT.pop()
+        mem = pilaMem.pop()
         result = temporalesPointer[availPointer]
         availPointer = availPointer+1
+        result_mem = memoria["temp"]["pointer"]
+        memoria["temp"]["pointer"] +=1
+
         generate_quad("+", aux, 0, result)
+        generate_quad_mem("+", mem, 0, result_mem)
         # TO DO cambiar esto al pointer de result
         # esto tiene que pasar antes de asig quad
         pilaO.append(result)
-        pOper.pop()
+        pilaT.append("pointer")
+        pilaMem.append(result_mem)
+        pOper.pop() # quita el fake bottom
