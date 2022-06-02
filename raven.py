@@ -1,46 +1,33 @@
 import birdhouse
+from memoria import memoriaVirtual as mv
 import ast
 
 cuadruplos = []
 ip = 0
-'''
-Var globales
-    num         1000
-    enunciado   3000
-    bool        5000
-
-Var locales
-    num         7000
-    enunciado   9000
-    bool        11000
-
-Ctes
-    num         13000
-    enunciado   15000
-    bool        17000
-
-'''
 
 
 def openQuads():
-    f = open("cuadruplosID.txt", "r")
+    f = open("cuadruplosMem.txt", "r")
     quads = f.readlines()
     for quad in quads:
         cuadruplo = ast.literal_eval(quad)
         cuadruplos.append(cuadruplo)
     f.close()
-    action(cuadruplos[ip])
 
+def actionQuads():
+    for i in cuadruplos:
+        action(i)
 
 def action(quad):
     operator = quad['operator']
     left_op = quad['left']
     right_op = quad['right']
     result = quad['result']
+    print("operator " + operator)
 
     if operator == "GOTO":
         print("GOTO")
-        action(cuadruplos[int(result)])
+        action(cuadruplos[result])
     elif operator == "GOTOF":
         if(left_op):
             action(cuadruplos[++ip])
@@ -60,12 +47,20 @@ def action(quad):
         print("param")
     elif operator == "=":
         print("=")
-    elif operator == "+":
+    elif operator == '+':
         print("+")
+        print(quad)
+        mv[result] = mv[left_op] + mv[right_op]
+    elif operator == "-":
+        print("+")
+        mv[result] = mv[left_op] - mv[right_op]
     elif operator == "/":
         print("/")
+        # to do: division por 0?
+        mv[result] = mv[left_op] / mv[right_op]
     elif operator == "*":
         print("*")
+        mv[result] = mv[left_op] * mv[right_op]
     elif operator == ">":
         print(">")
     elif operator == "<":
@@ -82,22 +77,18 @@ def action(quad):
         print("Verificacion arreglos")
 
 
-availNumG = 1000
-availEnunciadoG = 3000
-availBoolG = 5000
-
-availNumL = 7000
-availEnunciadoL = 9000
-availBoolL = 11000
-
-availNumCTE = 13000
-availEnunciadoCTE = 15000
-availBoolCTE = 17000
-
-
 def maquinaVirtual():
     openQuads()
     try:
         openQuads()
     except:
         print("Quadruple file has not been generated yet")
+    actionQuads()
+
+maquinaVirtual()
+
+cont = 0
+for i in mv:
+    if i != None:
+        print(cont + " " + i)
+    ++cont

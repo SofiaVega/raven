@@ -161,6 +161,7 @@ class VariableTable:
 
     def checkExists(self, key):
         if key in self.tablaVar:
+            print("si existe " + key)
             return True
         else:
             print("aqui")

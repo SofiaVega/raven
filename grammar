@@ -46,7 +46,7 @@ ID: /[a-zA-Z_][a-zA-Z_0-9]*/
 NUM: /\d+/
 
 start: programa
-programa: huv_inicio  SALTO importarloop titulo_asig np_asig_quad SALTO varsloop mecanicaloop capituloloop np_fin
+programa: huv_inicio  SALTO importarloop titulo_asig np_asig_quad SALTO varsloop mecanicaloop np_cap capituloloop np_fin
 np_fin: 
 huv_inicio: HUV ID
 titulo_asig: TITULO IGUAL STRING
@@ -85,6 +85,7 @@ vars_mecanica_loop: vars | vars_mecanica_loop vars |
 
 
 capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO estatuto SALTO mecanica4 FCOR
+np_cap: 
 
 expresion: exp | exp expresion_mayor
 expresion_mayor: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expresion | NOT_EQUAL exp cuadruplo_expresion | IGUAL_A exp cuadruplo_expresion
