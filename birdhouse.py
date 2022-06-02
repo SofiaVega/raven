@@ -62,6 +62,25 @@ def quad_mem(cuadruplos):
         f.write(str(quad)+'\n')
     f.close()
 
+def addVar(var):
+    if pilaFunciones[-1] == "global":
+                tabla_variables.addVar(var)
+    else:
+        tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
+
+def getVar(varID):
+    if pilaFunciones[-1] == "global":
+        var = tabla_variables.tablaVar[varID]
+    else:
+        var = tabla_funciones.procDirectory[pilaFunciones[-1]].tablaVar[varID]
+    return var
+
+def checkExists(val):
+    if pilaFunciones[-1] == "global":
+        tabla_variables.checkExists(val)
+    else:
+        tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
+
 
 def generate_quad(operator, left, right, result):
     global quad_pointer
@@ -121,10 +140,7 @@ class PuntosNeuralgicos(Visitor):
             name = inlineT[0].children[0].value
             inlineT = inlineT[1].children
             var = VariableClass(name, type)
-            if pilaFunciones[-1] == "global":
-                tabla_variables.addVar(var)
-            else:
-                tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
+            addVar(var)
             self.inlineVar(inlineT, type)
         else:
             return
@@ -135,21 +151,19 @@ class PuntosNeuralgicos(Visitor):
         name = tree.children[1].children[0].value
         mem = memoria["global"][type]
         var = VariableClass(name, type, addressVar=mem)
-        if pilaFunciones[-1] == "global":
-            tabla_variables.addVar(var)
-        else:
-            tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
+        addVar(var)
         # Logica para tambien agregar variables que se declaran en la misma linea
         self.inlineVar(tree.children[3].children, type)
 
     # Agrega ID a pila de operandos
     def np_asig(self, tree):
         val = tree.children[0].value
-        if (tabla_variables.checkExists(val)):
+        if (checkExists(val)):
+            var = getVar(val)
             pilaO.append(val)
             #to do: asume que es global, no deberia
-            tipo = tabla_variables.tablaVar[val].typeVar
-            mem = tabla_variables.tablaVar[val].addressVar
+            tipo = var.typeVar
+            mem = var.addressVar
             pilaT.append(tipo)
             pilaMem.append(mem)
             try:
@@ -183,10 +197,10 @@ class PuntosNeuralgicos(Visitor):
         # 0 o -1?
         miid = tree.children[0].value
         pilaO.append(miid)
-        # to do cambiar a global o funcion
-        tipo = tabla_variables.tablaVar[miid].typeVar
+        var = getVar(miid)
+        tipo = var.typeVar
         pilaT.append(tipo)
-        mem = tabla_variables.tablaVar[miid].addressVar
+        mem = getVar.addressVar
         pilaMem.append(mem)
 
     def guardar_num(self, tree):
@@ -266,7 +280,9 @@ class PuntosNeuralgicos(Visitor):
                 left_mem = pilaMem.pop()
                 operator = pOper.pop()
                 if operator == "/":
-                    if right_operand == "0" or tabla_variables.tablaVar[right_operand].value == 0:
+                    var = getVar(right_operand)
+                    # to do: en compilacion no sabemos el valor de las variables, asi que este check es incorrecto
+                    if right_operand == "0" or var.value == 0:
                         print("Error: no se puede dividir entre 0")
                         exit()
                 result_type = cubo_semantico[operator][left_type][right_type]
@@ -544,12 +560,7 @@ class PuntosNeuralgicos(Visitor):
         currNodo = NodoArreglo(dim=1, r=1, ls=ls, var=thisID)
         var.arrNode = currNodo
         headNodo = var.arrNode
-        if pilaFunciones[-1] == "global":
-            tabla_variables.addVar(var)
-            tabla_variables.printTable()
-        else:
-            tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
-            tabla_funciones.printTable()
+        addVar(var)
 
     def np_arr_5(self, tree):
         global currNodo
@@ -614,10 +625,11 @@ class PuntosNeuralgicos(Visitor):
         tipo = pilaT.pop()
         dim = 1
         pilaDim.append([idd, dim])
-        if tabla_variables.tablaVar[idd].isArray == False:
+        var = getVar(idd)
+        if var.isArray == False:
             print(idd + "no es un arreglo")
             exit()
-        currNodo = tabla_variables.tablaVar[idd].arrNode
+        currNodo = var.arrNode
         # fondo falso
         pOper.append("[")
         print("curr nodo")
