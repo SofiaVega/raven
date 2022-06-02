@@ -1,7 +1,4 @@
-import parser
 import birdhouse
-
-
 '''
 Var globales
     num         1000
@@ -19,6 +16,14 @@ Ctes
     bool        17000
 
 '''
+
+
+def openQuads():
+    f = open("cuadruplosID.txt", "r")
+    print(f.read())
+    f.close()
+
+
 availNumG = 1000
 availEnunciadoG = 3000
 availBoolG = 5000
@@ -30,3 +35,7 @@ availBoolL = 11000
 availNumCTE = 13000
 availEnunciadoCTE = 15000
 availBoolCTE = 17000
+
+
+def maquinaVirtual():
+    openQuads()
