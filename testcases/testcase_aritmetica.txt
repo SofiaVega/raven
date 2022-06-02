@@ -1,11 +1,10 @@
 habiaUnaVez Raven
 titulo = "Raven"
-num x = 2, y = 3, w = 0
+num x = 2, y = 3
 bool z
 capitulo uno () {
     titulo = "el principio del fin"
     x = 2 + 3
-    y = 2 * 3
     z = x > y
     si (x > y)
     {

@@ -47,6 +47,9 @@ def action(quad):
         print("param")
     elif operator == "=":
         print("=")
+        # checar si es pointer
+        print(quad)
+        mv[int(result)] = mv[int(left_op)]
     elif operator == '+':
         print("+")
         print(quad)
