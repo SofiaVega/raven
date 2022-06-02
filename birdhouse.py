@@ -46,7 +46,6 @@ for i in range(0, 1000):
 # Funcion para generar cuadruplos
 # Es posible moverla a un objeto para refactorizar
 # TO-DO: generar los mismos cuadruplos pero con memoria virtual
-# TO-DO: meter los cuadruplos a un archivo (txt?) en lugar de solo guardarlos aqui
 def quad_ids(cuadruplos):
     f = open("cuadruplosID.txt", "w")
     for quad in cuadruplos:
