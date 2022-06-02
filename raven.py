@@ -74,6 +74,12 @@ def action(quad):
         print("<=")
     elif operator == ">=":
         print(">=")
+    elif operator == "PRINT":
+        print("PRINT")
+    elif operator == "ENDFunc":
+        print("End function")
+    elif operator == "VER":
+        print("Verificacion arreglos")
 
 
 availNumG = 1000
