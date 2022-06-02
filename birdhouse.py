@@ -6,6 +6,7 @@
 from lark import Visitor
 from cubo_semantico import cubo as cubo_semantico
 from clases import *
+from memoria import *
 
 id_Asignar = ""
 pilaO = []  # Operandos
@@ -13,6 +14,7 @@ pOper = []  # Operadores
 pilaT = []  # Tipos
 pSaltos = []  # Saltos (migaja de pan)
 pilaDim = []
+pilaMem = [] # Dirs de memoria de pilaO
 temporales = []  # Temporales
 temporalesBool = []  # Temporales booleanos
 temporalesString = []  # Temporales de string
@@ -20,6 +22,7 @@ avail = 0  # Contador de temporales (empieza en t0)
 availBool = 0
 quad_pointer = 0  # Contador de cuadruplos
 cuadruplos = []  # Lista de cuadruplos
+cuadruplosMem = []
 pilaFunciones = []  # Pila de funciones: pilaFunciones[-1] es la funcion actual
 pilaFunciones.append("global")
 # pila de llamadas a funciones
@@ -58,6 +61,11 @@ def generate_quad(operator, left, right, result):
     #print(quad_pointer + 1, ' ', cuadruplo)
     print(quad_pointer + 1, ' ', operator, left, right, result)
     quad_pointer = quad_pointer + 1
+
+def generate_quad_mem(operator, left, right, result):
+    cuadruplo = {"operator": operator, "left": left,
+                 "right": right, "result": result}
+    cuadruplosMem.append(cuadruplo)
 
 # Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
 # Por lo general, para gotos
@@ -124,9 +132,12 @@ class PuntosNeuralgicos(Visitor):
         operator = pOper.pop()
         left_operand = pilaO.pop()
         right_operand = None
+        left_mem = pilaMem.pop()
         result = pilaO.pop()
+        res_mem = pilaMem.pop()
         generate_quad(operator, left_operand,
                       right_operand, result)
+        generate_quad_mem(operator, left_mem, None, res_mem)
 
         #generate_quad("=", "value", None, tree.children[0].value)
     ''' 
