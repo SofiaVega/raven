@@ -219,7 +219,7 @@ class PuntosNeuralgicos(Visitor):
                 result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global availNum
-                    result = temporalesNum[avail]
+                    result = temporalesNum[availNum]
                     availNum = availNum+1
                     generate_quad(operator, left_operand,
                                   right_operand, result)
