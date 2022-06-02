@@ -61,3 +61,5 @@ memoria = {
         "pointer": 25000
     }
 }
+
+memoriaVirtual = [None] * 25000

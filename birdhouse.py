@@ -79,11 +79,15 @@ def getVar(varID):
     return var
 
 # Revisa si el id corresponde a una variable del contexto actual
-def checkExists(val):
+def checkExists_contexto(val):
+    print(pilaFunciones[-1])
+    tabla_variables.printTable()
     if pilaFunciones[-1] == "global":
         tabla_variables.checkExists(val)
+        return True
     else:
         tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
+        return False
 
 #Genera cuadruplos con los ids
 def generate_quad(operator, left, right, result):
@@ -108,6 +112,8 @@ def fill_quad(end, cont):
     cuadruplos[end]["result"] = cont
 
 def fill_quad_mem(end, cont):
+    print("fill")
+    print(cuadruplosMem[end])
     cuadruplosMem[end]["result"] = cont
 
 
@@ -121,7 +127,7 @@ class PuntosNeuralgicos(Visitor):
         generate_quad("GOTO", tree.children[1].value, None, "blank")
         # to do: poner memoria en vez de valor
         generate_quad_mem("GOTO", tree.children[1].value, None, "blank")
-        pSaltos.append(quad_pointer)
+        pSaltos.append(quad_pointer-1)
 
     def titulo_asig(self, tree):
         pilaO.append(tree.children[0].value)
@@ -135,6 +141,13 @@ class PuntosNeuralgicos(Visitor):
         mem = memoria["cte"]["enunciado"]
         memoria["cte"]["enunciado"] += 1
         pilaMem.append(mem)
+
+    def np_cap(self, tree):
+        print("AQUI")
+        end = pSaltos.pop()
+        print("capitulo " + str(end) + " " + str(quad_pointer))
+        fill_quad(end, quad_pointer)
+        fill_quad_mem(end, quad_pointer)
 
     # Funcion ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
     def inlineVar(self, inlineT, type):
@@ -160,7 +173,7 @@ class PuntosNeuralgicos(Visitor):
     # Agrega ID a pila de operandos
     def np_asig(self, tree):
         val = tree.children[0].value
-        if (checkExists(val)):
+        if (checkExists_contexto(val) == True):
             var = getVar(val)
             pilaO.append(val)
             #to do: asume que es global, no deberia
@@ -173,6 +186,7 @@ class PuntosNeuralgicos(Visitor):
             except:
                 pOper.append(tree.children[2].value)
         else:
+            print("no existe " + val)
             exit()
 
     def np_asig_quad(self, tree):
@@ -202,7 +216,7 @@ class PuntosNeuralgicos(Visitor):
         var = getVar(miid)
         tipo = var.typeVar
         pilaT.append(tipo)
-        mem = getVar.addressVar
+        mem = var.addressVar
         pilaMem.append(mem)
 
     def guardar_num(self, tree):

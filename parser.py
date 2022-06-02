@@ -1,11 +1,11 @@
 from lark import Lark
 from lark import Visitor
 from birdhouse import *
-from raven import *
+#from raven import *
 
 
 parser = Lark(open("grammar", 'r').read())
-goodInput = open("testcases/testcase_funciones.txt", 'r').read()
+goodInput = open("testcases/testcase_aritmetica.txt", 'r').read()
 badInput = open("testcases/testcase_good.txt", 'r').read()
 
 # print("------ Good Input --------")
@@ -23,4 +23,4 @@ print("pila o")
 print(pilaO)
 print("pila oper")
 print(pOper)
-maquinaVirtual()
+#maquinaVirtual()
