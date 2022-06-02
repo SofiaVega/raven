@@ -51,3 +51,12 @@ Ya genera cuadruplos de condicionales y ciclos
 ## Lunes 30 de Mayo
 
 - Puntos neuralgicos de declaracion de arreglos
+
+## Martes 31 de Mayo
+
+- Comentar birdhouse.py para mejorar legibilidad
+
+## Miercoles 1 de Junio
+
+- Puntos neuralgicos de acceso a arreglos
+- Cuadruplos se generan con direcciones virtuales (Excepto funciones y arreglos)
