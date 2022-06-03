@@ -154,7 +154,9 @@ class PuntosNeuralgicos(Visitor):
         if(inlineT != []):
             name = inlineT[0].children[0].value
             inlineT = inlineT[1].children
-            var = VariableClass(name, type)
+            mem = memoria["global"][type]
+            memoria["global"][type] += 1
+            var = VariableClass(name, type, addressVar = mem)
             addVar(var)
             self.inlineVar(inlineT, type)
         else:
@@ -165,6 +167,7 @@ class PuntosNeuralgicos(Visitor):
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
         mem = memoria["global"][type]
+        memoria["global"][type] += 1
         var = VariableClass(name, type, addressVar=mem)
         addVar(var)
         # Logica para tambien agregar variables que se declaran en la misma linea
@@ -173,12 +176,15 @@ class PuntosNeuralgicos(Visitor):
     # Agrega ID a pila de operandos
     def np_asig(self, tree):
         val = tree.children[0].value
+        print(tree)
         if (checkExists_contexto(val) == True):
             var = getVar(val)
+            
             pilaO.append(val)
-            #to do: asume que es global, no deberia
             tipo = var.typeVar
             mem = var.addressVar
+            print(val)
+            print("mem "+str(mem))
             pilaT.append(tipo)
             pilaMem.append(mem)
             try:
@@ -196,6 +202,7 @@ class PuntosNeuralgicos(Visitor):
         right_operand = None
         left_mem = pilaMem.pop()
         result = pilaO.pop()
+        print(pilaMem)
         res_mem = pilaMem.pop()
         generate_quad(operator, left_operand,
                       right_operand, result)
@@ -208,7 +215,6 @@ class PuntosNeuralgicos(Visitor):
 
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        print(tree.children[-1])
         # verificarlo con el len de children -1
         # 0 o -1?
         miid = tree.children[0].value
@@ -321,13 +327,10 @@ class PuntosNeuralgicos(Visitor):
 
     def expresion_mayor(self, tree):
         # poper.push <, >, etc
-        #print("hijos de g")
-        # print(tree.children)
         signo = tree.children[0].value
         pOper.append(signo)
 
     def cuadruplo_expresion(self, tree):
-        #print("llegamos a cuadruplo expresion")
         if pOper:
             if (pOper[-1] == ">") or (pOper[-1] == "<"):
                 right_operand = pilaO.pop()
@@ -441,8 +444,6 @@ class PuntosNeuralgicos(Visitor):
 
     def np_funciones_1(self, tree):
         # Insert Function name into the DirFunc table (and its type, if any), verify semantics.
-        print("children mecanica")
-        print(tree.children[0].children[0])
         tipo_funcion = tree.children[0].children[0]
         nombre_funcion = tree.children[1]
         func = FunctionClass(nombre_funcion, tipo_funcion)
@@ -487,9 +488,7 @@ class PuntosNeuralgicos(Visitor):
 
     def np_llamada_funcion_1(self, tree):
         # verify that the function exists
-        print("llamada funcion")
         if tabla_funciones.findFunction(tree.children[0]):
-            print("Si existe la funcion")
             pilaLlamadas.append(tree.children[0])
         else:
             print("Error, esa funcion no existe")
@@ -506,7 +505,6 @@ class PuntosNeuralgicos(Visitor):
         # Argument= PilaO.Pop() ArgumentType= PTypes.Pop().
         # Verify ArgumentType against current Parameter (#k) in ParameterTable.
         # Generate action PARAMETER, Argument, Argument#k
-        print("verify argument type")
         argument = pilaO[-1]
         argumentType = pilaT[-1]
         if argumentType == tabla_funciones.procDirectory[pilaLlamadas[-1]].paramTipos[pilaK[-1]]:
@@ -547,9 +545,6 @@ class PuntosNeuralgicos(Visitor):
         global headNodo
         global r
         global tipo_arr_aux
-        print("arr")
-        print(tree.children)
-        print(tree.children[1])
         tipo = tipo_arr_aux
         thisID = tree.children[0]
         ls = tree.children[1]

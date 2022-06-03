@@ -47,6 +47,10 @@ def action(quad):
         print("param")
     elif operator == "=":
         print("=")
+        # checar si es pointer
+        print(quad)
+        mv[int(result)] = mv[int(left_op)]
+        print(mv[int(left_op)])
     elif operator == '+':
         print("+")
         print(quad)
@@ -63,14 +67,19 @@ def action(quad):
         mv[result] = mv[left_op] * mv[right_op]
     elif operator == ">":
         print(">")
+        mv[result] = mv[left_op] > mv[right_op]
     elif operator == "<":
         print("<")
+        mv[result] = mv[left_op] < mv[right_op]
     elif operator == "<=":
         print("<=")
+        mv[result] = mv[left_op] <= mv[right_op]
     elif operator == ">=":
         print(">=")
+        mv[result] = mv[left_op] >= mv[right_op]
     elif operator == "PRINT":
         print("PRINT")
+        print(mv[result])
     elif operator == "ENDFunc":
         print("End function")
     elif operator == "VER":
