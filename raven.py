@@ -14,6 +14,13 @@ def openQuads():
         cuadruplos.append(cuadruplo)
     f.close()
 
+def readCtes():
+    f = open("tablaCtes.txt", "r")
+    ctes = f.readlines()
+    for c in ctes:
+        a, b = c.split(maxsplit=1)
+        mv[int(a)] = b
+
 def actionQuads():
     for i in cuadruplos:
         action(i)
@@ -85,8 +92,17 @@ def action(quad):
     elif operator == "VER":
         print("Verificacion arreglos")
 
+def printMV():
+    cont = 0
+    print("imprimiendo mv")
+    for i in mv:
+        if i != None:
+            print(str(cont) + " " + str(i))
+        cont += 1
 
 def maquinaVirtual():
+    readCtes()
+    printMV()
     openQuads()
     try:
         openQuads()
@@ -96,8 +112,4 @@ def maquinaVirtual():
 
 maquinaVirtual()
 
-cont = 0
-for i in mv:
-    if i != None:
-        print(cont + " " + i)
-    ++cont
+

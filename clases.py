@@ -34,6 +34,29 @@ class NodoArreglo():
     def imprimir(self):
         print("li " + str(self.li) + " ls " + str(self.ls) + " dim " + str(self.dim) + " ultimoNodo " + str(self.ultimoNodo))
 
+class TablaConstantes():
+    '''
+    Atributos:
+    - dirs: arreglo de memoria virtual
+    - vals
+    '''
+
+    def __init__(self):
+        self.mv = []
+        print("tabla constantes")
+
+    def addCte(self, val, dir):
+        t = [dir, val]
+        self.mv.append(t)
+
+    def toTxt(self):
+        f = open("tablaCtes.txt", "w")
+        print(self.mv)
+        for m in self.mv:
+            f.write(str(m[0])+' '+str(m[1]) + '\n')
+        f.close()
+
+
 class VariableClass():
     '''
     Constructor de Variable
