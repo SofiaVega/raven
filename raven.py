@@ -30,7 +30,6 @@ def action(quad):
     left_op = quad['left']
     right_op = quad['right']
     result = quad['result']
-    print("operator " + operator)
 
     if operator == "GOTO":
         print("GOTO")
@@ -55,12 +54,9 @@ def action(quad):
     elif operator == "=":
         print("=")
         # checar si es pointer
-        print(quad)
         mv[int(result)] = mv[int(left_op)]
-        print(mv[int(left_op)])
     elif operator == '+':
         print("+")
-        print(quad)
         mv[result] = mv[left_op] + mv[right_op]
     elif operator == "-":
         print("+")
@@ -71,7 +67,8 @@ def action(quad):
         mv[result] = mv[left_op] / mv[right_op]
     elif operator == "*":
         print("*")
-        mv[result] = mv[left_op] * mv[right_op]
+        #to do: puede ser int o float
+        mv[result] = int(mv[left_op]) * int(mv[right_op])
     elif operator == ">":
         print(">")
         mv[result] = mv[left_op] > mv[right_op]
@@ -91,6 +88,10 @@ def action(quad):
         print("End function")
     elif operator == "VER":
         print("Verificacion arreglos")
+        # ver, x, li, ls
+        if (left_op <  right_op) or (left_op >= result):
+            print("Fuera de limites de arreglo " + left_op)
+            exit()
 
 def printMV():
     cont = 0
@@ -109,6 +110,7 @@ def maquinaVirtual():
     except:
         print("Quadruple file has not been generated yet")
     actionQuads()
+    printMV()
 
 maquinaVirtual()
 

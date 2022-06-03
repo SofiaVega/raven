@@ -11,6 +11,6 @@ capitulo uno () {
         x = 2
     }
     -> "Habia una vez un cuervo"
-    -> 2 * 3
+    -> 2 * 4
 
 }

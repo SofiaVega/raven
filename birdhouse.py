@@ -236,6 +236,7 @@ class PuntosNeuralgicos(Visitor):
         pilaO.append(miid)
         pilaT.append("num")
         mem = memoria["cte"]["num"]
+        memoria["cte"]["num"] += 1
         tabla_ctes.addCte(miid, mem)
         pilaMem.append(mem)
 
@@ -245,6 +246,7 @@ class PuntosNeuralgicos(Visitor):
         pilaO.append(miid)
         pilaT.append("enunciado")
         mem = memoria["cte"]["enunciado"]
+        memoria["cte"]["num"] += 1
         tabla_ctes.addCte(miid, mem)
         pilaMem.append(mem)
 
@@ -254,6 +256,7 @@ class PuntosNeuralgicos(Visitor):
         pilaO.append(miid)
         pilaT.append("bool")
         mem = memoria["cte"]["bool"]
+        memoria["cte"]["bool"] += 1
         tabla_ctes.addCte(miid, mem)
         pilaMem.append(mem)
 
@@ -373,12 +376,13 @@ class PuntosNeuralgicos(Visitor):
         mem_str = memoria["cte"]["enunciado"]
         memoria["cte"]["enunciado"] += 1
         pilaMem.append(mem_str)
-        if pilaO:
-            if pilaT.pop() == "enunciado":
-                result = pilaO.pop()
-                pilaT.pop()
-                generate_quad("PRINT", None, None, result)
-                generate_quad_mem("PRINT", None, None, mem_str)
+        #aqui habia un if pilaO pero creo que no es necesario
+        if pilaT.pop() == "enunciado":
+            result = pilaO.pop()
+            pilaT.pop()
+            generate_quad("PRINT", None, None, result)
+            generate_quad_mem("PRINT", None, None, mem_str)
+            tabla_ctes.addCte(result, mem_str)
 
     def np_print_expresion(self, tree):
         if pilaO:
