@@ -50,6 +50,7 @@ def action(quad):
         # checar si es pointer
         print(quad)
         mv[int(result)] = mv[int(left_op)]
+        print(mv[int(left_op)])
     elif operator == '+':
         print("+")
         print(quad)
