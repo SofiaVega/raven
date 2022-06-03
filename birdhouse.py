@@ -119,6 +119,7 @@ def fill_quad_mem(end, cont):
 
 tabla_variables = VariableTable()  # Tabla de variables
 tabla_funciones = ProcDirectory()  # Tabla de funciones
+tabla_ctes = TablaConstantes()
 
 
 class PuntosNeuralgicos(Visitor):
@@ -130,15 +131,19 @@ class PuntosNeuralgicos(Visitor):
         pSaltos.append(quad_pointer-1)
 
     def titulo_asig(self, tree):
-        pilaO.append(tree.children[0].value)
+        val = tree.children[0].value
+        pilaO.append(val)
         pilaT.append("enunciado")
         mem = memoria["cte"]["enunciado"]
+        tabla_ctes.addCte(val, mem)
         memoria["cte"]["enunciado"] += 1
         pilaMem.append(mem)
         pOper.append(tree.children[1].value)
-        pilaO.append(tree.children[2].value)
+        val = tree.children[2].value
+        pilaO.append(val)
         pilaT.append("enunciado")
         mem = memoria["cte"]["enunciado"]
+        tabla_ctes.addCte(val, mem)
         memoria["cte"]["enunciado"] += 1
         pilaMem.append(mem)
 
@@ -231,6 +236,7 @@ class PuntosNeuralgicos(Visitor):
         pilaO.append(miid)
         pilaT.append("num")
         mem = memoria["cte"]["num"]
+        tabla_ctes.addCte(miid, mem)
         pilaMem.append(mem)
 
     def guardar_string(self, tree):
@@ -239,6 +245,7 @@ class PuntosNeuralgicos(Visitor):
         pilaO.append(miid)
         pilaT.append("enunciado")
         mem = memoria["cte"]["enunciado"]
+        tabla_ctes.addCte(miid, mem)
         pilaMem.append(mem)
 
     def guardar_bool(self, tree):
@@ -247,6 +254,7 @@ class PuntosNeuralgicos(Visitor):
         pilaO.append(miid)
         pilaT.append("bool")
         mem = memoria["cte"]["bool"]
+        tabla_ctes.addCte(miid, mem)
         pilaMem.append(mem)
 
     def termino_mult(self, tree):
@@ -533,6 +541,7 @@ class PuntosNeuralgicos(Visitor):
         tabla_variables.printTable()
         quad_ids(cuadruplos)
         quad_mem(cuadruplosMem)
+        tabla_ctes.toTxt()
 
     # Arreglos
     def arreglo(self, tree):
