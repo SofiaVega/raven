@@ -95,6 +95,7 @@ def ejecutar():
             ip += 1
         elif operator == "PARAM":
             print("param")
+            # Indicates that the argument sent must be copied into parámater#-- in Run-Time
             ip += 1
         elif operator == "=":
             print("=")

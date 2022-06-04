@@ -464,6 +464,14 @@ class PuntosNeuralgicos(Visitor):
         tabla_funciones.addFunc(func)
         pilaFunciones.append(nombre_funcion)
         tabla_funciones.printTable()
+        # parche guadalupano maravilloso
+        if tipo_funcion != "vacia":
+            #asignar variable global
+            mem = memoria["global"][tipo_funcion]
+            memoria["global"][tipo_funcion] += 1
+            var = VariableClass(nameVar = nombre_funcion, typeVar = tipo_funcion, addressVar=mem)
+            tabla_variables.addVar(var)
+        
         # to do: verificar semanticas
 
     def mecanica2(self, tree):
@@ -521,8 +529,11 @@ class PuntosNeuralgicos(Visitor):
         # Generate action PARAMETER, Argument, Argument#k
         argument = pilaO[-1]
         argumentType = pilaT[-1]
+        arg_mem = pilaMem[-1]
         if argumentType == tabla_funciones.procDirectory[pilaLlamadas[-1]].paramTipos[pilaK[-1]]:
             print("parametro tipo compatible")
+            generate_quad("PARAM", argument, None, pilaK[-1])
+            generate_quad_mem("PARAM", arg_mem, None, pilaK[-1])
         else:
             print("El parametro no es del tipo correcto")
             exit()
@@ -538,10 +549,22 @@ class PuntosNeuralgicos(Visitor):
             exit()
 
     def np_llamada_funcion_6(self, tree):
+        global availNum
         # to do: falta initial-address
         qi = tabla_funciones.procDirectory[pilaLlamadas[-1]].quad_inicial
         generate_quad("GOSUB", pilaLlamadas[-1], None, None)
         generate_quad_mem("GOSUB", qi, None, None)
+        # to do: parche guadalupano maravilloso
+        func = pilaLlamadas[-1]
+        tipo_func = tabla_funciones.procDirectory[func].typeFunc
+        if tipo_func != "vacia":
+            result = temporalesNum[availNum]
+            availNum = availNum+1
+            result_mem = memoria["temp"]["num"]
+            memoria["temp"]["num"] +=1
+            mem_llamada = tabla_variables.tablaVar[pilaLlamadas[-1]].addressVar
+            generate_quad("=", pilaLlamadas[-1], None, result)
+            generate_quad_mem("=", mem_llamada, None, result_mem)
 
     def np_fin(self, tree):
         generate_quad("ENDProgram", None, None, None)
