@@ -458,8 +458,8 @@ class PuntosNeuralgicos(Visitor):
 
     def np_funciones_1(self, tree):
         # Insert Function name into the DirFunc table (and its type, if any), verify semantics.
-        tipo_funcion = tree.children[0].children[0]
-        nombre_funcion = tree.children[1]
+        tipo_funcion = tree.children[0].children[0].value
+        nombre_funcion = tree.children[1].value
         func = FunctionClass(nombre_funcion, tipo_funcion)
         tabla_funciones.addFunc(func)
         pilaFunciones.append(nombre_funcion)
@@ -478,8 +478,8 @@ class PuntosNeuralgicos(Visitor):
         # 2 - Insert every parameter into the current (local) VarTable.
         if tree.children:
             # esto solo funciona con un parametro
-            tipo = tree.children[0].children[0]
-            id_param = tree.children[1]
+            tipo = tree.children[0].children[0].value
+            id_param = tree.children[1].value
             tabla_funciones.procDirectory[pilaFunciones[-1]
                                           ].addParam(tipo, id_param)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
@@ -488,12 +488,27 @@ class PuntosNeuralgicos(Visitor):
     def mecanica3(self, tree):
         if tree.children:
             # otro parametro
-            tipo = tree.children[0].children[0]
-            id_param = tree.children[1]
+            tipo = tree.children[0].children[0].value
+            id_param = tree.children[1].value
             tabla_funciones.procDirectory[pilaFunciones[-1]
                                           ].addParam(tipo, id_param)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
             tabla_funciones.printTable()
+    
+    def np_mecanica_5(self, tree):
+        print("mecanica5")
+        o = pilaO.pop()
+        t = pilaT.pop()
+        mem = pilaMem.pop()
+        # to do: como conecta esto con el parche guadalupano??
+        # meter funcion actual
+        generate_quad("RETURN", pilaFunciones[-1], None, o)
+        tabla_variables.printTable()
+        mem_func = tabla_variables.tablaVar[pilaFunciones[-1]].addressVar
+        # direccion de la variable global
+        generate_quad_mem("RETURN", mem_func, None, mem)
+        # to do: el return en ejecucion asigna mv[m] a la variable global llamada como la funcion actual
+        # hacer pop de llamada?
 
     def cambiar_quad_pointer(self, tree):
         tabla_funciones.procDirectory[pilaFunciones[-1]
@@ -542,7 +557,9 @@ class PuntosNeuralgicos(Visitor):
         pilaK[-1] = pilaK[-1] + 1
 
     def np_llamada_funcion_5(self, tree):
-        if pilaK[-1] == (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam - 1):
+        print(pilaK[-1])
+        # antes era numparam - 1
+        if pilaK[-1] == (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam):
             print("right amount of params")
         else:
             print("Faltan parametros")
@@ -587,8 +604,8 @@ class PuntosNeuralgicos(Visitor):
         global r
         global tipo_arr_aux
         tipo = tipo_arr_aux
-        thisID = tree.children[0]
-        ls = tree.children[1]
+        thisID = tree.children[0].value
+        ls = tree.children[1].value
         var = VariableClass(thisID, tipo)
         # np 2
         var.isArray = True

@@ -5,7 +5,11 @@ mecanica vacia volar (num x) {
     -> "hola estoy volando"
     //-> x + z
 }
+mecanica num uno(){
+    regresa 1
+}
 capitulo uno () {
     titulo = "el principio del fin"
     volar(1)
+    -> uno()
 }

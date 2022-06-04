@@ -159,6 +159,16 @@ def ejecutar():
             print("despues de foto")
             printMV()
             ip = lineaQuede.pop()
+        elif operator == "RETURN":
+            print("Return")
+            # parche guadalupano maravilloso
+            # return, dir var global func, none, val return
+            mv[left_op] = mv[result]
+            restaurarFoto()
+            print("despues de foto")
+            printMV()
+            ip = lineaQuede.pop()
+
         elif operator == "VER":
             print("Verificacion arreglos")
             # ver, x, li, ls

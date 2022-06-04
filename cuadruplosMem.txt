@@ -1,9 +1,16 @@
-{'operator': 'GOTO', 'left': 'Raven', 'right': None, 'result': 5}
+{'operator': 'GOTO', 'left': 'Raven', 'right': None, 'result': 7}
 {'operator': '=', 'left': 15001, 'right': None, 'result': 15000}
 {'operator': '=', 'left': 13000, 'right': None, 'result': 1000}
 {'operator': 'PRINT', 'left': None, 'right': None, 'result': 15002}
 {'operator': 'ENDFunc', 'left': None, 'right': None, 'result': None}
+{'operator': 'RETURN', 'left': 1001, 'right': None, 'result': 13001}
+{'operator': 'ENDFunc', 'left': None, 'right': None, 'result': None}
 {'operator': '=', 'left': 15004, 'right': None, 'result': 15003}
 {'operator': 'ERA', 'left': 'volar', 'right': None, 'result': None}
+{'operator': 'PARAM', 'left': 13002, 'right': None, 'result': 0}
 {'operator': 'GOSUB', 'left': 3, 'right': None, 'result': None}
+{'operator': 'ERA', 'left': 'uno', 'right': None, 'result': None}
+{'operator': 'GOSUB', 'left': 5, 'right': None, 'result': None}
+{'operator': '=', 'left': 1001, 'right': None, 'result': 1900}
+{'operator': 'PRINT', 'left': None, 'right': None, 'result': 13002}
 {'operator': 'ENDProgram', 'left': None, 'right': None, 'result': None}

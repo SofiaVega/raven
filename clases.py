@@ -96,6 +96,7 @@ class FunctionClass:
     - paramsFunc : [] -> arreglo de parametros de tipo variable, o constante
     - scopeFunc : string -> scope de la funcion
     - addressFunc : int -> numero de cuadruplo donde inicia la funcion
+    - quad_inicial: numero de cuadruplo donde inicia la funcion
     '''
 
     def __init__(self, nameFunc, typeFunc, paramTipos=[], scopeFunc="", addressFunc="", numParam=0, numVar=0, quad_inicial=0):
@@ -156,6 +157,7 @@ class ProcDirectory:
             return True
         else:
             return False
+
 
 
 class VariableTable:
