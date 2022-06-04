@@ -1,7 +1,7 @@
 from lark import Lark
 from lark import Visitor
 from birdhouse import *
-#from raven import *
+from raven import *
 
 
 parser = Lark(open("grammar", 'r').read())
@@ -23,4 +23,4 @@ print("pila o")
 print(pilaO)
 print("pila oper")
 print(pOper)
-#maquinaVirtual()
+maquinaVirtual()
