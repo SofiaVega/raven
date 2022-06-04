@@ -75,7 +75,7 @@ def getVar(varID):
     if pilaFunciones[-1] == "global":
         var = tabla_variables.tablaVar[varID]
     else:
-        var = tabla_funciones.procDirectory[pilaFunciones[-1]].tablaVar[varID]
+        var = tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.tablaVar[varID]
     return var
 
 # Revisa si el id corresponde a una variable del contexto actual
@@ -83,11 +83,9 @@ def checkExists_contexto(val):
     print(pilaFunciones[-1])
     tabla_variables.printTable()
     if pilaFunciones[-1] == "global":
-        tabla_variables.checkExists(val)
-        return True
+        return tabla_variables.checkExists(val)
     else:
-        tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
-        return False
+        return tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
 
 #Genera cuadruplos con los ids
 def generate_quad(operator, left, right, result):
@@ -183,7 +181,10 @@ class PuntosNeuralgicos(Visitor):
     def np_asig(self, tree):
         val = tree.children[0].value
         print(tree)
+        print(pilaFunciones[-1])
+        print(checkExists_contexto(val))
         if (checkExists_contexto(val) == True):
+            print("entra porque si existe")
             var = getVar(val)
             
             pilaO.append(val)
@@ -502,7 +503,7 @@ class PuntosNeuralgicos(Visitor):
     def np_llamada_funcion_1(self, tree):
         # verify that the function exists
         if tabla_funciones.findFunction(tree.children[0]):
-            pilaLlamadas.append(tree.children[0])
+            pilaLlamadas.append(tree.children[0].value)
         else:
             print("Error, esa funcion no existe")
             exit()
@@ -538,8 +539,9 @@ class PuntosNeuralgicos(Visitor):
 
     def np_llamada_funcion_6(self, tree):
         # to do: falta initial-address
+        qi = tabla_funciones.procDirectory[pilaLlamadas[-1]].quad_inicial
         generate_quad("GOSUB", pilaLlamadas[-1], None, None)
-        generate_quad_mem("GOSUB", pilaLlamadas[-1], None, None)
+        generate_quad_mem("GOSUB", qi, None, None)
 
     def np_fin(self, tree):
         generate_quad("ENDProgram", None, None, None)

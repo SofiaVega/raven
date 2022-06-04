@@ -32,6 +32,7 @@ def openQuads():
     f = open("cuadruplosMem.txt", "r")
     quads = f.readlines()
     for quad in quads:
+        print(quad)
         cuadruplo = ast.literal_eval(quad)
         cuadruplos.append(cuadruplo)
     f.close()
@@ -64,8 +65,8 @@ def ejecutar():
         if operator == "GOTO":
             print("GOTO")
             # to do: 
-            #ip = int(result)
-            ip += 1
+            ip = int(result)
+            #ip += 1
         elif operator == "GOTOF":
             if(left_op):
                 ip += 1
@@ -78,8 +79,11 @@ def ejecutar():
                 ip = int(result)
         elif operator == "GOSUB":
             lineaQuede.append(ip + 1)
+            print("antes de foto")
+            printMV()
             tomarFoto()
-            ip = int[left_op]
+            print(left_op)
+            ip = int(left_op)
             # to do: como regresamos a donde nos quedamos
             #pila ?
             #action(cuadruplos[int(left_op)])
@@ -151,6 +155,8 @@ def ejecutar():
         elif operator == "ENDFunc":
             print("End function")
             restaurarFoto()
+            print("despues de foto")
+            printMV()
             ip = lineaQuede.pop()
         elif operator == "VER":
             print("Verificacion arreglos")
@@ -169,6 +175,7 @@ def printMV():
         cont += 1
 
 def maquinaVirtual():
+    print("-------- RAVEN TIME -------")
     readCtes()
     varsToMV()
     printMV()
