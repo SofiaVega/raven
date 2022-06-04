@@ -1,10 +1,19 @@
-import birdhouse
+from birdhouse import *
 from memoria import memoriaVirtual as mv
 import ast
 
+#pasar tablas de variables constantes y funciones
+
 cuadruplos = []
 ip = 0
+pilaCalls = []
 
+def varsToMV():
+    print("tabla variables")
+    
+    for key in tabla_variables.tablaVar:
+        print("hola")
+        mv[tabla_variables.tablaVar[key].addressVar] = tabla_variables.tablaVar[key].valueVar
 
 def openQuads():
     f = open("cuadruplosMem.txt", "r")
@@ -18,80 +27,122 @@ def readCtes():
     f = open("tablaCtes.txt", "r")
     ctes = f.readlines()
     for c in ctes:
+        print(c)
         a, b = c.split(maxsplit=1)
-        mv[int(a)] = b
+        s = b.rstrip()
+        mv[int(a)] = s
 
-def actionQuads():
-    for i in cuadruplos:
-        action(i)
 
-def action(quad):
-    operator = quad['operator']
-    left_op = quad['left']
-    right_op = quad['right']
-    result = quad['result']
 
-    if operator == "GOTO":
-        print("GOTO")
-        action(cuadruplos[result])
-    elif operator == "GOTOF":
-        if(left_op):
-            action(cuadruplos[++ip])
-        else:
-            action(cuadruplos[int(result)])
-    elif operator == "GOTOV":
-        if(left_op):
-            action(cuadruplos[++ip])
-        else:
-            action(cuadruplos[int(result)])
-    elif operator == "GOSUB":
-        action(cuadruplos[int(left_op)])
-    elif operator == "ERA":
-        # Generar los espacios de memoria
-        action()
-    elif operator == "PARAM":
-        print("param")
-    elif operator == "=":
-        print("=")
-        # checar si es pointer
-        mv[int(result)] = mv[int(left_op)]
-    elif operator == '+':
-        print("+")
-        mv[result] = mv[left_op] + mv[right_op]
-    elif operator == "-":
-        print("+")
-        mv[result] = mv[left_op] - mv[right_op]
-    elif operator == "/":
-        print("/")
-        # to do: division por 0?
-        mv[result] = mv[left_op] / mv[right_op]
-    elif operator == "*":
-        print("*")
-        #to do: puede ser int o float
-        mv[result] = int(mv[left_op]) * int(mv[right_op])
-    elif operator == ">":
-        print(">")
-        mv[result] = mv[left_op] > mv[right_op]
-    elif operator == "<":
-        print("<")
-        mv[result] = mv[left_op] < mv[right_op]
-    elif operator == "<=":
-        print("<=")
-        mv[result] = mv[left_op] <= mv[right_op]
-    elif operator == ">=":
-        print(">=")
-        mv[result] = mv[left_op] >= mv[right_op]
-    elif operator == "PRINT":
-        print("PRINT")
-        print(mv[result])
-    elif operator == "ENDFunc":
-        print("End function")
-    elif operator == "VER":
-        print("Verificacion arreglos")
-        # ver, x, li, ls
-        if (left_op <  right_op) or (left_op >= result):
-            print("Fuera de limites de arreglo " + left_op)
-            exit()
+def ejecutar():
+    global ip
+    operator = cuadruplos[ip]['operator']
+    left_op = cuadruplos[ip]['left']
+    right_op = cuadruplos[ip]['right']
+    result = cuadruplos[ip]['result']
+    while operator != "ENDProgram":
+        print(ip)
+
+        operator = cuadruplos[ip]['operator']
+        left_op = cuadruplos[ip]['left']
+        right_op = cuadruplos[ip]['right']
+        result = cuadruplos[ip]['result']
+
+        if operator == "GOTO":
+            print("GOTO")
+            # to do: 
+            #ip = int(result)
+            ip += 1
+        elif operator == "GOTOF":
+            if(left_op):
+                ip += 1
+            else:
+                ip = int(result)
+        elif operator == "GOTOV":
+            if(left_op):
+                ip += 1
+            else:
+                ip = int(result)
+        elif operator == "GOSUB":
+            ip = int[left_op]
+            # to do: como regresamos a donde nos quedamos
+            #pila ?
+            #action(cuadruplos[int(left_op)])
+            #action(cuadruplos[++ip])
+        elif operator == "ERA":
+            # Generar los espacios de memoria
+            #action()
+            #to do: reservar espacio de memoria
+            ip += 1
+        elif operator == "PARAM":
+            print("param")
+            ip += 1
+        elif operator == "=":
+            print("=")
+            print(cuadruplos[ip])
+            # checar si es pointer
+            #printMV()
+            mv[int(result)] = mv[int(left_op)]
+            ip += 1
+        elif operator == '+':
+            print("+")
+            print(cuadruplos[ip])
+            #checar tipo con direcciones de memoria
+            mv[result] = int(mv[left_op]) + int(mv[right_op])
+            #printMV()
+            ip += 1
+        elif operator == "-":
+            print("-")
+            print(cuadruplos[ip])
+            mv[result] = mv[left_op] - mv[right_op]
+            #printMV()
+            ip += 1
+        elif operator == "/":
+            print("/")
+            # to do: division por 0?
+            mv[result] = mv[left_op] / mv[right_op]
+            ip += 1
+        elif operator == "*":
+            print("*")
+            #to do: puede ser int o float
+            print(cuadruplos[ip])
+            #printMV()
+            mv[result] = int(mv[left_op]) * int(mv[right_op])
+            ip += 1
+        elif operator == ">":
+            print(">")
+            print(cuadruplos[ip])
+            print(mv[left_op])
+            print(mv[right_op])
+            #printMV()
+            mv[result] = int(mv[left_op]) > int(mv[right_op])
+            ip += 1
+        elif operator == "<":
+            print("<")
+            mv[result] = mv[left_op] < mv[right_op]
+            ip += 1
+        elif operator == "<=":
+            print("<=")
+            mv[result] = mv[left_op] <= mv[right_op]
+            ip += 1
+        elif operator == ">=":
+            print(">=")
+            mv[result] = mv[left_op] >= mv[right_op]
+            ip += 1
+        elif operator == "PRINT":
+            print("PRINT")
+            print(mv[result])
+            ip += 1
+        elif operator == "ENDFunc":
+            print("End function")
+            ip += 1
+        elif operator == "VER":
+            print("Verificacion arreglos")
+            # ver, x, li, ls
+            if (left_op <  right_op) or (left_op >= result):
+                print("Fuera de limites de arreglo " + left_op)
+                exit()
+            ip += 1
 
 def printMV():
     cont = 0
@@ -103,15 +154,13 @@ def printMV():
 
 def maquinaVirtual():
     readCtes()
+    varsToMV()
     printMV()
     openQuads()
     try:
         openQuads()
     except:
         print("Quadruple file has not been generated yet")
-    actionQuads()
+    ejecutar()
     printMV()
-
-maquinaVirtual()
-
 

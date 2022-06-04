@@ -161,6 +161,7 @@ class PuntosNeuralgicos(Visitor):
             inlineT = inlineT[1].children
             mem = memoria["global"][type]
             memoria["global"][type] += 1
+            # pasar esto a cuadruplos
             var = VariableClass(name, type, addressVar = mem)
             addVar(var)
             self.inlineVar(inlineT, type)
@@ -541,6 +542,8 @@ class PuntosNeuralgicos(Visitor):
         generate_quad_mem("GOSUB", pilaLlamadas[-1], None, None)
 
     def np_fin(self, tree):
+        generate_quad("ENDProgram", None, None, None)
+        generate_quad_mem("ENDProgram", None, None, None)
         print("tabla de variables fin")
         tabla_variables.printTable()
         quad_ids(cuadruplos)
