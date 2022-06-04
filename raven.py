@@ -7,6 +7,19 @@ import ast
 cuadruplos = []
 ip = 0
 pilaCalls = []
+#to do: rename, es la pila donde te quedaste cuando haces una llamada
+# a funcion
+lineaQuede = []
+foto = []
+
+def tomarFoto():
+    global foto
+    print("foto memoria local")
+    foto = mv[7000 : 12999]
+
+def restaurarFoto():
+    global foto
+    mv[7000 : 12999] = foto
 
 def varsToMV():
     print("tabla variables")
@@ -64,6 +77,8 @@ def ejecutar():
             else:
                 ip = int(result)
         elif operator == "GOSUB":
+            lineaQuede.append(ip + 1)
+            tomarFoto()
             ip = int[left_op]
             # to do: como regresamos a donde nos quedamos
             #pila ?
@@ -135,7 +150,8 @@ def ejecutar():
             ip += 1
         elif operator == "ENDFunc":
             print("End function")
-            ip += 1
+            restaurarFoto()
+            ip = lineaQuede.pop()
         elif operator == "VER":
             print("Verificacion arreglos")
             # ver, x, li, ls
