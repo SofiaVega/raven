@@ -3,8 +3,13 @@ titulo = "Raven"
 mecanica vacia volar (num x) {
     num z = 3
     -> "hola estoy volando"
+    //-> x + z
+}
+mecanica num uno(num a, num b){
+    regresa a + b
 }
 capitulo uno () {
     titulo = "el principio del fin"
     volar(1)
+    -> uno(5, 2)
 }

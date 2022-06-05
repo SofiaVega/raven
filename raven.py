@@ -7,6 +7,20 @@ import ast
 cuadruplos = []
 ip = 0
 pilaCalls = []
+#to do: rename, es la pila donde te quedaste cuando haces una llamada
+# a funcion
+lineaQuede = []
+foto = []
+
+def tomarFoto():
+    global foto
+    print("foto memoria local")
+    foto = mv[7000 : 12999]
+
+
+def restaurarFoto():
+    global foto
+    mv[7000 : 12999] = foto
 
 def varsToMV():
     print("tabla variables")
@@ -19,6 +33,7 @@ def openQuads():
     f = open("cuadruplosMem.txt", "r")
     quads = f.readlines()
     for quad in quads:
+        print(quad)
         cuadruplo = ast.literal_eval(quad)
         cuadruplos.append(cuadruplo)
     f.close()
@@ -51,8 +66,8 @@ def ejecutar():
         if operator == "GOTO":
             print("GOTO")
             # to do: 
-            #ip = int(result)
-            ip += 1
+            ip = int(result)
+            #ip += 1
         elif operator == "GOTOF":
             if(left_op):
                 ip += 1
@@ -64,7 +79,12 @@ def ejecutar():
             else:
                 ip = int(result)
         elif operator == "GOSUB":
-            ip = int[left_op]
+            lineaQuede.append(ip + 1)
+            print("antes de foto")
+            #printMV()
+            tomarFoto()
+            print(left_op)
+            ip = int(left_op)
             # to do: como regresamos a donde nos quedamos
             #pila ?
             #action(cuadruplos[int(left_op)])
@@ -73,9 +93,14 @@ def ejecutar():
             # Generar los espacios de memoria
             #action()
             #to do: reservar espacio de memoria
+            pilaCalls.append(left_op)
             ip += 1
         elif operator == "PARAM":
             print("param")
+            # Indicates that the argument sent must be copied into parámater#-- in Run-Time
+            key = tabla_funciones.procDirectory[pilaCalls[-1]].keysParam[result]
+            addv = tabla_funciones.procDirectory[pilaCalls[-1]].varsFunc.tablaVar[key].addressVar
+            mv[addv] = mv[left_op]
             ip += 1
         elif operator == "=":
             print("=")
@@ -131,11 +156,26 @@ def ejecutar():
             ip += 1
         elif operator == "PRINT":
             print("PRINT")
+            print(cuadruplos[ip])
             print(mv[result])
             ip += 1
         elif operator == "ENDFunc":
             print("End function")
-            ip += 1
+            restaurarFoto()
+            print("despues de foto")
+            #printMV()
+            ip = lineaQuede.pop()
+        elif operator == "RETURN":
+            print("Return")
+            # parche guadalupano maravilloso
+            # return, dir var global func, none, val return
+            print(cuadruplos[ip])
+            mv[left_op] = mv[result]
+            restaurarFoto()
+            print("despues de foto")
+            #printMV()
+            ip = lineaQuede.pop()
+
         elif operator == "VER":
             print("Verificacion arreglos")
             # ver, x, li, ls
@@ -153,6 +193,7 @@ def printMV():
         cont += 1
 
 def maquinaVirtual():
+    print("-------- RAVEN TIME -------")
     readCtes()
     varsToMV()
     printMV()

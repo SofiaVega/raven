@@ -62,6 +62,26 @@ def quad_mem(cuadruplos):
         f.write(str(quad)+'\n')
     f.close()
 
+def getTemp(tipo):
+    global availNum
+    global availBool
+    global availString
+    global availPointer
+    if tipo == "num":
+        result = temporalesNum[availNum]
+        availNum = availNum+1
+    elif tipo == "enunciado":
+        result = temporalesString[availString]
+        availString += 1
+    elif tipo == "bool":
+        result = temporalesBool[availBool]
+        availBool += 1
+    elif tipo == "pointer":
+        result = temporalesPointer[availPointer]
+        availPointer += 1
+
+    return result
+
 #Agrega una variable a la tabla de variables global o local
 def addVar(var):
     if pilaFunciones[-1] == "global":
@@ -75,7 +95,7 @@ def getVar(varID):
     if pilaFunciones[-1] == "global":
         var = tabla_variables.tablaVar[varID]
     else:
-        var = tabla_funciones.procDirectory[pilaFunciones[-1]].tablaVar[varID]
+        var = tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.tablaVar[varID]
     return var
 
 # Revisa si el id corresponde a una variable del contexto actual
@@ -83,11 +103,9 @@ def checkExists_contexto(val):
     print(pilaFunciones[-1])
     tabla_variables.printTable()
     if pilaFunciones[-1] == "global":
-        tabla_variables.checkExists(val)
-        return True
+        return tabla_variables.checkExists(val)
     else:
-        tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
-        return False
+        return tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
 
 #Genera cuadruplos con los ids
 def generate_quad(operator, left, right, result):
@@ -183,7 +201,10 @@ class PuntosNeuralgicos(Visitor):
     def np_asig(self, tree):
         val = tree.children[0].value
         print(tree)
+        print(pilaFunciones[-1])
+        print(checkExists_contexto(val))
         if (checkExists_contexto(val) == True):
+            print("entra porque si existe")
             var = getVar(val)
             
             pilaO.append(val)
@@ -457,34 +478,62 @@ class PuntosNeuralgicos(Visitor):
 
     def np_funciones_1(self, tree):
         # Insert Function name into the DirFunc table (and its type, if any), verify semantics.
-        tipo_funcion = tree.children[0].children[0]
-        nombre_funcion = tree.children[1]
+        tipo_funcion = tree.children[0].children[0].value
+        nombre_funcion = tree.children[1].value
         func = FunctionClass(nombre_funcion, tipo_funcion)
         tabla_funciones.addFunc(func)
         pilaFunciones.append(nombre_funcion)
         tabla_funciones.printTable()
+        # parche guadalupano maravilloso
+        if tipo_funcion != "vacia":
+            #asignar variable global
+            mem = memoria["global"][tipo_funcion]
+            memoria["global"][tipo_funcion] += 1
+            var = VariableClass(nameVar = nombre_funcion, typeVar = tipo_funcion, addressVar=mem)
+            tabla_variables.addVar(var)
+        
         # to do: verificar semanticas
 
     def mecanica2(self, tree):
         # 2 - Insert every parameter into the current (local) VarTable.
         if tree.children:
             # esto solo funciona con un parametro
-            tipo = tree.children[0].children[0]
-            id_param = tree.children[1]
+            tipo = tree.children[0].children[0].value
+            id_param = tree.children[1].value
+            mem = memoria["local"][tipo]
+            memoria["local"][tipo] += 1
             tabla_funciones.procDirectory[pilaFunciones[-1]
-                                          ].addParam(tipo, id_param)
+                                          ].addParam(tipo, id_param, mem)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
             tabla_funciones.printTable()
 
     def mecanica3(self, tree):
         if tree.children:
             # otro parametro
-            tipo = tree.children[0].children[0]
-            id_param = tree.children[1]
+            # to do: agregar address
+            tipo = tree.children[0].children[0].value
+            id_param = tree.children[1].value
+            mem = memoria["local"][tipo]
+            memoria["local"][tipo] += 1
             tabla_funciones.procDirectory[pilaFunciones[-1]
-                                          ].addParam(tipo, id_param)
+                                          ].addParam(tipo, id_param, mem)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
             tabla_funciones.printTable()
+    
+    def np_mecanica_5(self, tree):
+        print("mecanica5")
+        o = pilaO.pop()
+        t = pilaT.pop()
+        mem = pilaMem.pop()
+        # to do: como conecta esto con el parche guadalupano??
+        # meter funcion actual
+        generate_quad("RETURN", pilaFunciones[-1], None, o)
+        tabla_variables.printTable()
+        mem_func = tabla_variables.tablaVar[pilaFunciones[-1]].addressVar
+        # direccion de la variable global
+        generate_quad_mem("RETURN", mem_func, None, mem)
+        # to do: el return en ejecucion asigna mv[m] a la variable global llamada como la funcion actual
+        # hacer pop de llamada?
 
     def cambiar_quad_pointer(self, tree):
         tabla_funciones.procDirectory[pilaFunciones[-1]
@@ -502,7 +551,7 @@ class PuntosNeuralgicos(Visitor):
     def np_llamada_funcion_1(self, tree):
         # verify that the function exists
         if tabla_funciones.findFunction(tree.children[0]):
-            pilaLlamadas.append(tree.children[0])
+            pilaLlamadas.append(tree.children[0].value)
         else:
             print("Error, esa funcion no existe")
             exit()
@@ -520,8 +569,11 @@ class PuntosNeuralgicos(Visitor):
         # Generate action PARAMETER, Argument, Argument#k
         argument = pilaO[-1]
         argumentType = pilaT[-1]
+        arg_mem = pilaMem[-1]
         if argumentType == tabla_funciones.procDirectory[pilaLlamadas[-1]].paramTipos[pilaK[-1]]:
             print("parametro tipo compatible")
+            generate_quad("PARAM", argument, None, pilaK[-1])
+            generate_quad_mem("PARAM", arg_mem, None, pilaK[-1])
         else:
             print("El parametro no es del tipo correcto")
             exit()
@@ -530,16 +582,33 @@ class PuntosNeuralgicos(Visitor):
         pilaK[-1] = pilaK[-1] + 1
 
     def np_llamada_funcion_5(self, tree):
-        if pilaK[-1] == (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam - 1):
+        print(pilaK[-1])
+        # antes era numparam - 1
+        if pilaK[-1] == (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam):
             print("right amount of params")
         else:
             print("Faltan parametros")
             exit()
 
     def np_llamada_funcion_6(self, tree):
+        global availNum
         # to do: falta initial-address
+        qi = tabla_funciones.procDirectory[pilaLlamadas[-1]].quad_inicial
         generate_quad("GOSUB", pilaLlamadas[-1], None, None)
-        generate_quad_mem("GOSUB", pilaLlamadas[-1], None, None)
+        generate_quad_mem("GOSUB", qi, None, None)
+        # to do: parche guadalupano maravilloso
+        func = pilaLlamadas[-1]
+        tipo_func = tabla_funciones.procDirectory[func].typeFunc
+        if tipo_func != "vacia":
+            result = getTemp(tipo_func)
+            result_mem = memoria["temp"]["num"]
+            memoria["temp"]["num"] +=1
+            mem_llamada = tabla_variables.tablaVar[pilaLlamadas[-1]].addressVar
+            pilaO.append(result)
+            pilaT.append(tipo_func)
+            pilaMem.append(result_mem)
+            generate_quad("=", pilaLlamadas[-1], None, result)
+            generate_quad_mem("=", mem_llamada, None, result_mem)
 
     def np_fin(self, tree):
         generate_quad("ENDProgram", None, None, None)
@@ -562,8 +631,8 @@ class PuntosNeuralgicos(Visitor):
         global r
         global tipo_arr_aux
         tipo = tipo_arr_aux
-        thisID = tree.children[0]
-        ls = tree.children[1]
+        thisID = tree.children[0].value
+        ls = tree.children[1].value
         var = VariableClass(thisID, tipo)
         # np 2
         var.isArray = True

@@ -72,14 +72,15 @@ np_asig_quad:
 
 importar: IMPORTAR STRING COMO ID
 
-mecanica: MECANICA np_funciones_1 IPAR mecanica2 FPAR ICOR SALTO vars_mecanica_loop cambiar_quad_pointer estatuto SALTO mecanica4 mecanica5 FCOR fin_mecanica
+mecanica: MECANICA np_funciones_1 IPAR mecanica2 FPAR ICOR SALTO vars_mecanica_loop cambiar_quad_pointer mecanica4 mecanica5 FCOR fin_mecanica
 fin_mecanica: 
 cambiar_quad_pointer: 
 np_funciones_1: tipo ID
 mecanica2: tipo ID mecanica3 |
 mecanica3: "," tipo ID mecanica3 | 
 mecanica4: estatuto SALTO mecanica4 |
-mecanica5: REGRESA varcte | 
+mecanica5: REGRESA exp np_mecanica_5 | 
+np_mecanica_5: 
 
 vars_mecanica_loop: vars | vars_mecanica_loop vars |
 
@@ -107,6 +108,7 @@ varcte:  ID arr_o_no -> guardar_id
         | NUM -> guardar_num
         | STRING -> guardar_string
         | BOOL -> guardar_bool
+        | llamada_funcion
 
 arr_o_no: accarr accarr2 -> np_acc_arr_1
         | 
@@ -122,14 +124,15 @@ estatuto: asignacion
                 | ciclo_while 
                 | ciclo_por 
                 | escritura 
-                | ID IPAR np_llamada_funcion_2 estatuto2 np_llamada_funcion_5 FPAR np_llamada_funcion_6 -> np_llamada_funcion_1
+                | llamada_funcion
                 | opciones
+llamada_funcion: ID IPAR np_llamada_funcion_2 estatuto2 np_llamada_funcion_5 FPAR np_llamada_funcion_6 -> np_llamada_funcion_1
 np_llamada_funcion_2: 
 np_llamada_funcion_5:
 np_llamada_funcion_4:
 np_llamada_funcion_3:
 np_llamada_funcion_6:
-estatuto2: expresion np_llamada_funcion_3 estatuto3 |
+estatuto2: expresion np_llamada_funcion_3 estatuto3 np_llamada_funcion_4 |
 estatuto3: "," np_llamada_funcion_4 expresion np_llamada_funcion_3 estatuto3 |
 
 condicion: IF IPAR expresion FPAR np_if ICOR estatuto condicion2 FCOR sino np_if_2
