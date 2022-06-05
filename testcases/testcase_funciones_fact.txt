@@ -8,6 +8,9 @@ mecanica num fact(num n){
     }sino {
         res = fact(n - 1)*n
     }
+    -> "ene"
+    -> n
+    -> "res"
     -> res
     regresa res
 }

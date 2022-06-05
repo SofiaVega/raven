@@ -187,7 +187,7 @@ class PuntosNeuralgicos(Visitor):
         print(pilaFunciones[-1])
         print(checkExists_contexto(val))
         if (checkExists_contexto(val) == True):
-            print("entra porque si existe")
+            print("entra porque si existe "+ val + " -----------")
             var = getVar(val)
 
             pilaO.append(val)
@@ -208,6 +208,7 @@ class PuntosNeuralgicos(Visitor):
     def np_asig_quad(self, tree):
         print("asig quad")
         operator = pOper.pop()
+        print(pilaO)
         left_operand = pilaO.pop()
         right_operand = None
         left_mem = pilaMem.pop()
@@ -558,9 +559,9 @@ class PuntosNeuralgicos(Visitor):
         # Argument= PilaO.Pop() ArgumentType= PTypes.Pop().
         # Verify ArgumentType against current Parameter (#k) in ParameterTable.
         # Generate action PARAMETER, Argument, Argument#k
-        argument = pilaO[-1]
-        argumentType = pilaT[-1]
-        arg_mem = pilaMem[-1]
+        argument = pilaO.pop()
+        argumentType = pilaT.pop()
+        arg_mem = pilaMem.pop()
         if argumentType == tabla_funciones.procDirectory[pilaLlamadas[-1]].paramTipos[pilaK[-1]]:
             print("parametro tipo compatible")
             cuadruplos.generate_quad("PARAM", argument, None, pilaK[-1])
