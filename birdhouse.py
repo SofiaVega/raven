@@ -55,6 +55,8 @@ for i in range(0, 1000):
     temporalesPointer.append("tP" + str(i))
 
 # Agrega una variable a la tabla de variables global o local
+
+
 def getTemp(tipo):
     global availNum
     global availBool
@@ -75,7 +77,9 @@ def getTemp(tipo):
 
     return result
 
-#Agrega una variable a la tabla de variables global o local
+# Agrega una variable a la tabla de variables global o local
+
+
 def addVar(var):
     if pilaFunciones[-1] == "global":
         tabla_variables.addVar(var)
@@ -90,7 +94,8 @@ def getVar(varID):
     if pilaFunciones[-1] == "global":
         var = tabla_variables.tablaVar[varID]
     else:
-        var = tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.tablaVar[varID]
+        var = tabla_funciones.procDirectory[pilaFunciones[-1]
+                                            ].varsFunc.tablaVar[varID]
     return var
 
 # Revisa si el id corresponde a una variable del contexto actual
@@ -455,12 +460,13 @@ class PuntosNeuralgicos(Visitor):
         tabla_funciones.printTable()
         # parche guadalupano maravilloso
         if tipo_funcion != "vacia":
-            #asignar variable global
+            # asignar variable global
             mem = memoria["global"][tipo_funcion]
             memoria["global"][tipo_funcion] += 1
-            var = VariableClass(nameVar = nombre_funcion, typeVar = tipo_funcion, addressVar=mem)
+            var = VariableClass(nameVar=nombre_funcion,
+                                typeVar=tipo_funcion, addressVar=mem)
             tabla_variables.addVar(var)
-        
+
         # to do: verificar semanticas
 
     def mecanica2(self, tree):
@@ -488,7 +494,7 @@ class PuntosNeuralgicos(Visitor):
                                           ].addParam(tipo, id_param, mem)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
             tabla_funciones.printTable()
-    
+
     def np_mecanica_5(self, tree):
         print("mecanica5")
         o = pilaO.pop()
@@ -496,11 +502,11 @@ class PuntosNeuralgicos(Visitor):
         mem = pilaMem.pop()
         # to do: como conecta esto con el parche guadalupano??
         # meter funcion actual
-        generate_quad("RETURN", pilaFunciones[-1], None, o)
+        cuadruplos.generate_quad("RETURN", pilaFunciones[-1], None, o)
         tabla_variables.printTable()
         mem_func = tabla_variables.tablaVar[pilaFunciones[-1]].addressVar
         # direccion de la variable global
-        generate_quad_mem("RETURN", mem_func, None, mem)
+        cuadruplos.generate_quad_mem("RETURN", mem_func, None, mem)
         # to do: el return en ejecucion asigna mv[m] a la variable global llamada como la funcion actual
         # hacer pop de llamada?
 
@@ -541,8 +547,8 @@ class PuntosNeuralgicos(Visitor):
         arg_mem = pilaMem[-1]
         if argumentType == tabla_funciones.procDirectory[pilaLlamadas[-1]].paramTipos[pilaK[-1]]:
             print("parametro tipo compatible")
-            generate_quad("PARAM", argument, None, pilaK[-1])
-            generate_quad_mem("PARAM", arg_mem, None, pilaK[-1])
+            cuadruplos.generate_quad("PARAM", argument, None, pilaK[-1])
+            cuadruplos.generate_quad_mem("PARAM", arg_mem, None, pilaK[-1])
         else:
             print("El parametro no es del tipo correcto")
             exit()
@@ -571,7 +577,7 @@ class PuntosNeuralgicos(Visitor):
         if tipo_func != "vacia":
             result = getTemp(tipo_func)
             result_mem = memoria["temp"]["num"]
-            memoria["temp"]["num"] +=1
+            memoria["temp"]["num"] += 1
             mem_llamada = tabla_variables.tablaVar[pilaLlamadas[-1]].addressVar
             pilaO.append(result)
             pilaT.append(tipo_func)
