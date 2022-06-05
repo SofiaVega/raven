@@ -62,6 +62,26 @@ def quad_mem(cuadruplos):
         f.write(str(quad)+'\n')
     f.close()
 
+def getTemp(tipo):
+    global availNum
+    global availBool
+    global availString
+    global availPointer
+    if tipo == "num":
+        result = temporalesNum[availNum]
+        availNum = availNum+1
+    elif tipo == "enunciado":
+        result = temporalesString[availString]
+        availString += 1
+    elif tipo == "bool":
+        result = temporalesBool[availBool]
+        availBool += 1
+    elif tipo == "pointer":
+        result = temporalesPointer[availPointer]
+        availPointer += 1
+
+    return result
+
 #Agrega una variable a la tabla de variables global o local
 def addVar(var):
     if pilaFunciones[-1] == "global":
@@ -575,15 +595,12 @@ class PuntosNeuralgicos(Visitor):
         func = pilaLlamadas[-1]
         tipo_func = tabla_funciones.procDirectory[func].typeFunc
         if tipo_func != "vacia":
-            # to do: esto no deberia ser nums siempre, depende del tipo de la funcion
-            # hacer una funcion
-            result = temporalesNum[availNum]
-            availNum = availNum+1
+            result = getTemp(tipo_func)
             result_mem = memoria["temp"]["num"]
             memoria["temp"]["num"] +=1
             mem_llamada = tabla_variables.tablaVar[pilaLlamadas[-1]].addressVar
             pilaO.append(result)
-            pilaT.append("num")
+            pilaT.append(tipo_func)
             pilaMem.append(result_mem)
             generate_quad("=", pilaLlamadas[-1], None, result)
             generate_quad_mem("=", mem_llamada, None, result_mem)
