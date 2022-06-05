@@ -21,6 +21,13 @@ def tomarFoto():
     foto = mv[7000 : 12999]
     fotos.append(foto)
 
+def printSubMV(smv):
+    cont = 0
+    print("imprimiendo mv")
+    for i in smv:
+        if i != None:
+            print(str(cont) + " " + str(i))
+        cont += 1
 
 def restaurarFoto():
     global foto
@@ -99,7 +106,7 @@ def ejecutar():
             lineaQuede.append(ip + 1)
             print("antes de foto")
             #printMV()
-            tomarFoto()
+            #tomarFoto()
             print(left_op)
             ip = int(left_op)
             # to do: como regresamos a donde nos quedamos
@@ -110,6 +117,7 @@ def ejecutar():
             # Generar los espacios de memoria
             #action()
             #to do: reservar espacio de memoria
+            tomarFoto()
             pilaCalls.append(left_op)
             ip += 1
         elif operator == "PARAM":
@@ -148,7 +156,7 @@ def ejecutar():
             print("*")
             #to do: puede ser int o float
             print(cuadruplos[ip])
-            #printMV()
+            printMV()
             mv[result] = int(mv[left_op]) * int(mv[right_op])
             ip += 1
         elif operator == ">":
@@ -185,6 +193,7 @@ def ejecutar():
             ip += 1
         elif operator == "PRINT":
             print("PRINT")
+            printMV()
             print(cuadruplos[ip])
             print(mv[result])
             ip += 1
@@ -204,6 +213,7 @@ def ejecutar():
             print("despues de foto")
             #printMV()
             ip = lineaQuede.pop()
+            print("quede en "+ str(ip))
 
         elif operator == "VER":
             print("Verificacion arreglos")

@@ -5,7 +5,7 @@ from raven import *
 
 
 parser = Lark(open("grammar", 'r').read())
-goodInput = open("testcases/testcase_funciones_rec.txt", 'r').read()
+goodInput = open("testcases/testcase_funciones_fact.txt", 'r').read()
 badInput = open("testcases/testcase_good.txt", 'r').read()
 
 # print("------ Good Input --------")

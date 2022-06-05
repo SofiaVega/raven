@@ -55,7 +55,7 @@ memoria = {
         "bool": 17000
     },
     "temp": {
-        "num": 1900,
+        "num": 19000,
         "enunciado": 21000,
         "bool": 23000,
         "pointer": 25000
