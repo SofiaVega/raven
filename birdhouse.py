@@ -575,11 +575,16 @@ class PuntosNeuralgicos(Visitor):
         func = pilaLlamadas[-1]
         tipo_func = tabla_funciones.procDirectory[func].typeFunc
         if tipo_func != "vacia":
+            # to do: esto no deberia ser nums siempre, depende del tipo de la funcion
+            # hacer una funcion
             result = temporalesNum[availNum]
             availNum = availNum+1
             result_mem = memoria["temp"]["num"]
             memoria["temp"]["num"] +=1
             mem_llamada = tabla_variables.tablaVar[pilaLlamadas[-1]].addressVar
+            pilaO.append(result)
+            pilaT.append("num")
+            pilaMem.append(result_mem)
             generate_quad("=", pilaLlamadas[-1], None, result)
             generate_quad_mem("=", mem_llamada, None, result_mem)
 

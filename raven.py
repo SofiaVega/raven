@@ -80,7 +80,7 @@ def ejecutar():
         elif operator == "GOSUB":
             lineaQuede.append(ip + 1)
             print("antes de foto")
-            printMV()
+            #printMV()
             tomarFoto()
             print(left_op)
             ip = int(left_op)
@@ -151,22 +151,24 @@ def ejecutar():
             ip += 1
         elif operator == "PRINT":
             print("PRINT")
+            print(cuadruplos[ip])
             print(mv[result])
             ip += 1
         elif operator == "ENDFunc":
             print("End function")
             restaurarFoto()
             print("despues de foto")
-            printMV()
+            #printMV()
             ip = lineaQuede.pop()
         elif operator == "RETURN":
             print("Return")
             # parche guadalupano maravilloso
             # return, dir var global func, none, val return
+            print(cuadruplos[ip])
             mv[left_op] = mv[result]
             restaurarFoto()
             print("despues de foto")
-            printMV()
+            #printMV()
             ip = lineaQuede.pop()
 
         elif operator == "VER":

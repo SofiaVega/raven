@@ -10,7 +10,8 @@
 {'operator': 'PARAM', 'left': 13002, 'right': None, 'result': 0}
 {'operator': 'GOSUB', 'left': 3, 'right': None, 'result': None}
 {'operator': 'ERA', 'left': 'uno', 'right': None, 'result': None}
+{'operator': 'PARAM', 'left': 13003, 'right': None, 'result': 0}
 {'operator': 'GOSUB', 'left': 5, 'right': None, 'result': None}
 {'operator': '=', 'left': 1001, 'right': None, 'result': 1900}
-{'operator': 'PRINT', 'left': None, 'right': None, 'result': 13002}
+{'operator': 'PRINT', 'left': None, 'right': None, 'result': 1900}
 {'operator': 'ENDProgram', 'left': None, 'right': None, 'result': None}
