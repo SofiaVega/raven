@@ -12,3 +12,8 @@ capitulo uno () {
         -> "ye es mayor"
     }
 }
+
+
+indice() {
+    uno()
+}

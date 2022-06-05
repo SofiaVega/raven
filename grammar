@@ -41,14 +41,16 @@ IGUAL_A: "=="
 IGUAL: "="
 IMPORTAR: "importar"
 COMO: "como"
+INDICE: "indice"
 
 ID: /[a-zA-Z_][a-zA-Z_0-9]*/
 NUM: /\d+/
 
 start: programa
-programa: huv_inicio  SALTO importarloop titulo_asig np_asig_quad SALTO varsloop mecanicaloop np_cap capituloloop indice np_fin
+programa: huv_inicio SALTO importarloop titulo_asig np_asig_quad SALTO varsloop mecanicaloop np_cap capituloloop indice np_fin
 huv_inicio: HUV ID
 titulo_asig: TITULO IGUAL STRING
+np_asig_quad:
 np_fin: 
 
 importarloop: importar | importarloop importar|
@@ -64,7 +66,6 @@ np_add_vars:
 vars2: "," vars3 vars2 |
 vars3: ID | ID IGUAL expresion np_asig_quad -> np_asig
 np_asig:
-np_asig_quad:
 
 mecanica: MECANICA np_funciones_1 IPAR mecanica2 FPAR ICOR SALTO vars_mecanica_loop cambiar_quad_pointer mecanica4 mecanica5 FCOR fin_mecanica
 np_funciones_1: tipo ID
@@ -73,30 +74,20 @@ mecanica3: "," tipo ID mecanica3 |
 cambiar_quad_pointer: 
 mecanica4: estatuto SALTO mecanica4 |
 mecanica5: REGRESA exp np_mecanica_5 | 
+np_mecanica_5:
 fin_mecanica: 
 
 vars_mecanica_loop: vars | vars_mecanica_loop vars |
 
+capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO estatuto SALTO mecanica4 FCOR
+np_cap: 
 
 opciones: OPCIONES ":" "[" opciones2 "]"
 opciones2: opcion opciones3
 opciones3: ";" opcion opciones3 | 
 opcion: STRING "," ID IPAR estatuto2 FPAR
 
-
-
-
-
-
-
-
-
-
-
-capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO estatuto SALTO mecanica4 FCOR
-np_cap: 
-
-indice: INDICE IPAR FPAR ICOR 
+indice: INDICE IPAR FPAR ICOR llamada_funcion FCOR 
 
 expresion: exp | exp expresion_mayor
 expresion_mayor: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expresion | NOT_EQUAL exp cuadruplo_expresion | IGUAL_A exp cuadruplo_expresion

@@ -15,3 +15,7 @@ capitulo uno () {
     titulo = "el principio del fin"
     -> cero(2)
 }
+
+indice() {
+    uno()
+}
