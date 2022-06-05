@@ -46,20 +46,17 @@ ID: /[a-zA-Z_][a-zA-Z_0-9]*/
 NUM: /\d+/
 
 start: programa
-programa: huv_inicio  SALTO importarloop titulo_asig np_asig_quad SALTO varsloop mecanicaloop np_cap capituloloop np_fin
-np_fin: 
+programa: huv_inicio  SALTO importarloop titulo_asig np_asig_quad SALTO varsloop mecanicaloop np_cap capituloloop indice np_fin
 huv_inicio: HUV ID
 titulo_asig: TITULO IGUAL STRING
+np_fin: 
+
 importarloop: importar | importarloop importar|
 varsloop: vars | varsloop vars |
 mecanicaloop: mecanica | mecanicaloop  mecanica |
 capituloloop: capitulo | capituloloop capitulo 
 
-
-opciones: OPCIONES ":" "[" opciones2 "]"
-opciones2: opcion opciones3
-opciones3: ";" opcion opciones3 | 
-opcion: STRING "," ID IPAR estatuto2 FPAR
+importar: IMPORTAR STRING COMO ID
 
 vars: tipo vars3 np_add_vars vars2 SALTO -> np_vars
         | arreglo
@@ -69,24 +66,37 @@ vars3: ID | ID IGUAL expresion np_asig_quad -> np_asig
 np_asig:
 np_asig_quad:
 
-
-importar: IMPORTAR STRING COMO ID
-
 mecanica: MECANICA np_funciones_1 IPAR mecanica2 FPAR ICOR SALTO vars_mecanica_loop cambiar_quad_pointer mecanica4 mecanica5 FCOR fin_mecanica
-fin_mecanica: 
-cambiar_quad_pointer: 
 np_funciones_1: tipo ID
 mecanica2: tipo ID mecanica3 |
 mecanica3: "," tipo ID mecanica3 | 
+cambiar_quad_pointer: 
 mecanica4: estatuto SALTO mecanica4 |
 mecanica5: REGRESA exp np_mecanica_5 | 
-np_mecanica_5: 
+fin_mecanica: 
 
 vars_mecanica_loop: vars | vars_mecanica_loop vars |
 
 
+opciones: OPCIONES ":" "[" opciones2 "]"
+opciones2: opcion opciones3
+opciones3: ";" opcion opciones3 | 
+opcion: STRING "," ID IPAR estatuto2 FPAR
+
+
+
+
+
+
+
+
+
+
+
 capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO estatuto SALTO mecanica4 FCOR
 np_cap: 
+
+indice: INDICE IPAR FPAR ICOR 
 
 expresion: exp | exp expresion_mayor
 expresion_mayor: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expresion | NOT_EQUAL exp cuadruplo_expresion | IGUAL_A exp cuadruplo_expresion
