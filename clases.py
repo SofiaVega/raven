@@ -109,12 +109,14 @@ class FunctionClass:
         self.numParam = numParam
         self.numVar = numVar
         self.quad_inicial = quad_inicial
+        self.keysParam = []
 
-    def addParam(self, tipo, id_param):
+    def addParam(self, tipo, id_param, address):
         # to do: los parametros se agregan como variables?
-        var = VariableClass(id_param, tipo)
+        var = VariableClass(id_param, tipo, addressVar = address)
         self.varsFunc.addVar(var)
         self.numParam = self.numParam + 1
+        self.keysParam.append(id_param)
         # self.paramsFunc.append(var)
 
     def addVar(self, varObject):
@@ -157,6 +159,8 @@ class ProcDirectory:
             return True
         else:
             return False
+    def getFunc(self, name):
+        return self.procDirectory[name]
 
 
 

@@ -500,18 +500,23 @@ class PuntosNeuralgicos(Visitor):
             # esto solo funciona con un parametro
             tipo = tree.children[0].children[0].value
             id_param = tree.children[1].value
+            mem = memoria["local"][tipo]
+            memoria["local"][tipo] += 1
             tabla_funciones.procDirectory[pilaFunciones[-1]
-                                          ].addParam(tipo, id_param)
+                                          ].addParam(tipo, id_param, mem)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
             tabla_funciones.printTable()
 
     def mecanica3(self, tree):
         if tree.children:
             # otro parametro
+            # to do: agregar address
             tipo = tree.children[0].children[0].value
             id_param = tree.children[1].value
+            mem = memoria["local"][tipo]
+            memoria["local"][tipo] += 1
             tabla_funciones.procDirectory[pilaFunciones[-1]
-                                          ].addParam(tipo, id_param)
+                                          ].addParam(tipo, id_param, mem)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
             tabla_funciones.printTable()
     

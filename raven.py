@@ -17,6 +17,7 @@ def tomarFoto():
     print("foto memoria local")
     foto = mv[7000 : 12999]
 
+
 def restaurarFoto():
     global foto
     mv[7000 : 12999] = foto
@@ -92,10 +93,14 @@ def ejecutar():
             # Generar los espacios de memoria
             #action()
             #to do: reservar espacio de memoria
+            pilaCalls.append(left_op)
             ip += 1
         elif operator == "PARAM":
             print("param")
             # Indicates that the argument sent must be copied into parámater#-- in Run-Time
+            key = tabla_funciones.procDirectory[pilaCalls[-1]].keysParam[result]
+            addv = tabla_funciones.procDirectory[pilaCalls[-1]].varsFunc.tablaVar[key].addressVar
+            mv[addv] = mv[left_op]
             ip += 1
         elif operator == "=":
             print("=")
