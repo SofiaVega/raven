@@ -85,8 +85,12 @@ def getTemp(tipo):
 # Agrega una variable a la tabla de variables global o local
 def addVar(var):
     if pilaFunciones[-1] == "global":
+        print("guardando variable global")
+        print(var.nameVar)
         tabla_variables.addVar(var)
     else:
+        print("guardando variable local")
+        print(var.nameVar)
         tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
 
 
@@ -170,8 +174,11 @@ class PuntosNeuralgicos(Visitor):
         # print(tree)
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
-        mem = memoria["global"][type]
-        memoria["global"][type] += 1
+        contexto = pilaFunciones[-1]
+        if contexto != "global":
+            contexto = "local"
+        mem = memoria[contexto][type]
+        memoria[contexto][type] += 1
         var = VariableClass(name, type, addressVar=mem)
         addVar(var)
         # Logica para tambien agregar variables que se declaran en la misma linea
