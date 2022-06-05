@@ -116,11 +116,21 @@ def checkExists_contexto(val):
 
 
 class PuntosNeuralgicos(Visitor):
+    # HUV_INICIO
+    # Genera cuádruplo {PROGRAM, , , programName} para definir el nombre del programa
+    # Se llama desde programa
+    def huv_inicio(self, tree):
+        programName = tree.children[1].value
+        cuadruplos.generate_quad(
+            "PROGRAM", None, None, programName)
+        cuadruplos.print_quad()
+        cuadruplos.generate_quad_mem("PROGRAM", None, None, programName)
+
     # NP INDICE INICIO
     # Genera cuádruplo de {GOTO, indice, , []} incompleto para ser llenado posteriormente
     # Se llama desde programa
+
     def np_indice_inicio(self, tree):
-        print("Habia una vez")
         cuadruplos.generate_quad("GOTO", "indice", None, "blank")
         cuadruplos.print_quad()
         # to do: poner memoria en vez de valor
@@ -134,14 +144,24 @@ class PuntosNeuralgicos(Visitor):
     # y mete la variable 'titulo' a la tabla de variables
     #
     def titulo_asig(self, tree):
-        val = tree.children[0].value
-        pilaO.append(val)
+        print("------------------------------------------------------------------------------------------------")
+        # TITULO
+        titulo = tree.children[0].value
+        pilaO.append(titulo)
         pilaT.append("enunciado")
-        mem = memoria["cte"]["enunciado"]
-        tabla_ctes.addCte(val, mem)
-        memoria["cte"]["enunciado"] += 1
-        pilaMem.append(mem)
+        contexto = pilaFunciones[-1]
+        if contexto != "global":
+            contexto = "local"
+        memT = memoria[contexto]["enunciado"]
+        memoria[contexto]["enunciado"] += 1
+        pilaMem.append(memT)
+        var = VariableClass(titulo, "enunciado", addressVar=memT)
+        addVar(var)
+
+        # =
         pOper.append(tree.children[1].value)
+
+        # STRING
         val = tree.children[2].value
         pilaO.append(val)
         pilaT.append("enunciado")
