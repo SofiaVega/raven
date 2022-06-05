@@ -2,11 +2,11 @@
 # por Nadia Garcia y Sofia Vega (2022)
 # Compilador
 
-# Clase Variable para la creación de variables y sus atributos
 from lark import Visitor
 from cubo_semantico import cubo as cubo_semantico
 from clases import *
 from memoria import *
+from errores import *
 
 id_Asignar = ""
 pilaO = []  # Operandos
@@ -14,7 +14,7 @@ pOper = []  # Operadores
 pilaT = []  # Tipos
 pSaltos = []  # Saltos (migaja de pan)
 pilaDim = []
-pilaMem = [] # Dirs de memoria de pilaO
+pilaMem = []  # Dirs de memoria de pilaO
 temporalesNum = []  # Temporales
 temporalesBool = []  # Temporales booleanos
 temporalesString = []  # Temporales de string
@@ -56,21 +56,27 @@ def quad_ids(cuadruplos):
     f.close()
 
 # Pasa los cuadruplos con direcciones virtuales a un archivo de texto
+
+
 def quad_mem(cuadruplos):
     f = open("cuadruplosMem.txt", "w")
     for quad in cuadruplosMem:
         f.write(str(quad)+'\n')
     f.close()
 
-#Agrega una variable a la tabla de variables global o local
+# Agrega una variable a la tabla de variables global o local
+
+
 def addVar(var):
     if pilaFunciones[-1] == "global":
-                tabla_variables.addVar(var)
+        tabla_variables.addVar(var)
     else:
         tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
 
 # Obtiene una variable a partir de su nombre y el contexto en el que estamos
 # (global o una funcion)
+
+
 def getVar(varID):
     if pilaFunciones[-1] == "global":
         var = tabla_variables.tablaVar[varID]
@@ -79,6 +85,8 @@ def getVar(varID):
     return var
 
 # Revisa si el id corresponde a una variable del contexto actual
+
+
 def checkExists_contexto(val):
     print(pilaFunciones[-1])
     tabla_variables.printTable()
@@ -86,10 +94,13 @@ def checkExists_contexto(val):
         tabla_variables.checkExists(val)
         return True
     else:
-        tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
+        tabla_funciones.procDirectory[pilaFunciones[-1]
+                                      ].varsFunc.checkExists(val)
         return False
 
-#Genera cuadruplos con los ids
+# Genera cuadruplos con los ids
+
+
 def generate_quad(operator, left, right, result):
     global quad_pointer
     cuadruplo = {"operator": operator, "left": left,
@@ -99,6 +110,8 @@ def generate_quad(operator, left, right, result):
     quad_pointer = quad_pointer + 1
 
 # Genera cuadruplos con los valores de memoria
+
+
 def generate_quad_mem(operator, left, right, result):
     cuadruplo = {"operator": operator, "left": left,
                  "right": right, "result": result}
@@ -108,8 +121,11 @@ def generate_quad_mem(operator, left, right, result):
 
 # Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
 # Por lo general, para gotos
+
+
 def fill_quad(end, cont):
     cuadruplos[end]["result"] = cont
+
 
 def fill_quad_mem(end, cont):
     print("fill")
@@ -162,7 +178,7 @@ class PuntosNeuralgicos(Visitor):
             mem = memoria["global"][type]
             memoria["global"][type] += 1
             # pasar esto a cuadruplos
-            var = VariableClass(name, type, addressVar = mem)
+            var = VariableClass(name, type, addressVar=mem)
             addVar(var)
             self.inlineVar(inlineT, type)
         else:
@@ -185,7 +201,7 @@ class PuntosNeuralgicos(Visitor):
         print(tree)
         if (checkExists_contexto(val) == True):
             var = getVar(val)
-            
+
             pilaO.append(val)
             tipo = var.typeVar
             mem = var.addressVar
@@ -294,14 +310,14 @@ class PuntosNeuralgicos(Visitor):
                     memoria["temp"][result_type] = memoria["temp"][result_type] + 1
                     generate_quad(operator, left_operand,
                                   right_operand, result)
-                    generate_quad_mem(operator, left_mem, right_mem, result_mem)
+                    generate_quad_mem(operator, left_mem,
+                                      right_mem, result_mem)
                     pilaO.append(result)
                     pilaT.append(result_type)
                     pilaMem.append(result_mem)
                     # revisar si uno de los operandos era un temporal
                 else:
-                    print("Error: error de tipos")
-                    exit()
+                    errorTipos(operator, left_type, right_type)
 
     def cuadruplo_mult_div(self, tree):
         if pOper:
@@ -331,11 +347,11 @@ class PuntosNeuralgicos(Visitor):
                     result_mem = memoria["temp"][result_type]
                     pilaMem.append(result_mem)
                     memoria["temp"][result_type] = memoria["temp"][result_type] + 1
-                    generate_quad_mem(operator, left_mem, right_mem, result_mem)
+                    generate_quad_mem(operator, left_mem,
+                                      right_mem, result_mem)
                     # revisar si uno de los operandos era un temporal
                 else:
-                    print("Error: error de tipos")
-                    exit()
+                    errorTipos(operator, left_type, right_type)
 
     def expresion_mayor(self, tree):
         # poper.push <, >, etc
@@ -364,11 +380,11 @@ class PuntosNeuralgicos(Visitor):
                     result_mem = memoria["temp"][result_type]
                     pilaMem.append(result_mem)
                     memoria["temp"][result_type] = memoria["temp"][result_type] + 1
-                    generate_quad_mem(operator, left_mem, right_mem, result_mem)
+                    generate_quad_mem(operator, left_mem,
+                                      right_mem, result_mem)
                     # revisar si uno de los operandos era un temporal
                 else:
-                    print("Error: error de tipos")
-                    exit()
+                    errorTipos(operator, left_type, right_type)
 
     def print_string(self, tree):
         my_str = tree.children[-1].value
@@ -377,7 +393,7 @@ class PuntosNeuralgicos(Visitor):
         mem_str = memoria["cte"]["enunciado"]
         memoria["cte"]["enunciado"] += 1
         pilaMem.append(mem_str)
-        #aqui habia un if pilaO pero creo que no es necesario
+        # aqui habia un if pilaO pero creo que no es necesario
         if pilaT.pop() == "enunciado":
             result = pilaO.pop()
             pilaT.pop()
@@ -608,7 +624,7 @@ class PuntosNeuralgicos(Visitor):
 
     # cuadruplos de acceso a arreglos
     def np_acc_arr_1(self, tree):
-        #este cuadruplo ya no hace nada
+        # este cuadruplo ya no hace nada
         print("es un arreglo")
 
     def np_acc_arr_2(self, tree):
@@ -626,7 +642,7 @@ class PuntosNeuralgicos(Visitor):
         pOper.append("[")
         print("curr nodo")
         currNodo.imprimir()
-        
+
     def np_acc_arr_3(self, tree):
         global currNodo
         global availNum
@@ -641,7 +657,7 @@ class PuntosNeuralgicos(Visitor):
             result = temporalesNum[availNum]
             availNum = availNum+1
             result_mem = memoria["temp"]["num"]
-            memoria["temp"]["num"] +=1
+            memoria["temp"]["num"] += 1
 
             generate_quad("*", aux, currNodo.val, result)
             generate_quad_mem("*", mem, currNodo.val, result_mem)
@@ -660,7 +676,7 @@ class PuntosNeuralgicos(Visitor):
             result = temporalesNum[availNum]
             availNum = availNum+1
             result_mem = memoria["temp"]["num"]
-            memoria["temp"]["num"] +=1
+            memoria["temp"]["num"] += 1
 
             generate_quad("+", aux1, aux2, result)
             generate_quad_mem("*", mem, currNodo.val, result_mem)
@@ -683,7 +699,7 @@ class PuntosNeuralgicos(Visitor):
         result = temporalesPointer[availPointer]
         availPointer = availPointer+1
         result_mem = memoria["temp"]["pointer"]
-        memoria["temp"]["pointer"] +=1
+        memoria["temp"]["pointer"] += 1
 
         generate_quad("+", aux, 0, result)
         generate_quad_mem("+", mem, 0, result_mem)
@@ -692,4 +708,4 @@ class PuntosNeuralgicos(Visitor):
         pilaO.append(result)
         pilaT.append("pointer")
         pilaMem.append(result_mem)
-        pOper.pop() # quita el fake bottom
+        pOper.pop()  # quita el fake bottom
