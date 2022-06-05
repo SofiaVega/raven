@@ -58,7 +58,8 @@ importarloop: importar | importarloop importar|
 varsloop: vars | varsloop vars |
 mecanicaloop: mecanica | mecanicaloop  mecanica |
 capituloloop: capitulo | capituloloop capitulo 
-indice: INDICE IPAR FPAR ICOR FCOR 
+indice: INDICE IPAR FPAR ICOR llamada_capituloloop FCOR 
+llamada_capitulo_loop: llamada_capitulo | llamada_capitulo_loop llamada_capitulo
 
 importar: IMPORTAR STRING COMO ID
 
