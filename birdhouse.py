@@ -8,6 +8,13 @@ from clases import *
 from memoria import *
 from errores import *
 
+tabla_variables = VariableTable()  # Tabla de variables
+tabla_funciones = ProcDirectory()  # Tabla de funciones
+tabla_ctes = TablaConstantes()     # Tabla de constantes
+
+# CUADRUPLOS
+cuadruplos = Cuadruplos()
+
 # PILAS GENERALES
 pilaO = []  # Pila de Operandos
 pOper = []  # Pila de Operadores
@@ -25,9 +32,6 @@ availNum = 0  # Contador de temporales para numero (empieza en t0)
 availBool = 0  # Contador de temporales para booleanos (empieza en t0)
 availString = 0  # Contador de temporales para strings (empieza en t0)
 availPointer = 0  # Contador de temporales para iPointer (empieza en t0)
-
-# CUADRUPLOS
-cuadruplos = Cuadruplos()
 
 # FUNCIONES
 # Pila de funciones
@@ -77,19 +81,17 @@ def getTemp(tipo):
 
     return result
 
+
 # Agrega una variable a la tabla de variables global o local
-
-
 def addVar(var):
     if pilaFunciones[-1] == "global":
         tabla_variables.addVar(var)
     else:
         tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
 
+
 # Obtiene una variable a partir de su nombre y el contexto en el que estamos
 # (global o una funcion)
-
-
 def getVar(varID):
     if pilaFunciones[-1] == "global":
         var = tabla_variables.tablaVar[varID]
@@ -98,9 +100,8 @@ def getVar(varID):
                                             ].varsFunc.tablaVar[varID]
     return var
 
+
 # Revisa si el id corresponde a una variable del contexto actual
-
-
 def checkExists_contexto(val):
     print(pilaFunciones[-1])
     tabla_variables.printTable()
@@ -108,11 +109,6 @@ def checkExists_contexto(val):
         return tabla_variables.checkExists(val)
     else:
         return tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
-
-
-tabla_variables = VariableTable()  # Tabla de variables
-tabla_funciones = ProcDirectory()  # Tabla de funciones
-tabla_ctes = TablaConstantes()
 
 
 class PuntosNeuralgicos(Visitor):
