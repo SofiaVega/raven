@@ -214,8 +214,9 @@ class VariableTable:
 #   Esta clase albergará todas las funciones relacionadas con esta estructura
 class Cuadruplos():
     def __init__(self):
-        self.cuadruplosID = []  # Lista de cuadruplos con identificadores
-        self.cuadruplosMem = []  # Lista de cuadruplos con direcciones de memoria
+        self.cuadruplosID = [None]  # Lista de cuadruplos con identificadores
+        # Lista de cuadruplos con direcciones de memoria
+        self.cuadruplosMem = [None]
         self.quad_pointer = 1   # Contador/Apuntador de cuadruplo
 
     #   GENERA ARCHIVOS
