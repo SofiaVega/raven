@@ -8,6 +8,15 @@ mecanica vacia volar (num x) {
 mecanica num uno(num a, num b){
     regresa a + b
 }
+mecanica num fact(num f){
+    num res
+    si(f == 1){
+        res = f
+    }sino{
+        res = f * fact(f)
+    }
+    regresa res
+}
 capitulo uno () {
     titulo = "el principio del fin"
     volar(1)

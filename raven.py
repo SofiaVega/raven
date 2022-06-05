@@ -10,16 +10,22 @@ pilaCalls = []
 #to do: rename, es la pila donde te quedaste cuando haces una llamada
 # a funcion
 lineaQuede = []
+fotos = []
 foto = []
+policia = 0
 
 def tomarFoto():
     global foto
+    global fotos
     print("foto memoria local")
     foto = mv[7000 : 12999]
+    fotos.append(foto)
 
 
 def restaurarFoto():
     global foto
+    global fotos
+    foto = fotos.pop()
     mv[7000 : 12999] = foto
 
 def varsToMV():
@@ -27,6 +33,7 @@ def varsToMV():
     
     for key in tabla_variables.tablaVar:
         print("hola")
+        print(key)
         mv[tabla_variables.tablaVar[key].addressVar] = tabla_variables.tablaVar[key].valueVar
 
 def openQuads():
@@ -51,12 +58,14 @@ def readCtes():
 
 def ejecutar():
     global ip
+    global policia
     operator = cuadruplos[ip]['operator']
     left_op = cuadruplos[ip]['left']
     right_op = cuadruplos[ip]['right']
     result = cuadruplos[ip]['result']
     while operator != "ENDProgram":
         print(ip)
+        print(cuadruplos[ip])
 
         operator = cuadruplos[ip]['operator']
         left_op = cuadruplos[ip]['left']
@@ -69,10 +78,18 @@ def ejecutar():
             ip = int(result)
             #ip += 1
         elif operator == "GOTOF":
-            if(left_op):
+            print("GOTOF")
+            print(cuadruplos[ip])
+            print(type(mv[int(left_op)]))
+            print(mv[int(left_op)])
+            if(mv[int(left_op)] == True):
+                print("true")
                 ip += 1
             else:
+                print("falso")
+                # to do: tomar en cuenta que los cuadruplos empiezan en 0 o en 1
                 ip = int(result)
+                print(ip)
         elif operator == "GOTOV":
             if(left_op):
                 ip += 1
@@ -119,8 +136,8 @@ def ejecutar():
         elif operator == "-":
             print("-")
             print(cuadruplos[ip])
-            mv[result] = mv[left_op] - mv[right_op]
-            #printMV()
+            printMV()
+            mv[result] = int(mv[int(left_op)]) - int(mv[int(right_op)])
             ip += 1
         elif operator == "/":
             print("/")
@@ -139,8 +156,9 @@ def ejecutar():
             print(cuadruplos[ip])
             print(mv[left_op])
             print(mv[right_op])
-            #printMV()
+            printMV()
             mv[result] = int(mv[left_op]) > int(mv[right_op])
+            printMV()
             ip += 1
         elif operator == "<":
             print("<")
@@ -153,6 +171,17 @@ def ejecutar():
         elif operator == ">=":
             print(">=")
             mv[result] = mv[left_op] >= mv[right_op]
+            ip += 1
+        elif operator == "==":
+            print("==")
+            print(mv[left_op])
+            print(mv[right_op])
+            mv[result] = int(mv[left_op]) == int(mv[right_op])
+            print(mv[result])
+            ip += 1
+        elif operator == "!=":
+            print("!=")
+            mv[result] = mv[left_op] != mv[right_op]
             ip += 1
         elif operator == "PRINT":
             print("PRINT")
@@ -183,6 +212,10 @@ def ejecutar():
                 print("Fuera de limites de arreglo " + left_op)
                 exit()
             ip += 1
+        policia += 1
+        if(policia >= 40):
+            print("alto! ya se ciclo")
+            exit()
 
 def printMV():
     cont = 0

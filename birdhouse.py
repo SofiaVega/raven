@@ -341,7 +341,7 @@ class PuntosNeuralgicos(Visitor):
 
     def cuadruplo_expresion(self, tree):
         if pOper:
-            if (pOper[-1] == ">") or (pOper[-1] == "<"):
+            if (pOper[-1] == ">") or (pOper[-1] == "<") or (pOper[-1] == "!=") or (pOper[-1] == "=="):
                 right_operand = pilaO.pop()
                 left_operand = pilaO.pop()
                 right_type = pilaT.pop()
@@ -401,10 +401,11 @@ class PuntosNeuralgicos(Visitor):
             exit()
         else:
             result = pilaO.pop()
+            t = pilaT.pop()
             mem = pilaMem.pop()
             cuadruplos.generate_quad("GOTOF", result, None, "blank")
             # to do: este cuadruplo de memoria tambien tiene que ir con blank?
-            cuadruplos.generate_quad_mem("GOTOF", result, None, "blank")
+            cuadruplos.generate_quad_mem("GOTOF", mem, None, "blank")
             pSaltos.append(cuadruplos.quad_pointer - 1)
 
     def np_if_2(self, tree):
@@ -414,7 +415,9 @@ class PuntosNeuralgicos(Visitor):
 
     def np_if_3(self, tree):
         cuadruplos.generate_quad("GOTO", None, None, "blank")
+        cuadruplos.generate_quad_mem("GOTO", None, None, "blank")
         falso = pSaltos.pop()
+        pSaltos.append(cuadruplos.quad_pointer - 1)
         cuadruplos.fill_quad(falso, cuadruplos.quad_pointer)
         cuadruplos.fill_quad_mem(falso, cuadruplos.quad_pointer)
 
@@ -433,9 +436,10 @@ class PuntosNeuralgicos(Visitor):
             exit()
         else:
             result = pilaO.pop()
+            t = pilaT.pop()
             mem = pilaMem.pop()
             cuadruplos.generate_quad("GOTOF", result, None, "blank")
-            cuadruplos.generate_quad_mem("GOTOF", result, None, "blank")
+            cuadruplos.generate_quad_mem("GOTOF", mem, None, "blank")
             pSaltos.append(cuadruplos.quad_pointer - 1)
 
     def np_while_3(self, tree):
@@ -458,6 +462,7 @@ class PuntosNeuralgicos(Visitor):
         tabla_funciones.addFunc(func)
         pilaFunciones.append(nombre_funcion)
         tabla_funciones.printTable()
+        print(" ya agregue funcion "+ nombre_funcion)
         # parche guadalupano maravilloso
         if tipo_funcion != "vacia":
             # asignar variable global
@@ -477,6 +482,8 @@ class PuntosNeuralgicos(Visitor):
             id_param = tree.children[1].value
             mem = memoria["local"][tipo]
             memoria["local"][tipo] += 1
+            print("en que funcion estamos")
+            print(pilaFunciones[-1])
             tabla_funciones.procDirectory[pilaFunciones[-1]
                                           ].addParam(tipo, id_param, mem)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
@@ -484,6 +491,7 @@ class PuntosNeuralgicos(Visitor):
 
     def mecanica3(self, tree):
         if tree.children:
+            print(" creo que se cicla aqui mecanica 3")
             # otro parametro
             # to do: agregar address
             tipo = tree.children[0].children[0].value
@@ -525,10 +533,11 @@ class PuntosNeuralgicos(Visitor):
 
     def np_llamada_funcion_1(self, tree):
         # verify that the function exists
-        if tabla_funciones.findFunction(tree.children[0]):
-            pilaLlamadas.append(tree.children[0].value)
+        nombre_func = tree.children[0].value
+        if tabla_funciones.findFunction(nombre_func):
+            pilaLlamadas.append(nombre_func)
         else:
-            print("Error, esa funcion no existe")
+            print("Error, esa funcion no existe " + nombre_func)
             exit()
 
     def np_llamada_funcion_2(self, tree):
@@ -562,6 +571,7 @@ class PuntosNeuralgicos(Visitor):
         if pilaK[-1] == (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam):
             print("right amount of params")
         else:
+            print(pilaLlamadas)
             print("Faltan parametros")
             exit()
 
