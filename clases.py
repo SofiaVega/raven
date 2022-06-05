@@ -116,7 +116,7 @@ class FunctionClass:
 
     def addParam(self, tipo, id_param, address):
         # to do: los parametros se agregan como variables?
-        var = VariableClass(id_param, tipo, addressVar = address)
+        var = VariableClass(id_param, tipo, addressVar=address)
         self.varsFunc.addVar(var)
         self.numParam = self.numParam + 1
         self.keysParam.append(id_param)
@@ -162,9 +162,9 @@ class ProcDirectory:
             return True
         else:
             return False
+
     def getFunc(self, name):
         return self.procDirectory[name]
-
 
 
 class VariableTable:
@@ -243,21 +243,29 @@ class Cuadruplos():
         cuadruplo = {"operator": operator, "left": left,
                      "right": right, "result": result}
         self.cuadruplosID.append(cuadruplo)
-        self.print_quad()
         self.quad_pointer = self.quad_pointer + 1
 
+    #   GENERATE QUAD MEM
+    #   Función que genera los cuádruplos con direcciones de memoria virtual y
+    #   los agrega a la lista de cuádruplos con direcciones de memoria
     def generate_quad_mem(self, operator, left, right, result):
         cuadruplo = {"operator": operator, "left": left,
                      "right": right, "result": result}
         self.cuadruplosMem.append(cuadruplo)
-        print("cuadruplo memoria", cuadruplo)
 
-    # Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
-    # Por lo general, para gotos
+    #   FILL QUAD
+    #   Función que regresa a un cuadruplo generado con identificadores con ____
+    #   en la casilla de result para meter el número de cuádruplo al que tendrá
+    #   que tiene que brincar
+    #   Por lo general, para gotos
     def fill_quad(self, end, cont):
         self.cuadruplosID[end]["result"] = cont
 
+    #   FILL QUAD MEM
+    #   Función que regresa a un cuadruplo con direcciones de memoria virtuales
+    #   con ____ en la casilla de result para meter el número de cuádruplo al
+    #   que tendrá que tiene que brincar
+    #
+    #   Por lo general, para gotos
     def fill_quad_mem(self, end, cont):
-        print("fill")
-        print(self.cuadruplosMem[end])
         self.cuadruplosMem[end]["result"] = cont
