@@ -216,7 +216,7 @@ class Cuadruplos():
     def __init__(self):
         self.cuadruplosID = []  # Lista de cuadruplos con identificadores
         self.cuadruplosMem = []  # Lista de cuadruplos con direcciones de memoria
-        self.quad_pointer = 0   # Contador/Apuntador de cuadruplo
+        self.quad_pointer = 1   # Contador/Apuntador de cuadruplo
 
     #   GENERA ARCHIVOS
     #   Función que genera dos archivos de texto, uno con los cuadruplos con

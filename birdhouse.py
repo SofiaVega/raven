@@ -129,7 +129,7 @@ class PuntosNeuralgicos(Visitor):
     # NP INDICE INICIO
     # Genera cuádruplo de {GOTO, indice, , []} incompleto para ser llenado posteriormente
     # Se llama desde programa
-
+    #
     def np_indice_inicio(self, tree):
         cuadruplos.generate_quad("GOTO", "indice", None, "blank")
         cuadruplos.print_quad()
@@ -170,11 +170,11 @@ class PuntosNeuralgicos(Visitor):
         memoria["cte"]["enunciado"] += 1
         pilaMem.append(mem)
 
-    def np_indice(self, tree):
+    def indice(self, tree):
         end = pSaltos.pop()
         print("indice " + str(end) + " " + str(cuadruplos.quad_pointer))
-        cuadruplos.fill_quad(end, cuadruplos.quad_pointer)
-        cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer)
+        cuadruplos.fill_quad(end, cuadruplos.quad_pointer + 1)
+        cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer + 1)
 
     # Funcion ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
     def inlineVar(self, inlineT, type):

@@ -47,7 +47,7 @@ ID: /[a-zA-Z_][a-zA-Z_0-9]*/
 NUM: /\d+/
 
 start: programa
-programa: huv_inicio SALTO importarloop titulo_asig np_asig_quad SALTO varsloop np_indice_inicio mecanicaloop capituloloop np_indice indice np_fin
+programa: huv_inicio SALTO importarloop titulo_asig np_asig_quad SALTO varsloop np_indice_inicio mecanicaloop capituloloop indice np_fin
 huv_inicio: HUV ID
 titulo_asig: TITULO IGUAL STRING
 np_asig_quad:
@@ -82,7 +82,6 @@ fin_mecanica:
 vars_mecanica_loop: vars | vars_mecanica_loop vars |
 
 capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO estatuto SALTO mecanica4 FCOR
-np_indice: 
 
 opciones: OPCIONES ":" "[" opciones2 "]"
 opciones2: opcion opciones3
