@@ -58,9 +58,8 @@ for i in range(0, 1000):
     temporalesString.append("tS" + str(i))
     temporalesPointer.append("tP" + str(i))
 
+
 # Agrega una variable a la tabla de variables global o local
-
-
 def getTemp(tipo):
     global availNum
     global availBool
@@ -129,7 +128,6 @@ class PuntosNeuralgicos(Visitor):
     # NP INDICE INICIO
     # Genera cuádruplo de {GOTO, indice, , []} incompleto para ser llenado posteriormente
     # Se llama desde programa
-    #
     def np_indice_inicio(self, tree):
         cuadruplos.generate_quad("GOTO", "indice", None, "blank")
         cuadruplos.print_quad()
@@ -142,9 +140,7 @@ class PuntosNeuralgicos(Visitor):
     # Mete valores a pila de operandos, sus tipos a la pila de tipos, operador de
     # asignación a pila de operadores, guarda los valores en la tabla de constantes,
     # y mete la variable 'titulo' a la tabla de variables
-    #
     def titulo_asig(self, tree):
-        print("------------------------------------------------------------------------------------------------")
         # TITULO
         titulo = tree.children[0].value
         pilaO.append(titulo)
@@ -170,28 +166,33 @@ class PuntosNeuralgicos(Visitor):
         memoria["cte"]["enunciado"] += 1
         pilaMem.append(mem)
 
+    # NP INDICE
+    # Rellena el cuádruplo {GOTO, indice, , []} con el número de cuádruple donde inicia el indice
+    # Se llama desde programa
     def indice(self, tree):
         end = pSaltos.pop()
         print("indice " + str(end) + " " + str(cuadruplos.quad_pointer))
         cuadruplos.fill_quad(end, cuadruplos.quad_pointer + 1)
         cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer + 1)
 
-    # Funcion ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
+    # INLINE VAR
+    # Función ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
+    # a la tabla de variables
     def inlineVar(self, inlineT, type):
         if(inlineT != []):
             name = inlineT[0].children[0].value
             inlineT = inlineT[1].children
             mem = memoria["global"][type]
             memoria["global"][type] += 1
-            # pasar esto a cuadruplos
             var = VariableClass(name, type, addressVar=mem)
             addVar(var)
             self.inlineVar(inlineT, type)
         else:
             return
 
+    # NP VARS
+    # Punto neurálgico que agrega variables a la tabla de variables
     def np_vars(self, tree):
-        # print(tree)
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
         contexto = pilaFunciones[-1]
@@ -204,21 +205,16 @@ class PuntosNeuralgicos(Visitor):
         # Logica para tambien agregar variables que se declaran en la misma linea
         self.inlineVar(tree.children[3].children, type)
 
-    # Agrega ID a pila de operandos
+    # NP ASIG
+    # Punto neurálgico que agrega ID y su tipo a la pila de operadores y pila de tipos,
+    # además de agregar el operador = a la pila de operadores
     def np_asig(self, tree):
         val = tree.children[0].value
-        print(tree)
-        print(pilaFunciones[-1])
-        print(checkExists_contexto(val))
         if (checkExists_contexto(val) == True):
-            print("entra porque si existe")
             var = getVar(val)
-
             pilaO.append(val)
             tipo = var.typeVar
             mem = var.addressVar
-            print(val)
-            print("mem "+str(mem))
             pilaT.append(tipo)
             pilaMem.append(mem)
             try:
@@ -226,11 +222,12 @@ class PuntosNeuralgicos(Visitor):
             except:
                 pOper.append(tree.children[2].value)
         else:
-            print("no existe " + val)
+            errorExisteContexto(val)
             exit()
 
+    # NP ASIG QUAD
+    # Punto neurálgico que genera cuádruplos de asignación
     def np_asig_quad(self, tree):
-        print("asig quad")
         operator = pOper.pop()
         left_operand = pilaO.pop()
         right_operand = None
@@ -242,7 +239,6 @@ class PuntosNeuralgicos(Visitor):
                                  right_operand, result)
         cuadruplos.generate_quad_mem(operator, left_mem, None, res_mem)
 
-        #generate_quad("=", "value", None, tree.children[0].value)
     ''' 
     Guardado de constantes
     '''

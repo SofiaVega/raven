@@ -13,3 +13,7 @@ def errorTipos(operador, left_type, right_type):
     print("ERROR: Error de tipos. \nEl operador ", operador,
           " no soporta operaciones con la combinación de tipos ", left_type, " y ", right_type)
     exit()
+
+
+def errorExisteContexto(val):
+    print("ERROR: La variable ", val, " no existe.")
