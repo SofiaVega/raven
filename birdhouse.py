@@ -27,9 +27,7 @@ availString = 0  # Contador de temporales para strings (empieza en t0)
 availPointer = 0  # Contador de temporales para iPointer (empieza en t0)
 
 # CUADRUPLOS
-quad_pointer = 0  # Contador de cuadruplos
-cuadruplos = []  # Lista de cuadruplos con ids
-cuadruplosMem = []  # Lista de cuadruplos con Memoria
+cuadruplos = Cuadruplos()
 
 # FUNCIONES
 # Pila de funciones
@@ -55,24 +53,6 @@ for i in range(0, 1000):
     temporalesBool.append("tB" + str(i))
     temporalesString.append("tS" + str(i))
     temporalesPointer.append("tP" + str(i))
-
-
-# Funcion para generar cuadruplos
-# Es posible moverla a un objeto para refactorizar
-def quad_ids(cuadruplos):
-    f = open("cuadruplosID.txt", "w")
-    for quad in cuadruplos:
-        f.write(str(quad)+'\n')
-    f.close()
-
-# Pasa los cuadruplos con direcciones virtuales a un archivo de texto
-
-
-def quad_mem(cuadruplos):
-    f = open("cuadruplosMem.txt", "w")
-    for quad in cuadruplosMem:
-        f.write(str(quad)+'\n')
-    f.close()
 
 # Agrega una variable a la tabla de variables global o local
 
@@ -108,40 +88,6 @@ def checkExists_contexto(val):
                                       ].varsFunc.checkExists(val)
         return False
 
-# Genera cuadruplos con los ids
-
-
-def generate_quad(operator, left, right, result):
-    global quad_pointer
-    cuadruplo = {"operator": operator, "left": left,
-                 "right": right, "result": result}
-    cuadruplos.append(cuadruplo)
-    print(quad_pointer + 1, ' ', operator, left, right, result)
-    quad_pointer = quad_pointer + 1
-
-# Genera cuadruplos con los valores de memoria
-
-
-def generate_quad_mem(operator, left, right, result):
-    cuadruplo = {"operator": operator, "left": left,
-                 "right": right, "result": result}
-    cuadruplosMem.append(cuadruplo)
-    print("cuadruplo memoria")
-    print(cuadruplo)
-
-# Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
-# Por lo general, para gotos
-
-
-def fill_quad(end, cont):
-    cuadruplos[end]["result"] = cont
-
-
-def fill_quad_mem(end, cont):
-    print("fill")
-    print(cuadruplosMem[end])
-    cuadruplosMem[end]["result"] = cont
-
 
 tabla_variables = VariableTable()  # Tabla de variables
 tabla_funciones = ProcDirectory()  # Tabla de funciones
@@ -151,10 +97,11 @@ tabla_ctes = TablaConstantes()
 class PuntosNeuralgicos(Visitor):
     def huv_inicio(self, tree):
         print("Habia una vez", tree.children[1])
-        generate_quad("GOTO", tree.children[1].value, None, "blank")
+        cuadruplos.generate_quad("GOTO", tree.children[1].value, None, "blank")
         # to do: poner memoria en vez de valor
-        generate_quad_mem("GOTO", tree.children[1].value, None, "blank")
-        pSaltos.append(quad_pointer-1)
+        cuadruplos.generate_quad_mem(
+            "GOTO", tree.children[1].value, None, "blank")
+        pSaltos.append(cuadruplos.quad_pointer-1)
 
     def titulo_asig(self, tree):
         val = tree.children[0].value
@@ -176,9 +123,9 @@ class PuntosNeuralgicos(Visitor):
     def np_cap(self, tree):
         print("AQUI")
         end = pSaltos.pop()
-        print("capitulo " + str(end) + " " + str(quad_pointer))
-        fill_quad(end, quad_pointer)
-        fill_quad_mem(end, quad_pointer)
+        print("capitulo " + str(end) + " " + str(cuadruplos.quad_pointer))
+        cuadruplos.fill_quad(end, cuadruplos.quad_pointer)
+        cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer)
 
     # Funcion ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
     def inlineVar(self, inlineT, type):
@@ -236,9 +183,9 @@ class PuntosNeuralgicos(Visitor):
         result = pilaO.pop()
         print(pilaMem)
         res_mem = pilaMem.pop()
-        generate_quad(operator, left_operand,
-                      right_operand, result)
-        generate_quad_mem(operator, left_mem, None, res_mem)
+        cuadruplos.generate_quad(operator, left_operand,
+                                 right_operand, result)
+        cuadruplos.generate_quad_mem(operator, left_mem, None, res_mem)
 
         #generate_quad("=", "value", None, tree.children[0].value)
     ''' 
@@ -318,10 +265,10 @@ class PuntosNeuralgicos(Visitor):
                         availString = availString+1
                     result_mem = memoria["temp"][result_type]
                     memoria["temp"][result_type] = memoria["temp"][result_type] + 1
-                    generate_quad(operator, left_operand,
-                                  right_operand, result)
-                    generate_quad_mem(operator, left_mem,
-                                      right_mem, result_mem)
+                    cuadruplos.generate_quad(operator, left_operand,
+                                             right_operand, result)
+                    cuadruplos.generate_quad_mem(operator, left_mem,
+                                                 right_mem, result_mem)
                     pilaO.append(result)
                     pilaT.append(result_type)
                     pilaMem.append(result_mem)
@@ -350,15 +297,15 @@ class PuntosNeuralgicos(Visitor):
                     global availNum
                     result = temporalesNum[availNum]
                     availNum = availNum+1
-                    generate_quad(operator, left_operand,
-                                  right_operand, result)
+                    cuadruplos.generate_quad(operator, left_operand,
+                                             right_operand, result)
                     pilaO.append(result)
                     pilaT.append(result_type)
                     result_mem = memoria["temp"][result_type]
                     pilaMem.append(result_mem)
                     memoria["temp"][result_type] = memoria["temp"][result_type] + 1
-                    generate_quad_mem(operator, left_mem,
-                                      right_mem, result_mem)
+                    cuadruplos.generate_quad_mem(operator, left_mem,
+                                                 right_mem, result_mem)
                     # revisar si uno de los operandos era un temporal
                 else:
                     errorTipos(operator, left_type, right_type)
@@ -383,15 +330,15 @@ class PuntosNeuralgicos(Visitor):
                     global availBool
                     result = temporalesBool[availBool]
                     availBool = availBool+1
-                    generate_quad(operator, left_operand,
-                                  right_operand, result)
+                    cuadruplos.generate_quad(operator, left_operand,
+                                             right_operand, result)
                     pilaO.append(result)
                     pilaT.append(result_type)
                     result_mem = memoria["temp"][result_type]
                     pilaMem.append(result_mem)
                     memoria["temp"][result_type] = memoria["temp"][result_type] + 1
-                    generate_quad_mem(operator, left_mem,
-                                      right_mem, result_mem)
+                    cuadruplos.generate_quad_mem(operator, left_mem,
+                                                 right_mem, result_mem)
                     # revisar si uno de los operandos era un temporal
                 else:
                     errorTipos(operator, left_type, right_type)
@@ -407,8 +354,8 @@ class PuntosNeuralgicos(Visitor):
         if pilaT.pop() == "enunciado":
             result = pilaO.pop()
             pilaT.pop()
-            generate_quad("PRINT", None, None, result)
-            generate_quad_mem("PRINT", None, None, mem_str)
+            cuadruplos.generate_quad("PRINT", None, None, result)
+            cuadruplos.generate_quad_mem("PRINT", None, None, mem_str)
             tabla_ctes.addCte(result, mem_str)
 
     def np_print_expresion(self, tree):
@@ -417,14 +364,13 @@ class PuntosNeuralgicos(Visitor):
             if pilaT:
                 pilaT.pop()
             mem = pilaMem.pop()
-            generate_quad("PRINT", None, None, result)
-            generate_quad_mem("PRINT", None, None, mem)
+            cuadruplos.generate_quad("PRINT", None, None, result)
+            cuadruplos.generate_quad_mem("PRINT", None, None, mem)
 
     # Puntos neuralgicos del if
     # To do: probarlos con un ejemplo, necesitamos la tabla de variables
 
     def np_if(self, tree):
-        global quad_pointer
         exp_type = pilaT.pop()
         if exp_type != "bool":
             print("Type mismatch")
@@ -432,32 +378,31 @@ class PuntosNeuralgicos(Visitor):
         else:
             result = pilaO.pop()
             mem = pilaMem.pop()
-            generate_quad("GOTOF", result, None, "blank")
+            cuadruplos.generate_quad("GOTOF", result, None, "blank")
             # to do: este cuadruplo de memoria tambien tiene que ir con blank?
-            generate_quad_mem("GOTOF", result, None, "blank")
-            pSaltos.append(quad_pointer - 1)
+            cuadruplos.generate_quad_mem("GOTOF", result, None, "blank")
+            pSaltos.append(cuadruplos.quad_pointer - 1)
 
     def np_if_2(self, tree):
         end = pSaltos.pop()
-        fill_quad(end, quad_pointer)
-        fill_quad_mem(end, quad_pointer)
+        cuadruplos.fill_quad(end, cuadruplos.quad_pointer)
+        cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer)
 
     def np_if_3(self, tree):
-        generate_quad("GOTO", None, None, "blank")
+        cuadruplos.generate_quad("GOTO", None, None, "blank")
         falso = pSaltos.pop()
-        fill_quad(falso, quad_pointer)
-        fill_quad_mem(falso, quad_pointer)
+        cuadruplos.fill_quad(falso, cuadruplos.quad_pointer)
+        cuadruplos.fill_quad_mem(falso, cuadruplos.quad_pointer)
 
     # Puntos neuralgicos para un while
 
     def np_while_1(self, tree):
         # Migaja de pan
         # En cuanto encuentras el while
-        pSaltos.append(quad_pointer)
+        pSaltos.append(cuadruplos.quad_pointer)
 
     def np_while_2(self, tree):
         # Revisar que el tipo sea booleano
-        global quad_pointer
         exp_type = pilaT.pop()
         if exp_type != "bool":
             print("Type mismatch")
@@ -465,19 +410,19 @@ class PuntosNeuralgicos(Visitor):
         else:
             result = pilaO.pop()
             mem = pilaMem.pop()
-            generate_quad("GOTOF", result, None, "blank")
-            generate_quad_mem("GOTOF", result, None, "blank")
-            pSaltos.append(quad_pointer - 1)
+            cuadruplos.generate_quad("GOTOF", result, None, "blank")
+            cuadruplos.generate_quad_mem("GOTOF", result, None, "blank")
+            pSaltos.append(cuadruplos.quad_pointer - 1)
 
     def np_while_3(self, tree):
         # Hacer un goto de regreso a la condicion del while
         # Llenar el gotoF vacio
         end = pSaltos.pop()
         regreso = pSaltos.pop()
-        generate_quad("GOTO", None, None, regreso)
-        generate_quad_mem("GOTO", None, None, regreso)
-        fill_quad(end, quad_pointer)
-        fill_quad_mem(end, quad_pointer)
+        cuadruplos.generate_quad("GOTO", None, None, regreso)
+        cuadruplos.generate_quad_mem("GOTO", None, None, regreso)
+        cuadruplos.fill_quad(end, cuadruplos.quad_pointer)
+        cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer)
 
     # Puntos neuralgicos funciones
 
@@ -514,13 +459,13 @@ class PuntosNeuralgicos(Visitor):
 
     def cambiar_quad_pointer(self, tree):
         tabla_funciones.procDirectory[pilaFunciones[-1]
-                                      ].quad_inicial = quad_pointer
+                                      ].quad_inicial = cuadruplos.quad_pointer
 
     def fin_mecanica(self, tree):
         # varias cosas
         # release
-        generate_quad("ENDFunc", None, None, None)
-        generate_quad_mem("ENDFunc", None, None, None)
+        cuadruplos.generate_quad("ENDFunc", None, None, None)
+        cuadruplos.generate_quad_mem("ENDFunc", None, None, None)
         # insert the number of temps
 
     # puntos neuralgicos para llamadas a funciones
@@ -536,8 +481,8 @@ class PuntosNeuralgicos(Visitor):
     def np_llamada_funcion_2(self, tree):
         # Generar cuadruplo ERA, nombreFuncion
         # Cuando se llama a una funcion
-        generate_quad("ERA", pilaLlamadas[-1], None, None)
-        generate_quad_mem("ERA", pilaLlamadas[-1], None, None)
+        cuadruplos.generate_quad("ERA", pilaLlamadas[-1], None, None)
+        cuadruplos.generate_quad_mem("ERA", pilaLlamadas[-1], None, None)
         pilaK.append(0)
 
     def np_llamada_funcion_3(self, tree):
@@ -564,16 +509,16 @@ class PuntosNeuralgicos(Visitor):
 
     def np_llamada_funcion_6(self, tree):
         # to do: falta initial-address
-        generate_quad("GOSUB", pilaLlamadas[-1], None, None)
-        generate_quad_mem("GOSUB", pilaLlamadas[-1], None, None)
+        cuadruplos.generate_quad("GOSUB", pilaLlamadas[-1], None, None)
+        cuadruplos.generate_quad_mem("GOSUB", pilaLlamadas[-1], None, None)
 
     def np_fin(self, tree):
-        generate_quad("ENDProgram", None, None, None)
-        generate_quad_mem("ENDProgram", None, None, None)
+        cuadruplos.generate_quad("ENDProgram", None, None, None)
+        cuadruplos.generate_quad_mem("ENDProgram", None, None, None)
         print("tabla de variables fin")
         tabla_variables.printTable()
-        quad_ids(cuadruplos)
-        quad_mem(cuadruplosMem)
+        cuadruplos.generaArchivoMem()
+        cuadruplos.generaArchivoID()
         tabla_ctes.toTxt()
 
     # Arreglos
@@ -657,8 +602,8 @@ class PuntosNeuralgicos(Visitor):
         global currNodo
         global availNum
         print("verificacion")
-        generate_quad("VER", pilaO[-1], 0, currNodo.ls)
-        generate_quad_mem("VER", pilaMem[-1], 0, currNodo.ls)
+        cuadruplos.generate_quad("VER", pilaO[-1], 0, currNodo.ls)
+        cuadruplos.generate_quad_mem("VER", pilaMem[-1], 0, currNodo.ls)
         if currNodo.ultimoNodo == False:
             aux = pilaO.pop()
             tipo = pilaT.pop()
@@ -669,8 +614,8 @@ class PuntosNeuralgicos(Visitor):
             result_mem = memoria["temp"]["num"]
             memoria["temp"]["num"] += 1
 
-            generate_quad("*", aux, currNodo.val, result)
-            generate_quad_mem("*", mem, currNodo.val, result_mem)
+            cuadruplos.generate_quad("*", aux, currNodo.val, result)
+            cuadruplos.generate_quad_mem("*", mem, currNodo.val, result_mem)
             pilaO.append(result)
             pilaT.append("num")
             pilaMem.append(result_mem)
@@ -688,8 +633,8 @@ class PuntosNeuralgicos(Visitor):
             result_mem = memoria["temp"]["num"]
             memoria["temp"]["num"] += 1
 
-            generate_quad("+", aux1, aux2, result)
-            generate_quad_mem("*", mem, currNodo.val, result_mem)
+            cuadruplos.generate_quad("+", aux1, aux2, result)
+            cuadruplos.generate_quad_mem("*", mem, currNodo.val, result_mem)
             pilaO.append(result)
             pilaT.append("num")
             pilaMem.append(result_mem)
@@ -711,8 +656,8 @@ class PuntosNeuralgicos(Visitor):
         result_mem = memoria["temp"]["pointer"]
         memoria["temp"]["pointer"] += 1
 
-        generate_quad("+", aux, 0, result)
-        generate_quad_mem("+", mem, 0, result_mem)
+        cuadruplos.generate_quad("+", aux, 0, result)
+        cuadruplos.generate_quad_mem("+", mem, 0, result_mem)
         # TO DO cambiar esto al pointer de result
         # esto tiene que pasar antes de asig quad
         pilaO.append(result)

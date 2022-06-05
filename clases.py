@@ -199,3 +199,49 @@ class VariableTable:
         else:
             print('Syntax error: variable ' + key + ' does not exist')
             return False
+
+
+class Cuadruplos():
+    def __init__(self):
+        self.cuadruplosID = []
+        self.cuadruplosMem = []
+        self.quad_pointer = 0
+
+    def generaArchivoID(self):
+        f = open("cuadruplosID.txt", "w")
+        for quad in self.cuadruplosID:
+            f.write(str(quad)+'\n')
+        f.close()
+
+    def generaArchivoMem(self):
+        f = open("cuadruplosMem.txt", "w")
+        for quad in self.cuadruplosMem:
+            f.write(str(quad)+'\n')
+        f.close()
+
+    def generate_quad(self, operator, left, right, result):
+        cuadruplo = {"operator": operator, "left": left,
+                     "right": right, "result": result}
+        self.cuadruplosID.append(cuadruplo)
+        print(self.quad_pointer + 1, ' ', operator, left, right, result)
+        self.quad_pointer = self.quad_pointer + 1
+
+    """ def print_quad(self):
+        print(quad_pointer + 1, ' ', operator, left, right, result)
+        """
+
+    def generate_quad_mem(self, operator, left, right, result):
+        cuadruplo = {"operator": operator, "left": left,
+                     "right": right, "result": result}
+        self.cuadruplosMem.append(cuadruplo)
+        print("cuadruplo memoria", cuadruplo)
+
+    # Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
+    # Por lo general, para gotos
+    def fill_quad(self, end, cont):
+        self.cuadruplosID[end]["result"] = cont
+
+    def fill_quad_mem(self, end, cont):
+        print("fill")
+        print(self.cuadruplosMem[end])
+        self.cuadruplosMem[end]["result"] = cont
