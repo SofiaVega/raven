@@ -201,34 +201,44 @@ class VariableTable:
             return False
 
 
+#   CLASE CUADRUPLOS
+#   Un cuadruplo es una estructura de tipo registro con cuatro campos:
+#   {operador, operando_izquierdo, operando_derecho, resultado}
+#
+#   Esta clase albergará todas las funciones relacionadas con esta estructura
 class Cuadruplos():
     def __init__(self):
-        self.cuadruplosID = []
-        self.cuadruplosMem = []
-        self.quad_pointer = 0
+        self.cuadruplosID = []  # Lista de cuadruplos con identificadores
+        self.cuadruplosMem = []  # Lista de cuadruplos con direcciones de memoria
+        self.quad_pointer = 0   # Contador/Apuntador de cuadruplo
 
-    def generaArchivoID(self):
+    #   GENERA ARCHIVOS
+    #   Función que genera dos archivos de texto, uno con los cuadruplos con
+    #   identificadores y otro con los cuadruplos con direcciones de memoria
+    #   para ser interpretados por la máquina virtual
+    def generaArchivos(self):
         f = open("cuadruplosID.txt", "w")
         for quad in self.cuadruplosID:
             f.write(str(quad)+'\n')
         f.close()
 
-    def generaArchivoMem(self):
         f = open("cuadruplosMem.txt", "w")
         for quad in self.cuadruplosMem:
             f.write(str(quad)+'\n')
         f.close()
 
+    def print_quad(self):
+        print(self.quad_pointer + 1, self.cuadruplosID[-1])
+
+    #   GENERATE QUAD
+    #   Función que genera los cuádruplos con identificadores y los agrega a la
+    #   lista de cuádruplos con identificadores
     def generate_quad(self, operator, left, right, result):
         cuadruplo = {"operator": operator, "left": left,
                      "right": right, "result": result}
         self.cuadruplosID.append(cuadruplo)
-        print(self.quad_pointer + 1, ' ', operator, left, right, result)
+        self.print_quad()
         self.quad_pointer = self.quad_pointer + 1
-
-    """ def print_quad(self):
-        print(quad_pointer + 1, ' ', operator, left, right, result)
-        """
 
     def generate_quad_mem(self, operator, left, right, result):
         cuadruplo = {"operator": operator, "left": left,

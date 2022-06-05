@@ -517,8 +517,7 @@ class PuntosNeuralgicos(Visitor):
         cuadruplos.generate_quad_mem("ENDProgram", None, None, None)
         print("tabla de variables fin")
         tabla_variables.printTable()
-        cuadruplos.generaArchivoMem()
-        cuadruplos.generaArchivoID()
+        cuadruplos.generaArchivos()
         tabla_ctes.toTxt()
 
     # Arreglos
