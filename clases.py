@@ -99,6 +99,7 @@ class FunctionClass:
     - paramsFunc : [] -> arreglo de parametros de tipo variable, o constante
     - scopeFunc : string -> scope de la funcion
     - addressFunc : int -> numero de cuadruplo donde inicia la funcion
+    - quad_inicial: numero de cuadruplo donde inicia la funcion
     '''
 
     def __init__(self, nameFunc, typeFunc, paramTipos=[], scopeFunc="", addressFunc="", numParam=0, numVar=0, quad_inicial=0):
@@ -111,12 +112,14 @@ class FunctionClass:
         self.numParam = numParam
         self.numVar = numVar
         self.quad_inicial = quad_inicial
+        self.keysParam = []
 
-    def addParam(self, tipo, id_param):
+    def addParam(self, tipo, id_param, address):
         # to do: los parametros se agregan como variables?
-        var = VariableClass(id_param, tipo)
+        var = VariableClass(id_param, tipo, addressVar = address)
         self.varsFunc.addVar(var)
         self.numParam = self.numParam + 1
+        self.keysParam.append(id_param)
         # self.paramsFunc.append(var)
 
     def addVar(self, varObject):
@@ -159,6 +162,9 @@ class ProcDirectory:
             return True
         else:
             return False
+    def getFunc(self, name):
+        return self.procDirectory[name]
+
 
 
 class VariableTable:
