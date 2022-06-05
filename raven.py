@@ -2,24 +2,26 @@ from birdhouse import *
 from memoria import memoriaVirtual as mv
 import ast
 
-#pasar tablas de variables constantes y funciones
+# pasar tablas de variables constantes y funciones
 
 cuadruplos = []
 ip = 0
 pilaCalls = []
-#to do: rename, es la pila donde te quedaste cuando haces una llamada
+# to do: rename, es la pila donde te quedaste cuando haces una llamada
 # a funcion
 lineaQuede = []
 fotos = []
 foto = []
 policia = 0
 
+
 def tomarFoto():
     global foto
     global fotos
     print("foto memoria local")
-    foto = mv[7000 : 12999]
+    foto = mv[7000: 12999]
     fotos.append(foto)
+
 
 def printSubMV(smv):
     cont = 0
@@ -29,19 +31,22 @@ def printSubMV(smv):
             print(str(cont) + " " + str(i))
         cont += 1
 
+
 def restaurarFoto():
     global foto
     global fotos
     foto = fotos.pop()
-    mv[7000 : 12999] = foto
+    mv[7000: 12999] = foto
+
 
 def varsToMV():
     print("tabla variables")
-    
+
     for key in tabla_variables.tablaVar:
         print("hola")
         print(key)
         mv[tabla_variables.tablaVar[key].addressVar] = tabla_variables.tablaVar[key].valueVar
+
 
 def openQuads():
     f = open("cuadruplosMem.txt", "r")
@@ -52,6 +57,7 @@ def openQuads():
         cuadruplos.append(cuadruplo)
     f.close()
 
+
 def readCtes():
     f = open("tablaCtes.txt", "r")
     ctes = f.readlines()
@@ -60,7 +66,6 @@ def readCtes():
         a, b = c.split(maxsplit=1)
         s = b.rstrip()
         mv[int(a)] = s
-
 
 
 def ejecutar():
@@ -79,9 +84,12 @@ def ejecutar():
         right_op = cuadruplos[ip]['right']
         result = cuadruplos[ip]['result']
 
-        if operator == "GOTO":
+        if operator == "PROGRAM":
+            print("programa")
+            ip += 1
+        elif operator == "GOTO":
             print("GOTO")
-            # to do: 
+            # to do:
             ip = int(result)
             #ip += 1
         elif operator == "GOTOF":
@@ -105,41 +113,43 @@ def ejecutar():
         elif operator == "GOSUB":
             lineaQuede.append(ip + 1)
             print("antes de foto")
-            #printMV()
-            #tomarFoto()
+            # printMV()
+            # tomarFoto()
             print(left_op)
             ip = int(left_op)
             # to do: como regresamos a donde nos quedamos
-            #pila ?
-            #action(cuadruplos[int(left_op)])
-            #action(cuadruplos[++ip])
+            # pila ?
+            # action(cuadruplos[int(left_op)])
+            # action(cuadruplos[++ip])
         elif operator == "ERA":
             # Generar los espacios de memoria
-            #action()
-            #to do: reservar espacio de memoria
+            # action()
+            # to do: reservar espacio de memoria
             tomarFoto()
             pilaCalls.append(left_op)
             ip += 1
         elif operator == "PARAM":
             print("param")
             # Indicates that the argument sent must be copied into parámater#-- in Run-Time
-            key = tabla_funciones.procDirectory[pilaCalls[-1]].keysParam[result]
-            addv = tabla_funciones.procDirectory[pilaCalls[-1]].varsFunc.tablaVar[key].addressVar
+            key = tabla_funciones.procDirectory[pilaCalls[-1]
+                                                ].keysParam[result]
+            addv = tabla_funciones.procDirectory[pilaCalls[-1]
+                                                 ].varsFunc.tablaVar[key].addressVar
             mv[addv] = mv[left_op]
             ip += 1
         elif operator == "=":
             print("=")
             print(cuadruplos[ip])
             # checar si es pointer
-            #printMV()
+            # printMV()
             mv[int(result)] = mv[int(left_op)]
             ip += 1
         elif operator == '+':
             print("+")
             print(cuadruplos[ip])
-            #checar tipo con direcciones de memoria
+            # checar tipo con direcciones de memoria
             mv[result] = int(mv[left_op]) + int(mv[right_op])
-            #printMV()
+            # printMV()
             ip += 1
         elif operator == "-":
             print("-")
@@ -154,7 +164,7 @@ def ejecutar():
             ip += 1
         elif operator == "*":
             print("*")
-            #to do: puede ser int o float
+            # to do: puede ser int o float
             print(cuadruplos[ip])
             printMV()
             mv[result] = int(mv[left_op]) * int(mv[right_op])
@@ -201,7 +211,7 @@ def ejecutar():
             print("End function")
             restaurarFoto()
             print("despues de foto")
-            #printMV()
+            # printMV()
             ip = lineaQuede.pop()
         elif operator == "RETURN":
             print("Return")
@@ -211,14 +221,14 @@ def ejecutar():
             mv[left_op] = mv[result]
             restaurarFoto()
             print("despues de foto")
-            #printMV()
+            # printMV()
             ip = lineaQuede.pop()
-            print("quede en "+ str(ip))
+            print("quede en " + str(ip))
 
         elif operator == "VER":
             print("Verificacion arreglos")
             # ver, x, li, ls
-            if (left_op <  right_op) or (left_op >= result):
+            if (left_op < right_op) or (left_op >= result):
                 print("Fuera de limites de arreglo " + left_op)
                 exit()
             ip += 1
@@ -227,6 +237,7 @@ def ejecutar():
             print("alto! ya se ciclo")
             exit()
 
+
 def printMV():
     cont = 0
     print("imprimiendo mv")
@@ -234,6 +245,7 @@ def printMV():
         if i != None:
             print(str(cont) + " " + str(i))
         cont += 1
+
 
 def maquinaVirtual():
     print("-------- RAVEN TIME -------")
@@ -247,4 +259,3 @@ def maquinaVirtual():
         print("Quadruple file has not been generated yet")
     ejecutar()
     printMV()
-

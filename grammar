@@ -42,6 +42,7 @@ IGUAL: "="
 IMPORTAR: "importar"
 COMO: "como"
 INDICE: "indice"
+HOLA: "hola"
 
 ID: /[a-zA-Z_][a-zA-Z_0-9]*/
 NUM: /\d+/
@@ -59,7 +60,8 @@ varsloop: vars | varsloop vars |
 mecanicaloop: mecanica | mecanicaloop  mecanica |
 capituloloop: capitulo | capituloloop capitulo 
 indice: INDICE IPAR FPAR ICOR llamada_capituloloop FCOR 
-llamada_capitulo_loop: llamada_capitulo | llamada_capitulo_loop llamada_capitulo
+llamada_capituloloop: llamada_capitulo | llamada_capituloloop llamada_capitulo
+llamada_capitulo: HOLA
 
 importar: IMPORTAR STRING COMO ID
 

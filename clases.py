@@ -225,12 +225,12 @@ class Cuadruplos():
     #   para ser interpretados por la máquina virtual
     def generaArchivos(self):
         f = open("cuadruplosID.txt", "w")
-        for quad in self.cuadruplosID:
+        for quad in self.cuadruplosID[1:]:
             f.write(str(quad)+'\n')
         f.close()
 
         f = open("cuadruplosMem.txt", "w")
-        for quad in self.cuadruplosMem:
+        for quad in self.cuadruplosMem[1:]:
             f.write(str(quad)+'\n')
         f.close()
 
