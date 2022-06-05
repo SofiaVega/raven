@@ -10,7 +10,8 @@ class NodoArreglo():
         r
 
     """
-    def __init__(self, r = 1, var = "", ls = 0, dim = 1):
+
+    def __init__(self, r=1, var="", ls=0, dim=1):
         self.li = 0
         self.ls = int(ls)
         self.dim = dim
@@ -32,7 +33,9 @@ class NodoArreglo():
         self.val = val
 
     def imprimir(self):
-        print("li " + str(self.li) + " ls " + str(self.ls) + " dim " + str(self.dim) + " ultimoNodo " + str(self.ultimoNodo))
+        print("li " + str(self.li) + " ls " + str(self.ls) + " dim " +
+              str(self.dim) + " ultimoNodo " + str(self.ultimoNodo))
+
 
 class TablaConstantes():
     '''
@@ -79,13 +82,13 @@ class VariableClass():
         self.isArray = False
         self.arrNode = None
 
-
     def printvar(self):
         print("[nameVar: {} typeVar: {} valueVar: {} addressVar: {}]".format(
             self.nameVar, self.typeVar, self.valueVar, self.addressVar))
 
-
 # Clase Funcion para la creación de funciones y sus atributos
+
+
 class FunctionClass:
     '''
     Constructor de Function
@@ -176,7 +179,6 @@ class VariableTable:
         self.tablaVar[name]
 
     def printTable(self):
-        # print(len(self.tablaVar.items()))
         for item in self.tablaVar.items():
             print(item)
             item[1].printvar()
@@ -204,3 +206,58 @@ class VariableTable:
             print('Syntax error: variable ' + key + ' does not exist')
             return False
 
+
+#   CLASE CUADRUPLOS
+#   Un cuadruplo es una estructura de tipo registro con cuatro campos:
+#   {operador, operando_izquierdo, operando_derecho, resultado}
+#
+#   Esta clase albergará todas las funciones relacionadas con esta estructura
+class Cuadruplos():
+    def __init__(self):
+        self.cuadruplosID = []  # Lista de cuadruplos con identificadores
+        self.cuadruplosMem = []  # Lista de cuadruplos con direcciones de memoria
+        self.quad_pointer = 0   # Contador/Apuntador de cuadruplo
+
+    #   GENERA ARCHIVOS
+    #   Función que genera dos archivos de texto, uno con los cuadruplos con
+    #   identificadores y otro con los cuadruplos con direcciones de memoria
+    #   para ser interpretados por la máquina virtual
+    def generaArchivos(self):
+        f = open("cuadruplosID.txt", "w")
+        for quad in self.cuadruplosID:
+            f.write(str(quad)+'\n')
+        f.close()
+
+        f = open("cuadruplosMem.txt", "w")
+        for quad in self.cuadruplosMem:
+            f.write(str(quad)+'\n')
+        f.close()
+
+    def print_quad(self):
+        print(self.quad_pointer + 1, self.cuadruplosID[-1])
+
+    #   GENERATE QUAD
+    #   Función que genera los cuádruplos con identificadores y los agrega a la
+    #   lista de cuádruplos con identificadores
+    def generate_quad(self, operator, left, right, result):
+        cuadruplo = {"operator": operator, "left": left,
+                     "right": right, "result": result}
+        self.cuadruplosID.append(cuadruplo)
+        self.print_quad()
+        self.quad_pointer = self.quad_pointer + 1
+
+    def generate_quad_mem(self, operator, left, right, result):
+        cuadruplo = {"operator": operator, "left": left,
+                     "right": right, "result": result}
+        self.cuadruplosMem.append(cuadruplo)
+        print("cuadruplo memoria", cuadruplo)
+
+    # Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
+    # Por lo general, para gotos
+    def fill_quad(self, end, cont):
+        self.cuadruplosID[end]["result"] = cont
+
+    def fill_quad_mem(self, end, cont):
+        print("fill")
+        print(self.cuadruplosMem[end])
+        self.cuadruplosMem[end]["result"] = cont
