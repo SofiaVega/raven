@@ -234,7 +234,7 @@ class Cuadruplos():
         f.close()
 
     def print_quad(self):
-        print(self.quad_pointer + 1, self.cuadruplosID[-1])
+        print(self.quad_pointer, self.cuadruplosID[-1])
 
     #   GENERATE QUAD
     #   Función que genera los cuádruplos con identificadores y los agrega a la

@@ -18,5 +18,4 @@ capitulo uno () {
 }
 
 indice() {
-    uno()
 }

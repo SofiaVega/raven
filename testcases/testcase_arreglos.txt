@@ -12,6 +12,4 @@ capitulo uno () {
     -> "habia una vez"
 }
 
-indice() {
-    uno()
-}
+indice() {}
