@@ -10,7 +10,8 @@ class NodoArreglo():
         r
 
     """
-    def __init__(self, r = 1, var = "", ls = 0, dim = 1):
+
+    def __init__(self, r=1, var="", ls=0, dim=1):
         self.li = 0
         self.ls = int(ls)
         self.dim = dim
@@ -32,7 +33,9 @@ class NodoArreglo():
         self.val = val
 
     def imprimir(self):
-        print("li " + str(self.li) + " ls " + str(self.ls) + " dim " + str(self.dim) + " ultimoNodo " + str(self.ultimoNodo))
+        print("li " + str(self.li) + " ls " + str(self.ls) + " dim " +
+              str(self.dim) + " ultimoNodo " + str(self.ultimoNodo))
+
 
 class TablaConstantes():
     '''
@@ -79,13 +82,13 @@ class VariableClass():
         self.isArray = False
         self.arrNode = None
 
-
     def printvar(self):
         print("[nameVar: {} typeVar: {} valueVar: {} addressVar: {}]".format(
             self.nameVar, self.typeVar, self.valueVar, self.addressVar))
 
-
 # Clase Funcion para la creación de funciones y sus atributos
+
+
 class FunctionClass:
     '''
     Constructor de Function
@@ -170,7 +173,6 @@ class VariableTable:
         self.tablaVar[name]
 
     def printTable(self):
-        # print(len(self.tablaVar.items()))
         for item in self.tablaVar.items():
             print(item)
             item[1].printvar()
@@ -197,4 +199,3 @@ class VariableTable:
         else:
             print('Syntax error: variable ' + key + ' does not exist')
             return False
-

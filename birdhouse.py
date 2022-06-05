@@ -8,30 +8,40 @@ from clases import *
 from memoria import *
 from errores import *
 
-id_Asignar = ""
-pilaO = []  # Operandos
-pOper = []  # Operadores
-pilaT = []  # Tipos
-pSaltos = []  # Saltos (migaja de pan)
-pilaDim = []
+# PILAS GENERALES
+pilaO = []  # Pila de Operandos
+pOper = []  # Pila de Operadores
+pilaT = []  # Pila de Tipos
+pSaltos = []  # Pila de Saltos (migaja de pan)
+pilaDim = []  # Pila de dimensiones
 pilaMem = []  # Dirs de memoria de pilaO
-temporalesNum = []  # Temporales
+
+# TEMPORALES
+temporalesNum = []  # Temporales para numeros
 temporalesBool = []  # Temporales booleanos
 temporalesString = []  # Temporales de string
 temporalesPointer = []  # Temporales para Instruction Pointer
-availNum = 0  # Contador de temporales (empieza en t0)
-availBool = 0
-availString = 0
-availPointer = 0
+availNum = 0  # Contador de temporales para numero (empieza en t0)
+availBool = 0  # Contador de temporales para booleanos (empieza en t0)
+availString = 0  # Contador de temporales para strings (empieza en t0)
+availPointer = 0  # Contador de temporales para iPointer (empieza en t0)
+
+# CUADRUPLOS
 quad_pointer = 0  # Contador de cuadruplos
-cuadruplos = []  # Lista de cuadruplos
-cuadruplosMem = []
-pilaFunciones = []  # Pila de funciones: pilaFunciones[-1] es la funcion actual
+cuadruplos = []  # Lista de cuadruplos con ids
+cuadruplosMem = []  # Lista de cuadruplos con Memoria
+
+# FUNCIONES
+# Pila de funciones
+# pilaFunciones[-1] es la funcion actual
+pilaFunciones = []
 pilaFunciones.append("global")
 # pila de llamadas a funciones
 # pila[-1] es la llamada actual
 pilaLlamadas = []
-# parameter counter
+
+# ARREGLOS
+# Contador de parametros
 pilaK = []
 tipo_arr_aux = ""  # Es el tipo con el que vamos a declarar un arreglo
 # Necesitamos un auxiliar porque lo declaramos en 2 puntos diferentes
@@ -39,7 +49,7 @@ r = 1  # La r auxiliar para calcular las dimensiones de un arreglo
 currNodo = NodoArreglo()  # Nodo auxiliar para recorrer los nodos de una matriz
 headNodo = NodoArreglo()  # El primer nodo de la matriz que estamos declarando
 
-# Generacion de los temporales
+# Generacion de temporales
 for i in range(0, 1000):
     temporalesNum.append("tN" + str(i))
     temporalesBool.append("tB" + str(i))
