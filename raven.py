@@ -36,11 +36,14 @@ def restaurarFoto():
 
 def varsToMV():
     print("tabla variables")
+    mv[13000] = 0
     
     for key in tabla_variables.tablaVar:
-        print("hola")
+        print("metiendo variables a mv")
         print(key)
-        mv[tabla_variables.tablaVar[key].addressVar] = tabla_variables.tablaVar[key].valueVar
+        print(tabla_variables.tablaVar[key].addressVar)
+        mv[int(tabla_variables.tablaVar[key].addressVar)] = tabla_variables.tablaVar[key].valueVar
+    
 
 def openQuads():
     f = open("cuadruplosMem.txt", "r")
@@ -77,6 +80,10 @@ def ejecutar():
         left_op = cuadruplos[ip]['left']
         right_op = cuadruplos[ip]['right']
         result = cuadruplos[ip]['result']
+
+        # esto verifica si es pointer
+        #if (int(result) >= 25000):
+        #    result = mv[result]
 
         if operator == "GOTO":
             print("GOTO")
@@ -130,8 +137,9 @@ def ejecutar():
         elif operator == "=":
             print("=")
             print(cuadruplos[ip])
-            # checar si es pointer
-            #printMV()
+            # checar si es pointer de 25000 en adelante
+            if result >= 25000:
+                result = mv[int(result)]
             mv[int(result)] = mv[int(left_op)]
             ip += 1
         elif operator == '+':
@@ -220,8 +228,9 @@ def ejecutar():
         elif operator == "VER":
             print("Verificacion arreglos")
             # ver, x, li, ls
-            if (left_op <  right_op) or (left_op >= result):
-                print("Fuera de limites de arreglo " + left_op)
+            printMV()
+            if (int(mv[left_op]) <  int(mv[right_op])) or (int(mv[left_op]) >= int(result)):
+                print("Fuera de limites de arreglo " + str(left_op))
                 exit()
             ip += 1
         elif operator == "READ":
@@ -232,7 +241,7 @@ def ejecutar():
             print("otro")
             ip += 1
         
-        policia += 1
+        #policia += 1
         if(policia >= 40):
             print("alto! ya se ciclo")
             exit()
