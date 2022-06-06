@@ -81,20 +81,20 @@ def getTemp(tipo):
     return result
 
 
+# ADD VAR
 # Agrega una variable a la tabla de variables global o local
 def addVar(var):
     if pilaFunciones[-1] == "global":
-        print("guardando variable global")
         print(var.nameVar)
         tabla_variables.addVar(var)
     else:
-        print("guardando variable local")
         print(var.nameVar)
         tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
 
 
+# GET VAR
 # Obtiene una variable a partir de su nombre y el contexto en el que estamos
-# (global o una funcion)
+# (global o una función)
 def getVar(varID):
     if pilaFunciones[-1] == "global":
         var = tabla_variables.tablaVar[varID]
@@ -104,6 +104,7 @@ def getVar(varID):
     return var
 
 
+# CHECK EXISTS CONTEXTO
 # Revisa si el id corresponde a una variable del contexto actual
 def checkExists_contexto(val):
     print(pilaFunciones[-1])
@@ -122,7 +123,6 @@ class PuntosNeuralgicos(Visitor):
         programName = tree.children[1].value
         cuadruplos.generate_quad(
             "PROGRAM", None, None, programName)
-        cuadruplos.print_quad()
         cuadruplos.generate_quad_mem("PROGRAM", None, None, programName)
 
     # NP INDICE INICIO
@@ -223,18 +223,15 @@ class PuntosNeuralgicos(Visitor):
                 pOper.append(tree.children[2].value)
         else:
             errorExisteContexto(val)
-            exit()
 
     # NP ASIG QUAD
     # Punto neurálgico que genera cuádruplos de asignación
     def np_asig_quad(self, tree):
         operator = pOper.pop()
-        print(pilaO)
         left_operand = pilaO.pop()
         right_operand = None
         left_mem = pilaMem.pop()
         result = pilaO.pop()
-        print(pilaMem)
         res_mem = pilaMem.pop()
         cuadruplos.generate_quad(operator, left_operand,
                                  right_operand, result)
@@ -342,8 +339,7 @@ class PuntosNeuralgicos(Visitor):
                     var = getVar(right_operand)
                     # to do: en compilacion no sabemos el valor de las variables, asi que este check es incorrecto
                     if right_operand == "0" or var.value == 0:
-                        print("Error: no se puede dividir entre 0")
-                        exit()
+                        errorDivCero()
                 result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global availNum
@@ -428,14 +424,12 @@ class PuntosNeuralgicos(Visitor):
         exp_type = pilaT.pop()
         print(exp_type)
         if exp_type != "bool":
-            print("Type mismatch")
-            exit()
+            errorTiposB()
         else:
             result = pilaO.pop()
             t = pilaT.pop()
             mem = pilaMem.pop()
             cuadruplos.generate_quad("GOTOF", result, None, "blank")
-            # to do: este cuadruplo de memoria tambien tiene que ir con blank?
             cuadruplos.generate_quad_mem("GOTOF", mem, None, "blank")
             pSaltos.append(cuadruplos.quad_pointer - 1)
 
@@ -463,8 +457,7 @@ class PuntosNeuralgicos(Visitor):
         # Revisar que el tipo sea booleano
         exp_type = pilaT.pop()
         if exp_type != "bool":
-            print("Type mismatch")
-            exit()
+            errorTiposB()
         else:
             result = pilaO.pop()
             t = pilaT.pop()
@@ -777,9 +770,12 @@ class PuntosNeuralgicos(Visitor):
         pilaMem.append(result_mem)
         pOper.pop()  # quita el fake bottom
 
+    # NP FIN
+    # Punto neurálgico que genera el cuádruplo {ENDPROGRAM, , , }
+    # además de llamar a las funciones que generarán los archivos
+    # de la lista de cuádruplos y la tabla de constantes
     def np_fin(self, tree):
         cuadruplos.generate_quad("ENDProgram", None, None, None)
         cuadruplos.generate_quad_mem("ENDProgram", None, None, None)
-        tabla_variables.printTable()
         cuadruplos.generaArchivos()
         tabla_ctes.toTxt()

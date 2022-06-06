@@ -1,3 +1,6 @@
+from errores import *
+
+
 class NodoArreglo():
     """
     Nodo arreglo
@@ -46,7 +49,6 @@ class TablaConstantes():
 
     def __init__(self):
         self.mv = []
-        print("tabla constantes")
 
     def addCte(self, val, dir):
         t = [dir, val]
@@ -158,7 +160,7 @@ class ProcDirectory:
 
     def checkDuplicate(self, key):
         if key in self.procDirectory:
-            print('Syntax error: redeclaration of function' + key)
+            errorReFunc(key)
             return True
         else:
             return False
@@ -185,17 +187,15 @@ class VariableTable:
 
     def checkDuplicate(self, key):
         if key in self.tablaVar:
-            print('Syntax error: redeclaration of variable' + key)
+            errorReVar(key)
             return True
         else:
             return False
 
     def checkExists(self, key):
         if key in self.tablaVar:
-            print("si existe " + key)
             return True
         else:
-            print("aqui")
             print('Syntax error: variable ' + key + ' does not exist')
             return False
 
