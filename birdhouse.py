@@ -399,6 +399,12 @@ class PuntosNeuralgicos(Visitor):
             cuadruplos.generate_quad("PRINT", None, None, result)
             cuadruplos.generate_quad_mem("PRINT", None, None, mem)
 
+    # Puntos neuralgicos de lectura
+
+    def np_asig_lectura(self, tree):
+        #crear cuadruplo para leer respuesta del usuario
+        print("lectura")
+
     # Puntos neuralgicos del if
     # To do: probarlos con un ejemplo, necesitamos la tabla de variables
 
