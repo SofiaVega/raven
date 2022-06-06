@@ -11,10 +11,12 @@ class NodoArreglo():
         val: mdim o -k
         ultimoNodo: booleano
         r
+        ls: limite superior
+        dirLS: direccion del limite superior como constante
 
     """
 
-    def __init__(self, r=1, var="", ls=0, dim=1):
+    def __init__(self, r=1, var="", ls=0, dim=1, dirLS = 0):
         self.li = 0
         self.ls = int(ls)
         self.dim = dim
@@ -22,6 +24,7 @@ class NodoArreglo():
         self.r = r
         self.var = var
         self.siguienteNodo = None
+        self.dirLS = dirLS
 
     def setNextNode(self, nodo):
         self.ultimoNodo = False
@@ -53,6 +56,11 @@ class TablaConstantes():
     def addCte(self, val, dir):
         t = [dir, val]
         self.mv.append(t)
+
+    def getDir(self, val):
+        for i in self.mv:
+            if i[1] == val:
+                return i[0]
 
     def toTxt(self):
         f = open("tablaCtes.txt", "w")

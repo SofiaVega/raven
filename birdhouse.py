@@ -50,6 +50,7 @@ tipo_arr_aux = ""  # Es el tipo con el que vamos a declarar un arreglo
 r = 1  # La r auxiliar para calcular las dimensiones de un arreglo
 currNodo = NodoArreglo()  # Nodo auxiliar para recorrer los nodos de una matriz
 headNodo = NodoArreglo()  # El primer nodo de la matriz que estamos declarando
+dirCero = 13000
 
 # Generacion de temporales
 for i in range(0, 1000):
@@ -415,8 +416,30 @@ class PuntosNeuralgicos(Visitor):
             cuadruplos.generate_quad("PRINT", None, None, result)
             cuadruplos.generate_quad_mem("PRINT", None, None, mem)
 
+    # Puntos neuralgicos de lectura
+
+    def np_lectura(self, tree):
+        #meter el id
+        print("np lectura")
+        print(tree.children[1].value)
+        val = tree.children[1].value
+        # to do: si var es arreglo, hace otras cosas
+        var = getVar(val)
+        pilaO.append(val)
+        pilaT.append(var.typeVar)
+        pilaMem.append(var.addressVar)
+
+    def np_asig_lectura(self, tree):
+        #crear cuadruplo para leer respuesta del usuario
+        result = pilaO.pop()
+        #revisar que exista la variable o acceso a arreglo
+        tipo = pilaT.pop()
+        mem = pilaMem.pop()
+        print("lectura")
+        cuadruplos.generate_quad("READ", None, None, result)
+        cuadruplos.generate_quad_mem("READ", None, None, mem)
+
     # Puntos neuralgicos del if
-    # To do: probarlos con un ejemplo, necesitamos la tabla de variables
 
     def np_if(self, tree):
         print(pilaT)
@@ -639,15 +662,28 @@ class PuntosNeuralgicos(Visitor):
         global tipo_arr_aux
         tipo = tipo_arr_aux
         thisID = tree.children[0].value
-        ls = tree.children[1].value
-        var = VariableClass(thisID, tipo)
+        ls = int(tree.children[1].value)
+        contexto = pilaFunciones[-1]
+        if contexto != "global":
+            contexto = "local"
+        print("memoria arreglo ------------")
+        print(memoria[contexto][tipo])
+        print(ls)
+        mem = memoria[contexto][tipo]
+        memoria[contexto][tipo] += ls
+        var = VariableClass(thisID, tipo, addressVar = mem)
         # np 2
         var.isArray = True
         # np 3
         r = 1
-        currNodo = NodoArreglo(dim=1, r=1, ls=ls, var=thisID)
+        mem_ls = memoria["cte"]["num"]
+        memoria["cte"]["num"] += 1
+        currNodo = NodoArreglo(dim=1, r=1, ls=ls, var=thisID, dirLS = mem_ls)
         var.arrNode = currNodo
         headNodo = var.arrNode
+        mem_pointer = memoria["cte"]["num"]
+        memoria["cte"]["num"] += 1
+        tabla_ctes.addCte(mem, mem_pointer)
         addVar(var)
 
     def np_arr_5(self, tree):
@@ -707,8 +743,9 @@ class PuntosNeuralgicos(Visitor):
         global currNodo
         global availNum
         print("verificacion")
-        cuadruplos.generate_quad("VER", pilaO[-1], 0, currNodo.ls)
-        cuadruplos.generate_quad_mem("VER", pilaMem[-1], 0, currNodo.ls)
+        # to do: guardar 0 y ls como constantes
+        cuadruplos.generate_quad("VER", pilaO[-1], dirCero, currNodo.ls)
+        cuadruplos.generate_quad_mem("VER", pilaMem[-1], dirCero, currNodo.ls)
         if currNodo.ultimoNodo == False:
             aux = pilaO.pop()
             tipo = pilaT.pop()
@@ -760,9 +797,12 @@ class PuntosNeuralgicos(Visitor):
         availPointer = availPointer+1
         result_mem = memoria["temp"]["pointer"]
         memoria["temp"]["pointer"] += 1
+        var = getVar(currNodo.var)
+        add = var.addressVar
+        dir = tabla_ctes.getDir(add)
+        cuadruplos.generate_quad("+", aux, currNodo.var, result)
+        cuadruplos.generate_quad_mem("+", mem, dir, result_mem)
 
-        cuadruplos.generate_quad("+", aux, 0, result)
-        cuadruplos.generate_quad_mem("+", mem, 0, result_mem)
         # TO DO cambiar esto al pointer de result
         # esto tiene que pasar antes de asig quad
         pilaO.append(result)

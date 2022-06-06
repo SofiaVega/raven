@@ -7,6 +7,7 @@ IF: "si"
 ELSE: "sino"
 HUV: "habiaUnaVez"
 PRINT: "->"
+INPUT: "<-"
 SALTO: /\n+/
 
 NUMTIPO: "num"
@@ -133,6 +134,7 @@ estatuto: asignacion
                 | llamada_funcion
                 | opciones
                 | mecanica5
+                | lectura
 llamada_funcion: ID IPAR np_llamada_funcion_2 estatuto2 np_llamada_funcion_5 FPAR np_llamada_funcion_6 -> np_llamada_funcion_1
 np_llamada_funcion_2: 
 np_llamada_funcion_5:
@@ -157,6 +159,9 @@ escritura: PRINT STRING -> print_string
         | PRINT expresion np_print_expresion -> print_expresion
         | PRINT ID "[" NUM "]" SALTO -> print_import
 np_print_expresion: 
+
+lectura: INPUT ID arr_o_no np_asig_lectura -> np_lectura
+np_asig_lectura: 
 
 arreglo: tipo arr arreglo3
 arr: ID "[" NUM np_arr_5 "]" arreglo2 np_arr_7

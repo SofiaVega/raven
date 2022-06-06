@@ -50,7 +50,7 @@ memoria = {
         "bool": 11000
     },
     "cte": {
-        "num": 13000,
+        "num": 13001,
         "enunciado": 15000,
         "bool": 17000
     },
@@ -62,4 +62,4 @@ memoria = {
     }
 }
 
-memoriaVirtual = [None] * 25000
+memoriaVirtual = [None] * 27000
