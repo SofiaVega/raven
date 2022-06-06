@@ -485,8 +485,10 @@ class PuntosNeuralgicos(Visitor):
 
     # Puntos neuralgicos funciones
 
+    # NP FUNCIONES 1
+    # Punto neurálgico que inserta las funciones y su tipo al Directorio de Funciones
+    # Se verifica semántica
     def np_funciones_1(self, tree):
-        # Insert Function name into the DirFunc table (and its type, if any), verify semantics.
         tipo_funcion = tree.children[0].children[0].value
         nombre_funcion = tree.children[1].value
         func = FunctionClass(nombre_funcion, tipo_funcion)
@@ -503,28 +505,28 @@ class PuntosNeuralgicos(Visitor):
                                 typeVar=tipo_funcion, addressVar=mem)
             tabla_variables.addVar(var)
 
-        # to do: verificar semanticas
-
+    # NP MECANICA 2
+    # Se inserta cada parámetro a una tabla de variables locales
     def mecanica2(self, tree):
-        # 2 - Insert every parameter into the current (local) VarTable.
         if tree.children:
             # esto solo funciona con un parametro
             tipo = tree.children[0].children[0].value
             id_param = tree.children[1].value
             mem = memoria["local"][tipo]
             memoria["local"][tipo] += 1
-            print("en que funcion estamos")
-            print(pilaFunciones[-1])
+            # del print("en que funcion estamos")
+            # del print(pilaFunciones[-1])
             tabla_funciones.procDirectory[pilaFunciones[-1]
                                           ].addParam(tipo, id_param, mem)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
-            tabla_funciones.printTable()
+            # del tabla_funciones.printTable()
 
+    # NP MECANICA 3
+    # Inserta parámetros después de la coma a tabla de variables locales
     def mecanica3(self, tree):
         if tree.children:
-            print(" creo que se cicla aqui mecanica 3")
-            # otro parametro
-            # to do: agregar address
+            # del print(" creo que se cicla aqui mecanica 3")
+            # del to do: agregar address
             tipo = tree.children[0].children[0].value
             id_param = tree.children[1].value
             mem = memoria["local"][tipo]
@@ -534,50 +536,53 @@ class PuntosNeuralgicos(Visitor):
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
             tabla_funciones.printTable()
 
+    # NP MECANICA 5
+    # Genera cuádruplo de {RETURN, FUNC, , result}
     def np_mecanica_5(self, tree):
-        print("mecanica5")
         o = pilaO.pop()
         t = pilaT.pop()
         mem = pilaMem.pop()
-        # to do: como conecta esto con el parche guadalupano??
-        # meter funcion actual
         cuadruplos.generate_quad("RETURN", pilaFunciones[-1], None, o)
         tabla_variables.printTable()
         mem_func = tabla_variables.tablaVar[pilaFunciones[-1]].addressVar
         # direccion de la variable global
         cuadruplos.generate_quad_mem("RETURN", mem_func, None, mem)
-        # to do: el return en ejecucion asigna mv[m] a la variable global llamada como la funcion actual
-        # hacer pop de llamada?
+        # del to do: el return en ejecucion asigna mv[m] a la variable global llamada como la funcion actual
+        # del hacer pop de llamada?
 
     def cambiar_quad_pointer(self, tree):
         tabla_funciones.procDirectory[pilaFunciones[-1]
                                       ].quad_inicial = cuadruplos.quad_pointer
 
-    def fin_mecanica(self, tree):
-        # varias cosas
-        # release
+    # NP FIN_MECANICA
+    # Punto neurálgico que genera el cuádruplo de ENDFUNC, libera la memoria y
+    # hace un recuento de temporales utilizados
+    def np_fin_mecanica(self, tree):
+        # to-do release
         cuadruplos.generate_quad("ENDFunc", None, None, None)
         cuadruplos.generate_quad_mem("ENDFunc", None, None, None)
-        # insert the number of temps
+        # to-do insert the number of temps
 
-    # puntos neuralgicos para llamadas a funciones
-
+    # PUNTOS NEURÁLGICOS PARA LLAMADAS DE FUNCIONES
+    # NP LLAMADA FUNCIÓN 1
+    # Este punto neurálgico verifica que la función exista
     def np_llamada_funcion_1(self, tree):
-        # verify that the function exists
         nombre_func = tree.children[0].value
         if tabla_funciones.findFunction(nombre_func):
             pilaLlamadas.append(nombre_func)
         else:
-            print("Error, esa funcion no existe " + nombre_func)
-            exit()
+            errorFuncionNoExiste(nombre_func)
 
+    # NP LLAMADA FUNCIÓN 2
+    # Este punto neurálgico genera el cuádruplo ERA cada que se llama una función
     def np_llamada_funcion_2(self, tree):
-        # Generar cuadruplo ERA, nombreFuncion
-        # Cuando se llama a una funcion
         cuadruplos.generate_quad("ERA", pilaLlamadas[-1], None, None)
         cuadruplos.generate_quad_mem("ERA", pilaLlamadas[-1], None, None)
         pilaK.append(0)
 
+    # NP LLAMADA FUNCION 3
+    # Punto neurálgico que genera el cuádruplo {PARAM, argumento, , numParam}
+    # Verifica que correspondan los tipos declarados de los invocados
     def np_llamada_funcion_3(self, tree):
         # Argument= PilaO.Pop() ArgumentType= PTypes.Pop().
         # Verify ArgumentType against current Parameter (#k) in ParameterTable.
@@ -586,33 +591,34 @@ class PuntosNeuralgicos(Visitor):
         argumentType = pilaT.pop()
         arg_mem = pilaMem.pop()
         if argumentType == tabla_funciones.procDirectory[pilaLlamadas[-1]].paramTipos[pilaK[-1]]:
-            print("parametro tipo compatible")
             cuadruplos.generate_quad("PARAM", argument, None, pilaK[-1])
             cuadruplos.generate_quad_mem("PARAM", arg_mem, None, pilaK[-1])
         else:
-            print("El parametro no es del tipo correcto")
-            exit()
+            errorTiposNoCoinciden(argument, argumentType)
 
+    # NP LLAMADA FUNCION 4
+    # Punto neurálgico que incrementa el contador de número de parámetros de la función
     def np_llamada_funcion_4(self, tree):
         pilaK[-1] = pilaK[-1] + 1
 
+    # NP LLAMADA FUNCION 5
+    # Punto neurálgico que revisa si el nūmero de parámetros invocados coincide
+    # coincide con el número de parámetros declarados
     def np_llamada_funcion_5(self, tree):
-        print(pilaK[-1])
-        # antes era numparam - 1
-        if pilaK[-1] == (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam):
-            print("right amount of params")
-        else:
-            print(pilaLlamadas)
-            print("Faltan parametros")
-            exit()
+        if not(pilaK[-1] == (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam)):
+            errorDifNumParams(
+                pilaK[-1], tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam)
 
+    # NP LLAMADA FUNCION 6
+    # Punto neurálgico que genera el cuádruplo {GOSUB, numCuadruplo, ,}
+    # y genera además el cuádruplo de asignación de nombre de la función
+    # con el valor de retorno de funciones no vacías
     def np_llamada_funcion_6(self, tree):
-        global availNum
-        # to do: falta initial-address
+        # del to do: falta initial-address
         qi = tabla_funciones.procDirectory[pilaLlamadas[-1]].quad_inicial
         cuadruplos.generate_quad("GOSUB", pilaLlamadas[-1], None, None)
         cuadruplos.generate_quad_mem("GOSUB", qi, None, None)
-        # to do: parche guadalupano maravilloso
+        # del to do: parche guadalupano maravilloso
         func = pilaLlamadas[-1]
         tipo_func = tabla_funciones.procDirectory[func].typeFunc
         if tipo_func != "vacia":
@@ -626,15 +632,8 @@ class PuntosNeuralgicos(Visitor):
             cuadruplos.generate_quad("=", pilaLlamadas[-1], None, result)
             cuadruplos.generate_quad_mem("=", mem_llamada, None, result_mem)
 
-    def np_fin(self, tree):
-        cuadruplos.generate_quad("ENDProgram", None, None, None)
-        cuadruplos.generate_quad_mem("ENDProgram", None, None, None)
-        print("tabla de variables fin")
-        tabla_variables.printTable()
-        cuadruplos.generaArchivos()
-        tabla_ctes.toTxt()
-
     # Arreglos
+
     def arreglo(self, tree):
         #vartable.add(id, type)
         global tipo_arr_aux
@@ -777,3 +776,10 @@ class PuntosNeuralgicos(Visitor):
         pilaT.append("pointer")
         pilaMem.append(result_mem)
         pOper.pop()  # quita el fake bottom
+
+    def np_fin(self, tree):
+        cuadruplos.generate_quad("ENDProgram", None, None, None)
+        cuadruplos.generate_quad_mem("ENDProgram", None, None, None)
+        tabla_variables.printTable()
+        cuadruplos.generaArchivos()
+        tabla_ctes.toTxt()

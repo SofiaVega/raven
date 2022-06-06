@@ -74,7 +74,9 @@ vars2: "," vars3 vars2 |
 vars3: ID | ID IGUAL expresion np_asig_quad -> np_asig
 np_asig:
 
-mecanica: MECANICA np_funciones_1 IPAR mecanica2 FPAR ICOR SALTO vars_mecanica_loop cambiar_quad_pointer mecanica4 mecanica5 FCOR fin_mecanica
+mecanica: MECANICA np_funciones_1 IPAR mecanica2 FPAR ICOR SALTO cambiar_quad_pointer vars_mecanica_loop mecanica4 mecanica5 FCOR np_fin_mecanica
+cambiar_quad_pointer:
+np_fin_mecanica:
 np_funciones_1: tipo ID
 mecanica2: tipo ID mecanica3 |
 mecanica3: "," tipo ID mecanica3 | 
@@ -84,7 +86,8 @@ np_mecanica_5:
 
 vars_mecanica_loop: vars | vars_mecanica_loop vars |
 
-capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO estatuto SALTO mecanica4 FCOR
+capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO estatutoloop FCOR
+estatutoloop: estatuto SALTO | estatutoloop estatuto SALTO |
 
 opciones: OPCIONES ":" "[" opciones2 "]"
 opciones2: opcion opciones3
