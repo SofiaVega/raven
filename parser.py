@@ -5,7 +5,7 @@ from raven import *
 
 
 parser = Lark(open("grammar", 'r').read())
-goodInput = open("testcases/testcase_aritmetica.txt", 'r').read()
+goodInput = open("testcases/testcase_funciones_fact.txt", 'r').read()
 badInput = open("testcases/testcase_good.txt", 'r').read()
 result = parser.parse(goodInput)
 """ print(result.pretty())
@@ -20,4 +20,4 @@ print("pila o")
 print(pilaO)
 print("pila oper")
 print(pOper)
-maquinaVirtual()
+# maquinaVirtual()
