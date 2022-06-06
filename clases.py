@@ -1,3 +1,6 @@
+from errores import *
+
+
 class NodoArreglo():
     """
     Nodo arreglo
@@ -49,7 +52,6 @@ class TablaConstantes():
 
     def __init__(self):
         self.mv = []
-        print("tabla constantes")
 
     def addCte(self, val, dir):
         t = [dir, val]
@@ -124,7 +126,7 @@ class FunctionClass:
 
     def addParam(self, tipo, id_param, address):
         # to do: los parametros se agregan como variables?
-        var = VariableClass(id_param, tipo, addressVar = address)
+        var = VariableClass(id_param, tipo, addressVar=address)
         self.varsFunc.addVar(var)
         self.numParam = self.numParam + 1
         self.keysParam.append(id_param)
@@ -166,13 +168,13 @@ class ProcDirectory:
 
     def checkDuplicate(self, key):
         if key in self.procDirectory:
-            print('Syntax error: redeclaration of function' + key)
+            errorReFunc(key)
             return True
         else:
             return False
+
     def getFunc(self, name):
         return self.procDirectory[name]
-
 
 
 class VariableTable:
@@ -193,17 +195,15 @@ class VariableTable:
 
     def checkDuplicate(self, key):
         if key in self.tablaVar:
-            print('Syntax error: redeclaration of variable' + key)
+            errorReVar(key)
             return True
         else:
             return False
 
     def checkExists(self, key):
         if key in self.tablaVar:
-            print("si existe " + key)
             return True
         else:
-            print("aqui")
             print('Syntax error: variable ' + key + ' does not exist')
             return False
 
@@ -222,9 +222,10 @@ class VariableTable:
 #   Esta clase albergará todas las funciones relacionadas con esta estructura
 class Cuadruplos():
     def __init__(self):
-        self.cuadruplosID = []  # Lista de cuadruplos con identificadores
-        self.cuadruplosMem = []  # Lista de cuadruplos con direcciones de memoria
-        self.quad_pointer = 0   # Contador/Apuntador de cuadruplo
+        self.cuadruplosID = [None]  # Lista de cuadruplos con identificadores
+        # Lista de cuadruplos con direcciones de memoria
+        self.cuadruplosMem = [None]
+        self.quad_pointer = 1   # Contador/Apuntador de cuadruplo
 
     #   GENERA ARCHIVOS
     #   Función que genera dos archivos de texto, uno con los cuadruplos con
@@ -232,17 +233,17 @@ class Cuadruplos():
     #   para ser interpretados por la máquina virtual
     def generaArchivos(self):
         f = open("cuadruplosID.txt", "w")
-        for quad in self.cuadruplosID:
+        for quad in self.cuadruplosID[1:]:
             f.write(str(quad)+'\n')
         f.close()
 
         f = open("cuadruplosMem.txt", "w")
-        for quad in self.cuadruplosMem:
+        for quad in self.cuadruplosMem[1:]:
             f.write(str(quad)+'\n')
         f.close()
 
     def print_quad(self):
-        print(self.quad_pointer + 1, self.cuadruplosID[-1])
+        print(self.quad_pointer, self.cuadruplosID[-1])
 
     #   GENERATE QUAD
     #   Función que genera los cuádruplos con identificadores y los agrega a la
@@ -251,21 +252,29 @@ class Cuadruplos():
         cuadruplo = {"operator": operator, "left": left,
                      "right": right, "result": result}
         self.cuadruplosID.append(cuadruplo)
-        self.print_quad()
         self.quad_pointer = self.quad_pointer + 1
 
+    #   GENERATE QUAD MEM
+    #   Función que genera los cuádruplos con direcciones de memoria virtual y
+    #   los agrega a la lista de cuádruplos con direcciones de memoria
     def generate_quad_mem(self, operator, left, right, result):
         cuadruplo = {"operator": operator, "left": left,
                      "right": right, "result": result}
         self.cuadruplosMem.append(cuadruplo)
-        print("cuadruplo memoria", cuadruplo)
 
-    # Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
-    # Por lo general, para gotos
+    #   FILL QUAD
+    #   Función que regresa a un cuadruplo generado con identificadores con ____
+    #   en la casilla de result para meter el número de cuádruplo al que tendrá
+    #   que tiene que brincar
+    #   Por lo general, para gotos
     def fill_quad(self, end, cont):
         self.cuadruplosID[end]["result"] = cont
 
+    #   FILL QUAD MEM
+    #   Función que regresa a un cuadruplo con direcciones de memoria virtuales
+    #   con ____ en la casilla de result para meter el número de cuádruplo al
+    #   que tendrá que tiene que brincar
+    #
+    #   Por lo general, para gotos
     def fill_quad_mem(self, end, cont):
-        print("fill")
-        print(self.cuadruplosMem[end])
         self.cuadruplosMem[end]["result"] = cont

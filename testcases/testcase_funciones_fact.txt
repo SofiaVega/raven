@@ -13,3 +13,7 @@ capitulo uno () {
     -> fact(6)
     ->"terminamos"
 }
+
+indice() {
+    hola
+}

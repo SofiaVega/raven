@@ -1,0 +1,16 @@
+habiaUnaVez Raven
+titulo = "Raven"
+num lista [5]
+capitulo uno () {
+    titulo = "el principio del fin"
+    lista[0] = 0
+    lista[1] = 1
+    lista[2] = 2
+    lista[3] = 3
+    y = lista[0]
+    -> "probando arreglos"
+    -> lista[0]
+    -> "fin"
+    -> y
+    -> "fin ahora si"
+}

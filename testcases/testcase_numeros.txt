@@ -15,3 +15,7 @@ capitulo uno () {
     -> 2 * 3
 
 }
+
+indice() {
+    uno()
+}
