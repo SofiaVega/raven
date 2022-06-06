@@ -207,14 +207,15 @@ class PuntosNeuralgicos(Visitor):
             exit()
 
     def np_asig_quad(self, tree):
-        print("asig quad")
+        print("asig quad -------------")
+        print(pilaO)
+        print(pilaMem)
         operator = pOper.pop()
         print(pilaO)
         left_operand = pilaO.pop()
         right_operand = None
         left_mem = pilaMem.pop()
         result = pilaO.pop()
-        print(pilaMem)
         res_mem = pilaMem.pop()
         cuadruplos.generate_quad(operator, left_operand,
                                  right_operand, result)
@@ -387,18 +388,17 @@ class PuntosNeuralgicos(Visitor):
         if pilaT.pop() == "enunciado":
             result = pilaO.pop()
             pilaT.pop()
-            cuadruplos.generate_quad("PRINT", None, None, result)
-            cuadruplos.generate_quad_mem("PRINT", None, None, mem_str)
-            tabla_ctes.addCte(result, mem_str)
-
-    def np_print_expresion(self, tree):
-        if pilaO:
-            result = pilaO.pop()
-            if pilaT:
-                pilaT.pop()
             mem = pilaMem.pop()
             cuadruplos.generate_quad("PRINT", None, None, result)
             cuadruplos.generate_quad_mem("PRINT", None, None, mem)
+            tabla_ctes.addCte(result, mem)
+
+    def np_print_expresion(self, tree):
+        result = pilaO.pop()
+        pilaT.pop()
+        mem = pilaMem.pop()
+        cuadruplos.generate_quad("PRINT", None, None, result)
+        cuadruplos.generate_quad_mem("PRINT", None, None, mem)
 
     # Puntos neuralgicos de lectura
 
@@ -582,7 +582,7 @@ class PuntosNeuralgicos(Visitor):
         pilaK.append(0)
 
     def np_llamada_funcion_3(self, tree):
-        # Argument= PilaO.Pop() ArgumentType= PTypes.Pop().
+        # Argument= PilaO. Pop() ArgumentType= PTypes.Pop().
         # Verify ArgumentType against current Parameter (#k) in ParameterTable.
         # Generate action PARAMETER, Argument, Argument#k
         argument = pilaO.pop()
@@ -715,6 +715,7 @@ class PuntosNeuralgicos(Visitor):
         global currNodo
         idd = pilaO.pop()
         tipo = pilaT.pop()
+        mem = pilaMem.pop()
         dim = 1
         pilaDim.append([idd, dim])
         var = getVar(idd)

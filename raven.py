@@ -140,6 +140,8 @@ def ejecutar():
             # checar si es pointer de 25000 en adelante
             if result >= 25000:
                 result = mv[int(result)]
+            if left_op >= 25000:
+                left_op = mv[int(left_op)]
             mv[int(result)] = mv[int(left_op)]
             ip += 1
         elif operator == '+':
