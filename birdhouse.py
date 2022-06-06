@@ -401,12 +401,28 @@ class PuntosNeuralgicos(Visitor):
 
     # Puntos neuralgicos de lectura
 
+    def np_lectura(self, tree):
+        #meter el id
+        print("np lectura")
+        print(tree.children[1].value)
+        val = tree.children[1].value
+        # to do: si var es arreglo, hace otras cosas
+        var = getVar(val)
+        pilaO.append(val)
+        pilaT.append(var.typeVar)
+        pilaMem.append(var.addressVar)
+
     def np_asig_lectura(self, tree):
         #crear cuadruplo para leer respuesta del usuario
+        result = pilaO.pop()
+        #revisar que exista la variable o acceso a arreglo
+        tipo = pilaT.pop()
+        mem = pilaMem.pop()
         print("lectura")
+        cuadruplos.generate_quad("READ", None, None, result)
+        cuadruplos.generate_quad_mem("READ", None, None, mem)
 
     # Puntos neuralgicos del if
-    # To do: probarlos con un ejemplo, necesitamos la tabla de variables
 
     def np_if(self, tree):
         print(pilaT)

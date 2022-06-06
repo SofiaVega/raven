@@ -81,8 +81,8 @@ def ejecutar():
         if operator == "GOTO":
             print("GOTO")
             # to do: 
-            ip = int(result)
-            #ip += 1
+            #ip = int(result)
+            ip += 1
         elif operator == "GOTOF":
             print("GOTOF")
             print(cuadruplos[ip])
@@ -224,7 +224,15 @@ def ejecutar():
                 print("Fuera de limites de arreglo " + left_op)
                 exit()
             ip += 1
-        #policia += 1
+        elif operator == "READ":
+            print("Leer")
+            mv[result] = input()
+            ip += 1
+        elif operator == "otro":
+            print("otro")
+            ip += 1
+        
+        policia += 1
         if(policia >= 40):
             print("alto! ya se ciclo")
             exit()

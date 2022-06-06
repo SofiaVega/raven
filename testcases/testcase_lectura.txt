@@ -1,0 +1,10 @@
+habiaUnaVez Raven
+titulo = "Raven"
+num x
+capitulo uno () {
+    titulo = "el principio del fin"
+    <- x
+    -> "resultado"
+    -> x
+
+}

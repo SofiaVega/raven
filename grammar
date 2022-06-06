@@ -156,7 +156,7 @@ escritura: PRINT STRING -> print_string
         | PRINT ID "[" NUM "]" SALTO -> print_import
 np_print_expresion: 
 
-lectura: INPUT ID arr_o_no np_asig_lectura
+lectura: INPUT ID arr_o_no np_asig_lectura -> np_lectura
 np_asig_lectura: 
 
 arreglo: tipo arr arreglo3
