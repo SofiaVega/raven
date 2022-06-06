@@ -1,0 +1,15 @@
+habiaUnaVez Raven
+titulo = "Raven"
+mecanica num fact(num n){
+    si (n == 1){
+        regresa n
+    }sino {
+        regresa fact(n - 1)*n
+    }
+}
+capitulo uno () {
+    titulo = "el principio del fin"
+    ->"factorial"
+    -> fact(6)
+    ->"terminamos"
+}

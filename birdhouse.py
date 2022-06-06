@@ -82,8 +82,12 @@ def getTemp(tipo):
 
 def addVar(var):
     if pilaFunciones[-1] == "global":
+        print("guardando variable global")
+        print(var.nameVar)
         tabla_variables.addVar(var)
     else:
+        print("guardando variable local")
+        print(var.nameVar)
         tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
 
 # Obtiene una variable a partir de su nombre y el contexto en el que estamos
@@ -166,8 +170,11 @@ class PuntosNeuralgicos(Visitor):
         # print(tree)
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
-        mem = memoria["global"][type]
-        memoria["global"][type] += 1
+        contexto = pilaFunciones[-1]
+        if contexto != "global":
+            contexto = "local"
+        mem = memoria[contexto][type]
+        memoria[contexto][type] += 1
         var = VariableClass(name, type, addressVar=mem)
         addVar(var)
         # Logica para tambien agregar variables que se declaran en la misma linea
@@ -180,7 +187,7 @@ class PuntosNeuralgicos(Visitor):
         print(pilaFunciones[-1])
         print(checkExists_contexto(val))
         if (checkExists_contexto(val) == True):
-            print("entra porque si existe")
+            print("entra porque si existe "+ val + " -----------")
             var = getVar(val)
 
             pilaO.append(val)
@@ -201,6 +208,7 @@ class PuntosNeuralgicos(Visitor):
     def np_asig_quad(self, tree):
         print("asig quad")
         operator = pOper.pop()
+        print(pilaO)
         left_operand = pilaO.pop()
         right_operand = None
         left_mem = pilaMem.pop()
@@ -341,7 +349,7 @@ class PuntosNeuralgicos(Visitor):
 
     def cuadruplo_expresion(self, tree):
         if pOper:
-            if (pOper[-1] == ">") or (pOper[-1] == "<"):
+            if (pOper[-1] == ">") or (pOper[-1] == "<") or (pOper[-1] == "!=") or (pOper[-1] == "==") or (pOper[-1] == ">=") or (pOper[-1] == "<="):
                 right_operand = pilaO.pop()
                 left_operand = pilaO.pop()
                 right_type = pilaT.pop()
@@ -395,16 +403,20 @@ class PuntosNeuralgicos(Visitor):
     # To do: probarlos con un ejemplo, necesitamos la tabla de variables
 
     def np_if(self, tree):
+        print(pilaT)
+        print(pilaO)
         exp_type = pilaT.pop()
+        print(exp_type)
         if exp_type != "bool":
             print("Type mismatch")
             exit()
         else:
             result = pilaO.pop()
+            t = pilaT.pop()
             mem = pilaMem.pop()
             cuadruplos.generate_quad("GOTOF", result, None, "blank")
             # to do: este cuadruplo de memoria tambien tiene que ir con blank?
-            cuadruplos.generate_quad_mem("GOTOF", result, None, "blank")
+            cuadruplos.generate_quad_mem("GOTOF", mem, None, "blank")
             pSaltos.append(cuadruplos.quad_pointer - 1)
 
     def np_if_2(self, tree):
@@ -414,7 +426,9 @@ class PuntosNeuralgicos(Visitor):
 
     def np_if_3(self, tree):
         cuadruplos.generate_quad("GOTO", None, None, "blank")
+        cuadruplos.generate_quad_mem("GOTO", None, None, "blank")
         falso = pSaltos.pop()
+        pSaltos.append(cuadruplos.quad_pointer - 1)
         cuadruplos.fill_quad(falso, cuadruplos.quad_pointer)
         cuadruplos.fill_quad_mem(falso, cuadruplos.quad_pointer)
 
@@ -433,9 +447,10 @@ class PuntosNeuralgicos(Visitor):
             exit()
         else:
             result = pilaO.pop()
+            t = pilaT.pop()
             mem = pilaMem.pop()
             cuadruplos.generate_quad("GOTOF", result, None, "blank")
-            cuadruplos.generate_quad_mem("GOTOF", result, None, "blank")
+            cuadruplos.generate_quad_mem("GOTOF", mem, None, "blank")
             pSaltos.append(cuadruplos.quad_pointer - 1)
 
     def np_while_3(self, tree):
@@ -458,6 +473,7 @@ class PuntosNeuralgicos(Visitor):
         tabla_funciones.addFunc(func)
         pilaFunciones.append(nombre_funcion)
         tabla_funciones.printTable()
+        print(" ya agregue funcion "+ nombre_funcion)
         # parche guadalupano maravilloso
         if tipo_funcion != "vacia":
             # asignar variable global
@@ -477,6 +493,8 @@ class PuntosNeuralgicos(Visitor):
             id_param = tree.children[1].value
             mem = memoria["local"][tipo]
             memoria["local"][tipo] += 1
+            print("en que funcion estamos")
+            print(pilaFunciones[-1])
             tabla_funciones.procDirectory[pilaFunciones[-1]
                                           ].addParam(tipo, id_param, mem)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
@@ -484,6 +502,7 @@ class PuntosNeuralgicos(Visitor):
 
     def mecanica3(self, tree):
         if tree.children:
+            print(" creo que se cicla aqui mecanica 3")
             # otro parametro
             # to do: agregar address
             tipo = tree.children[0].children[0].value
@@ -525,10 +544,11 @@ class PuntosNeuralgicos(Visitor):
 
     def np_llamada_funcion_1(self, tree):
         # verify that the function exists
-        if tabla_funciones.findFunction(tree.children[0]):
-            pilaLlamadas.append(tree.children[0].value)
+        nombre_func = tree.children[0].value
+        if tabla_funciones.findFunction(nombre_func):
+            pilaLlamadas.append(nombre_func)
         else:
-            print("Error, esa funcion no existe")
+            print("Error, esa funcion no existe " + nombre_func)
             exit()
 
     def np_llamada_funcion_2(self, tree):
@@ -542,9 +562,9 @@ class PuntosNeuralgicos(Visitor):
         # Argument= PilaO.Pop() ArgumentType= PTypes.Pop().
         # Verify ArgumentType against current Parameter (#k) in ParameterTable.
         # Generate action PARAMETER, Argument, Argument#k
-        argument = pilaO[-1]
-        argumentType = pilaT[-1]
-        arg_mem = pilaMem[-1]
+        argument = pilaO.pop()
+        argumentType = pilaT.pop()
+        arg_mem = pilaMem.pop()
         if argumentType == tabla_funciones.procDirectory[pilaLlamadas[-1]].paramTipos[pilaK[-1]]:
             print("parametro tipo compatible")
             cuadruplos.generate_quad("PARAM", argument, None, pilaK[-1])
@@ -562,6 +582,7 @@ class PuntosNeuralgicos(Visitor):
         if pilaK[-1] == (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam):
             print("right amount of params")
         else:
+            print(pilaLlamadas)
             print("Faltan parametros")
             exit()
 

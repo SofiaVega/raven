@@ -1,0 +1,14 @@
+habiaUnaVez Raven
+titulo = "Raven"
+num b = 5
+num x = 2, y = 3, a = 4
+bool z
+capitulo uno () {
+    titulo = "el principio del fin"
+    si (x > y)
+    {
+        -> "Equis es mayor"
+    }sino {
+        -> "ye es mayor"
+    }
+}
