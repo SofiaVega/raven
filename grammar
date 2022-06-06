@@ -34,9 +34,11 @@ ICOR: "{"
 FCOR: "}"
 IPAR: /\(/
 FPAR: ")"
-NOT_EQUAL: "<>"
+NOT_EQUAL: "!="
 GREATER_THEN: ">"
 LESSER_THEN: "<"
+GREATER_OR_EQUAL_THAN: ">="
+LESSER_OR_EQUAL_THAN: "<="
 IGUAL_A: "=="
 IGUAL: "="
 IMPORTAR: "importar"
@@ -76,11 +78,9 @@ mecanica: MECANICA np_funciones_1 IPAR mecanica2 FPAR ICOR SALTO vars_mecanica_l
 np_funciones_1: tipo ID
 mecanica2: tipo ID mecanica3 |
 mecanica3: "," tipo ID mecanica3 | 
-cambiar_quad_pointer: 
-mecanica4: estatuto SALTO mecanica4 |
-mecanica5: REGRESA exp np_mecanica_5 | 
-np_mecanica_5:
-fin_mecanica: 
+mecanica4: estatuto SALTO mecanica4 | mecanica5 SALTO mecanica4 |
+mecanica5: REGRESA expresion np_mecanica_5 | 
+np_mecanica_5: 
 
 vars_mecanica_loop: vars | vars_mecanica_loop vars |
 
@@ -92,7 +92,7 @@ opciones3: ";" opcion opciones3 |
 opcion: STRING "," ID IPAR estatuto2 FPAR
 
 expresion: exp | exp expresion_mayor
-expresion_mayor: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expresion | NOT_EQUAL exp cuadruplo_expresion | IGUAL_A exp cuadruplo_expresion
+expresion_mayor: exp | LESSER_THEN exp cuadruplo_expresion | GREATER_THEN exp cuadruplo_expresion | NOT_EQUAL exp cuadruplo_expresion | IGUAL_A exp cuadruplo_expresion | GREATER_OR_EQUAL_THAN exp cuadruplo_expresion | LESSER_OR_EQUAL_THAN exp cuadruplo_expresion
 cuadruplo_expresion: 
 
 
@@ -129,6 +129,7 @@ estatuto: asignacion
                 | escritura 
                 | llamada_funcion
                 | opciones
+                | mecanica5
 llamada_funcion: ID IPAR np_llamada_funcion_2 estatuto2 np_llamada_funcion_5 FPAR np_llamada_funcion_6 -> np_llamada_funcion_1
 np_llamada_funcion_2: 
 np_llamada_funcion_5:

@@ -11,21 +11,21 @@ pilaCalls = []
 # a funcion
 lineaQuede = []
 fotos = []
-foto = []
 policia = 0
 
 
 def tomarFoto():
-    global foto
     global fotos
+    global mv
     print("foto memoria local")
-    foto = mv[7000: 12999]
+    foto = mv[7000 : 12999]
+    printSubMV(foto)
     fotos.append(foto)
 
 
 def printSubMV(smv):
-    cont = 0
-    print("imprimiendo mv")
+    cont = 7000
+    print("imprimiendo sub mv")
     for i in smv:
         if i != None:
             print(str(cont) + " " + str(i))
@@ -33,11 +33,9 @@ def printSubMV(smv):
 
 
 def restaurarFoto():
-    global foto
     global fotos
-    foto = fotos.pop()
-    mv[7000: 12999] = foto
-
+    global mv
+    mv[7000 : 12999] = fotos.pop()
 
 def varsToMV():
     print("tabla variables")
@@ -126,6 +124,7 @@ def ejecutar():
             # action()
             # to do: reservar espacio de memoria
             tomarFoto()
+            print(fotos)
             pilaCalls.append(left_op)
             ip += 1
         elif operator == "PARAM":
@@ -180,11 +179,11 @@ def ejecutar():
             ip += 1
         elif operator == "<":
             print("<")
-            mv[result] = mv[left_op] < mv[right_op]
+            mv[result] = int(mv[left_op]) < int(mv[right_op])
             ip += 1
         elif operator == "<=":
             print("<=")
-            mv[result] = mv[left_op] <= mv[right_op]
+            mv[result] = int(mv[left_op]) <= int(mv[right_op])
             ip += 1
         elif operator == ">=":
             print(">=")
@@ -217,11 +216,13 @@ def ejecutar():
             print("Return")
             # parche guadalupano maravilloso
             # return, dir var global func, none, val return
+            printMV()
             print(cuadruplos[ip])
-            mv[left_op] = mv[result]
+            aux = mv[result]
             restaurarFoto()
+            mv[left_op] = aux
             print("despues de foto")
-            # printMV()
+            printMV()
             ip = lineaQuede.pop()
             print("quede en " + str(ip))
 
@@ -232,7 +233,7 @@ def ejecutar():
                 print("Fuera de limites de arreglo " + left_op)
                 exit()
             ip += 1
-        policia += 1
+        #policia += 1
         if(policia >= 40):
             print("alto! ya se ciclo")
             exit()

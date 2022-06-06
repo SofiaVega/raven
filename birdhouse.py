@@ -229,6 +229,7 @@ class PuntosNeuralgicos(Visitor):
     # Punto neurálgico que genera cuádruplos de asignación
     def np_asig_quad(self, tree):
         operator = pOper.pop()
+        print(pilaO)
         left_operand = pilaO.pop()
         right_operand = None
         left_mem = pilaMem.pop()
@@ -368,7 +369,7 @@ class PuntosNeuralgicos(Visitor):
 
     def cuadruplo_expresion(self, tree):
         if pOper:
-            if (pOper[-1] == ">") or (pOper[-1] == "<") or (pOper[-1] == "!=") or (pOper[-1] == "=="):
+            if (pOper[-1] == ">") or (pOper[-1] == "<") or (pOper[-1] == "!=") or (pOper[-1] == "==") or (pOper[-1] == ">=") or (pOper[-1] == "<="):
                 right_operand = pilaO.pop()
                 left_operand = pilaO.pop()
                 right_type = pilaT.pop()
@@ -422,7 +423,10 @@ class PuntosNeuralgicos(Visitor):
     # To do: probarlos con un ejemplo, necesitamos la tabla de variables
 
     def np_if(self, tree):
+        print(pilaT)
+        print(pilaO)
         exp_type = pilaT.pop()
+        print(exp_type)
         if exp_type != "bool":
             print("Type mismatch")
             exit()
@@ -578,9 +582,9 @@ class PuntosNeuralgicos(Visitor):
         # Argument= PilaO.Pop() ArgumentType= PTypes.Pop().
         # Verify ArgumentType against current Parameter (#k) in ParameterTable.
         # Generate action PARAMETER, Argument, Argument#k
-        argument = pilaO[-1]
-        argumentType = pilaT[-1]
-        arg_mem = pilaMem[-1]
+        argument = pilaO.pop()
+        argumentType = pilaT.pop()
+        arg_mem = pilaMem.pop()
         if argumentType == tabla_funciones.procDirectory[pilaLlamadas[-1]].paramTipos[pilaK[-1]]:
             print("parametro tipo compatible")
             cuadruplos.generate_quad("PARAM", argument, None, pilaK[-1])
