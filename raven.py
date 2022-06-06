@@ -170,11 +170,11 @@ def ejecutar():
             ip += 1
         elif operator == "<":
             print("<")
-            mv[result] = mv[left_op] < mv[right_op]
+            mv[result] = int(mv[left_op]) < int(mv[right_op])
             ip += 1
         elif operator == "<=":
             print("<=")
-            mv[result] = mv[left_op] <= mv[right_op]
+            mv[result] = int(mv[left_op]) <= int(mv[right_op])
             ip += 1
         elif operator == ">=":
             print(">=")

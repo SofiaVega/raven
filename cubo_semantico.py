@@ -90,7 +90,7 @@ cubo = {
             "bool":"bool"
         }
     },
-    "<>": {
+    "!=": {
         "num": {
             "num":"bool",
             "enunciado":"error",
@@ -127,6 +127,42 @@ cubo = {
         }
     },
     ">": {
+        "num": {
+            "num":"bool",
+            "enunciado":"error",
+            "bool":"bool"
+        },
+        "enunciado":{
+            "num":"error",
+            "enunciado":"bool",
+            "bool":"error"
+
+        },
+        "bool":{
+            "num":"bool",
+            "enunciado":"error",
+            "bool":"bool"
+        }
+    },
+    ">=": {
+        "num": {
+            "num":"bool",
+            "enunciado":"error",
+            "bool":"bool"
+        },
+        "enunciado":{
+            "num":"error",
+            "enunciado":"bool",
+            "bool":"error"
+
+        },
+        "bool":{
+            "num":"bool",
+            "enunciado":"error",
+            "bool":"bool"
+        }
+    },
+    "<=": {
         "num": {
             "num":"bool",
             "enunciado":"error",

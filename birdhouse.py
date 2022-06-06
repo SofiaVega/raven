@@ -349,7 +349,7 @@ class PuntosNeuralgicos(Visitor):
 
     def cuadruplo_expresion(self, tree):
         if pOper:
-            if (pOper[-1] == ">") or (pOper[-1] == "<") or (pOper[-1] == "!=") or (pOper[-1] == "=="):
+            if (pOper[-1] == ">") or (pOper[-1] == "<") or (pOper[-1] == "!=") or (pOper[-1] == "==") or (pOper[-1] == ">=") or (pOper[-1] == "<="):
                 right_operand = pilaO.pop()
                 left_operand = pilaO.pop()
                 right_type = pilaT.pop()
@@ -403,7 +403,10 @@ class PuntosNeuralgicos(Visitor):
     # To do: probarlos con un ejemplo, necesitamos la tabla de variables
 
     def np_if(self, tree):
+        print(pilaT)
+        print(pilaO)
         exp_type = pilaT.pop()
+        print(exp_type)
         if exp_type != "bool":
             print("Type mismatch")
             exit()
