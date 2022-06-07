@@ -1,0 +1,26 @@
+habiaUnaVez Raven
+titulo = "Raven"
+num n
+num res = 1
+num actual = 0
+num sig = 1
+num x = 0
+num temporal
+num tope
+capitulo uno () {
+    titulo = "el principio del fin"
+    n = 7
+    tope = n + 1
+    mientras (x < tope){
+        temporal = actual
+        actual = sig
+        sig = sig + temporal
+        x = x + 1
+    }
+    ->"fibonacci"
+    -> temporal
+    ->"terminamos"
+}
+indice(){
+    >> uno()
+}
