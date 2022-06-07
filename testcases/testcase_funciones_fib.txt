@@ -13,3 +13,6 @@ capitulo uno () {
     -> fib(6)
     ->"terminamos"
 }
+indice(){
+    >> uno()
+}

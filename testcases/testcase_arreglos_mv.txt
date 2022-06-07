@@ -14,3 +14,6 @@ capitulo uno () {
     -> y
     -> "fin ahora si"
 }
+indice(){
+    >> uno()
+}

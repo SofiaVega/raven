@@ -4,3 +4,6 @@ capitulo uno () {
     titulo = "el principio del fin"
     -> "Habia una vez un cuervo"
 }
+indice(){
+    >> uno()
+}

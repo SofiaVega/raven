@@ -22,3 +22,6 @@ capitulo uno () {
     volar(1)
     -> uno(5, 2)
 }
+indice(){
+    >> uno()
+}

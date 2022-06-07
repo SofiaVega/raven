@@ -11,3 +11,6 @@ capitulo uno () {
     lista[3] = y
     -> "habia una vez"
 }
+indice(){
+    >> uno()
+}

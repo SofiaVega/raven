@@ -18,7 +18,7 @@ def tomarFoto():
     global mv
     print("foto memoria local")
     foto = mv[7000 : 12999]
-    printSubMV(foto)
+    #printSubMV(foto)
     fotos.append(foto)
 
 def printSubMV(smv):
@@ -41,7 +41,7 @@ def varsToMV():
     for key in tabla_variables.tablaVar:
         print("metiendo variables a mv")
         print(key)
-        print(tabla_variables.tablaVar[key].addressVar)
+        #print(tabla_variables.tablaVar[key].addressVar)
         mv[int(tabla_variables.tablaVar[key].addressVar)] = tabla_variables.tablaVar[key].valueVar
     
 
@@ -134,7 +134,6 @@ def ejecutar():
             #action()
             #to do: reservar espacio de memoria
             tomarFoto()
-            print(fotos)
             pilaCalls.append(left_op)
             ip += 1
         elif operator == "PARAM":
@@ -202,13 +201,16 @@ def ejecutar():
             ip += 1
         elif operator == "==":
             print("==")
+            print(mv[left_op])
+            print(mv[right_op])
             if(left_op >= 25000):
                 left_op = mv[left_op]
             if(right_op >= 25000):
                 right_op = mv[right_op]
-            print(mv[left_op])
-            print(mv[right_op])
-            mv[result] = (mv[left_op]) == (mv[right_op])
+            try:
+                mv[result] = int(mv[left_op]) == int(mv[right_op])
+            except:
+                mv[result] = (mv[left_op]) == (mv[right_op])
             print(mv[result])
             ip += 1
         elif operator == "!=":
@@ -258,8 +260,8 @@ def ejecutar():
             print("otro")
             ip += 1
         
-        #policia += 1
-        if(policia >= 40):
+        policia += 1
+        if(policia >= 100):
             print("alto! ya se ciclo")
             exit()
 
