@@ -73,7 +73,7 @@ def ejecutar():
     right_op = cuadruplos[ip]['right']
     result = cuadruplos[ip]['result']
     while operator != "ENDProgram":
-        printMV()
+        #printMV()
         print(ip)
         print(cuadruplos[ip])
 

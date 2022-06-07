@@ -1,16 +1,18 @@
 habiaUnaVez Raven
 titulo = "Raven"
-num x = 3
+num x = 4
 bool z
 capitulo uno () {
     titulo = "el principio del fin"
     z = x > 2
-    mientras ( x > 2 )
+    -> "inicio loop"
+    mientras ( x > 1 )
     {
-        x = 1
+        x = x - 1
+        -> x
     }
-
-    -> "Habia una vez un cuervo"
-    -> 2 * 3
-
+    -> "fin loop"
+}
+indice(){
+    >> uno()
 }
