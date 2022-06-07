@@ -202,9 +202,13 @@ def ejecutar():
             ip += 1
         elif operator == "==":
             print("==")
+            if(left_op >= 25000):
+                left_op = mv[left_op]
+            if(right_op >= 25000):
+                right_op = mv[right_op]
             print(mv[left_op])
             print(mv[right_op])
-            mv[result] = int(mv[left_op]) == int(mv[right_op])
+            mv[result] = (mv[left_op]) == (mv[right_op])
             print(mv[result])
             ip += 1
         elif operator == "!=":
@@ -228,20 +232,20 @@ def ejecutar():
             print("Return")
             # parche guadalupano maravilloso
             # return, dir var global func, none, val return
-            printMV()
+            #printMV()
             print(cuadruplos[ip])
             aux = mv[result]
             restaurarFoto()
             mv[left_op] = aux
             print("despues de foto")
-            printMV()
+            #printMV()
             ip = lineaQuede.pop()
             print("quede en "+ str(ip))
 
         elif operator == "VER":
             print("Verificacion arreglos")
             # ver, x, li, ls
-            printMV()
+            #printMV()
             if (int(mv[left_op]) <  int(mv[right_op])) or (int(mv[left_op]) >= int(result)):
                 print("Fuera de limites de arreglo " + str(left_op))
                 exit()

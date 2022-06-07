@@ -118,7 +118,11 @@ def checkExists_contexto(val):
     if pilaFunciones[-1] == "global":
         return tabla_variables.checkExists(val)
     else:
-        return tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
+        res = tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
+        if res == False:
+            res = tabla_variables.checkExists(val)
+        return res
+        
 
 
 tabla_variables = VariableTable()  # Tabla de variables
@@ -313,11 +317,15 @@ class PuntosNeuralgicos(Visitor):
     def guardar_bool(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
         miid = tree.children[-1].value
-        pilaO.append(miid)
+        if miid == "Verdad":
+            val = True
+        else:
+            val = False
+        pilaO.append(val)
         pilaT.append("bool")
         mem = memoria["cte"]["bool"]
         memoria["cte"]["bool"] += 1
-        tabla_ctes.addCte(miid, mem)
+        tabla_ctes.addCte(val, mem)
         pilaMem.append(mem)
 
     def termino_mult(self, tree):
@@ -411,7 +419,10 @@ class PuntosNeuralgicos(Visitor):
                 right_mem = pilaMem.pop()
                 left_mem = pilaMem.pop()
                 operator = pOper.pop()
-                result_type = cubo_semantico[operator][left_type][right_type]
+                if left_type == "pointer" or right_type == "pointer":
+                    result_type = "bool"
+                else:
+                    result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global availBool
                     result = temporalesBool[availBool]

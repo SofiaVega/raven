@@ -5,7 +5,16 @@ num x = 3
 num cont = 0
 num b
 mecanica num find(){
-    regresa x
+    mientras ( cont < 4 )
+    {
+        -> "lista cont"
+        -> lista[cont]
+        si (lista[cont] == 2){
+            regresa 1
+        }
+        cont = cont + 1
+    }
+    regresa 0
 }
 capitulo uno () {
     titulo = "el principio del fin"
@@ -14,15 +23,11 @@ capitulo uno () {
     lista[2] = 2
     lista[3] = 3
     -> "inicio loop"
-    mientras ( cont < 4 )
-    {
-        -> lista[cont]
-        cont = cont + 1
-    }
-    -> "fin loop"
     b = find()
-    si (b == 4){
+    si (b == 1){
         -> "funciona"
+    } sino {
+        -> "pues no funciona"
     }
 
 }
