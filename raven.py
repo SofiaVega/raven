@@ -214,6 +214,8 @@ def ejecutar():
         elif operator == "PRINT":
             print("PRINT")
             #printMV()
+            if result >= 25000:
+                result = mv[result]
             print(mv[result])
             ip += 1
         elif operator == "ENDFunc":

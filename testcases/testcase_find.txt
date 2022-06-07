@@ -1,0 +1,22 @@
+habiaUnaVez Raven
+titulo = "Raven"
+num lista[4]
+num x = 3
+num cont = 0
+capitulo uno () {
+    titulo = "el principio del fin"
+    lista[0] = 0
+    lista[1] = 1
+    lista[2] = 2
+    lista[3] = 3
+    -> "inicio loop"
+    mientras ( cont < 4 )
+    {
+        -> lista[cont]
+        cont = cont + 1
+    }
+    -> "fin loop"
+}
+indice(){
+    >> uno()
+}
