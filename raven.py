@@ -16,7 +16,6 @@ policia = 0
 def tomarFoto():
     global fotos
     global mv
-    print("foto memoria local")
     foto = mv[7000 : 12999]
     #printSubMV(foto)
     fotos.append(foto)
@@ -74,8 +73,8 @@ def ejecutar():
     result = cuadruplos[ip]['result']
     while operator != "ENDProgram":
         #printMV()
-        print(ip)
-        print(cuadruplos[ip])
+        #print(ip)
+        #print(cuadruplos[ip])
 
         operator = cuadruplos[ip]['operator']
         left_op = cuadruplos[ip]['left']
@@ -102,9 +101,6 @@ def ejecutar():
             ip += 1
         elif operator == "GOTOF":
             print("GOTOF")
-            print(cuadruplos[ip])
-            print(type(mv[int(left_op)]))
-            print(mv[int(left_op)])
             if(mv[int(left_op)] == True):
                 print("true")
                 ip += 1
@@ -120,10 +116,8 @@ def ejecutar():
                 ip = int(result)
         elif operator == "GOSUB":
             lineaQuede.append(ip + 1)
-            print("antes de foto")
             #printMV()
             #tomarFoto()
-            print(left_op)
             ip = int(left_op)
             # to do: como regresamos a donde nos quedamos
             #pila ?
@@ -145,7 +139,6 @@ def ejecutar():
             ip += 1
         elif operator == "=":
             print("=")
-            print(cuadruplos[ip])
             # checar si es pointer de 25000 en adelante
             if result >= 25000:
                 result = mv[int(result)]
@@ -156,7 +149,6 @@ def ejecutar():
         elif operator == '+':
             print("+")
             #printMV()
-            print(cuadruplos[ip])
             #checar tipo con direcciones de memoria
             if right_op >= 25000:
                 right_op = mv[int(right_op)]
@@ -167,27 +159,34 @@ def ejecutar():
             ip += 1
         elif operator == "-":
             print("-")
-            print(cuadruplos[ip])
             #printMV()
+            if(left_op >= 25000):
+                left_op = mv[left_op]
+            if(right_op >= 25000):
+                right_op = mv[right_op]
             mv[result] = int(mv[int(left_op)]) - int(mv[int(right_op)])
             ip += 1
         elif operator == "/":
             print("/")
+            if(left_op >= 25000):
+                left_op = mv[left_op]
+            if(right_op >= 25000):
+                right_op = mv[right_op]
             # to do: division por 0?
             mv[result] = mv[left_op] / mv[right_op]
             ip += 1
         elif operator == "*":
             print("*")
             #to do: puede ser int o float
-            print(cuadruplos[ip])
             #printMV()
+            if(left_op >= 25000):
+                left_op = mv[left_op]
+            if(right_op >= 25000):
+                right_op = mv[right_op]
             mv[result] = int(mv[left_op]) * int(mv[right_op])
             ip += 1
         elif operator == ">":
             print(">")
-            print(cuadruplos[ip])
-            print(mv[left_op])
-            print(mv[right_op])
             #printMV()
             mv[result] = int(mv[left_op]) > int(mv[right_op])
             #printMV()
@@ -206,8 +205,6 @@ def ejecutar():
             ip += 1
         elif operator == "==":
             print("==")
-            print(mv[left_op])
-            print(mv[right_op])
             if(left_op >= 25000):
                 left_op = mv[left_op]
             if(right_op >= 25000):
@@ -216,7 +213,6 @@ def ejecutar():
                 mv[result] = int(mv[left_op]) == int(mv[right_op])
             except:
                 mv[result] = (mv[left_op]) == (mv[right_op])
-            print(mv[result])
             ip += 1
         elif operator == "!=":
             print("!=")
@@ -240,14 +236,11 @@ def ejecutar():
             # parche guadalupano maravilloso
             # return, dir var global func, none, val return
             #printMV()
-            print(cuadruplos[ip])
             aux = mv[result]
             restaurarFoto()
             mv[left_op] = aux
-            print("despues de foto")
             #printMV()
             ip = lineaQuede.pop()
-            print("quede en "+ str(ip))
 
         elif operator == "VER":
             print("Verificacion arreglos")

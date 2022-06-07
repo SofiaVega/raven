@@ -1,7 +1,7 @@
 habiaUnaVez Raven
 titulo = "Raven"
 num b = 5
-num x = 2, y = 3, a = 4
+num x = 2, y = 3, a = 5
 bool z = Verdad
 capitulo uno () {
     titulo = "el principio del fin"

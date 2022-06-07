@@ -6,6 +6,7 @@ mecanica num cero(num s){
     si (s == 0){
         res = 0
     }sino {
+        -> s
         res = cero(s - 1)
     }
     -> res

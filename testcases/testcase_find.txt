@@ -25,9 +25,9 @@ capitulo uno () {
     -> "inicio loop"
     b = find()
     si (b == 1){
-        -> "funciona"
+        -> "se encuentra el numero"
     } sino {
-        -> "pues no funciona"
+        -> "no se encuentra el numero"
     }
 
 }
