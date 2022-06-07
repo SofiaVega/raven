@@ -102,8 +102,11 @@ def getVar(varID):
     if pilaFunciones[-1] == "global":
         var = tabla_variables.tablaVar[varID]
     else:
-        var = tabla_funciones.procDirectory[pilaFunciones[-1]
+        try:
+            var = tabla_funciones.procDirectory[pilaFunciones[-1]
                                             ].varsFunc.tablaVar[varID]
+        except:
+            var = tabla_variables.tablaVar[varID]
     return var
 
 # Revisa si el id corresponde a una variable del contexto actual
@@ -610,6 +613,7 @@ class PuntosNeuralgicos(Visitor):
         # release
         cuadruplos.generate_quad("ENDFunc", None, None, None)
         cuadruplos.generate_quad_mem("ENDFunc", None, None, None)
+        pilaFunciones.pop()
         # insert the number of temps
 
     # puntos neuralgicos para llamadas a funciones

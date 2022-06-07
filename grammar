@@ -49,6 +49,7 @@ HOLA: "hola"
 
 ID: /[a-zA-Z_][a-zA-Z_0-9]*/
 NUM: /\d+/
+BOOL_EXP: "Verdad" | "Falso"
 
 start: programa
 programa: huv_inicio  SALTO importarloop titulo_asig np_asig_quad SALTO varsloop np_indice_inicio mecanicaloop np_cap capituloloop indice np_fin
@@ -117,7 +118,7 @@ factor: IPAR expresion FPAR | varcte | SUMA varcte | RESTA varcte
 varcte:  ID arr_o_no -> guardar_id
         | NUM -> guardar_num
         | STRING -> guardar_string
-        | BOOL -> guardar_bool
+        | BOOL_EXP -> guardar_bool
         | llamada_funcion
 
 arr_o_no: accarr accarr2 -> np_acc_arr_1
