@@ -5,6 +5,7 @@ num x = 2, y = 3, a = 4
 bool z
 capitulo uno () {
     titulo = "el principio del fin"
+    -> "empieza uno"
     x = 2 + 3
     z = x > a
     si (x > y)
@@ -14,5 +15,7 @@ capitulo uno () {
     -> "Habia una vez un cuervo"
     -> 2 * 4
     -> x * a
-
+}
+indice() {
+    >> uno()
 }

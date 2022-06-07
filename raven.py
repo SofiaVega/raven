@@ -73,6 +73,7 @@ def ejecutar():
     right_op = cuadruplos[ip]['right']
     result = cuadruplos[ip]['result']
     while operator != "ENDProgram":
+        printMV()
         print(ip)
         print(cuadruplos[ip])
 
@@ -88,7 +89,16 @@ def ejecutar():
         if operator == "GOTO":
             print("GOTO")
             # to do: 
-            #ip = int(result)
+            ip = int(result)
+            #ip += 1
+        elif operator == "GOCAP":
+            print("GOCAP")
+            lineaQuede.append(ip + 1)
+            ip = int(result)
+        elif operator == "ENDCAP":
+            print("ENDCAP")
+            ip = lineaQuede.pop()
+        elif operator == "PROGRAM":
             ip += 1
         elif operator == "GOTOF":
             print("GOTOF")
@@ -154,7 +164,7 @@ def ejecutar():
         elif operator == "-":
             print("-")
             print(cuadruplos[ip])
-            printMV()
+            #printMV()
             mv[result] = int(mv[int(left_op)]) - int(mv[int(right_op)])
             ip += 1
         elif operator == "/":
@@ -166,7 +176,7 @@ def ejecutar():
             print("*")
             #to do: puede ser int o float
             print(cuadruplos[ip])
-            printMV()
+            #printMV()
             mv[result] = int(mv[left_op]) * int(mv[right_op])
             ip += 1
         elif operator == ">":
@@ -174,9 +184,9 @@ def ejecutar():
             print(cuadruplos[ip])
             print(mv[left_op])
             print(mv[right_op])
-            printMV()
+            #printMV()
             mv[result] = int(mv[left_op]) > int(mv[right_op])
-            printMV()
+            #printMV()
             ip += 1
         elif operator == "<":
             print("<")
@@ -203,8 +213,7 @@ def ejecutar():
             ip += 1
         elif operator == "PRINT":
             print("PRINT")
-            printMV()
-            print(cuadruplos[ip])
+            #printMV()
             print(mv[result])
             ip += 1
         elif operator == "ENDFunc":

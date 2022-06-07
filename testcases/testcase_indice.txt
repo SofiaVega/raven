@@ -1,12 +1,12 @@
 habiaUnaVez Raven
 titulo = "Raven"
-num x
+num x = 4
 capitulo uno () {
     titulo = "el principio del fin"
-    <- x
-    -> "resultado"
+    -> "empieza uno"
+    -> "Habia una vez un cuervo"
     -> x
 }
-indice(){
+indice() {
     >> uno()
 }

@@ -10,6 +10,9 @@ mecanica num fact(num n){
 capitulo uno () {
     titulo = "el principio del fin"
     ->"factorial"
-    -> fact(6)
+    -> fact(4)
     ->"terminamos"
+}
+indice(){
+    >> uno()
 }

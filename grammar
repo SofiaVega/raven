@@ -44,12 +44,15 @@ IGUAL_A: "=="
 IGUAL: "="
 IMPORTAR: "importar"
 COMO: "como"
+INDICE: "indice"
+HOLA: "hola"
 
 ID: /[a-zA-Z_][a-zA-Z_0-9]*/
 NUM: /\d+/
 
 start: programa
-programa: huv_inicio  SALTO importarloop titulo_asig np_asig_quad SALTO varsloop mecanicaloop np_cap capituloloop np_fin
+programa: huv_inicio  SALTO importarloop titulo_asig np_asig_quad SALTO varsloop np_indice_inicio mecanicaloop np_cap capituloloop indice np_fin
+np_indice_inicio: 
 np_fin: 
 huv_inicio: HUV ID
 titulo_asig: TITULO IGUAL STRING
@@ -57,6 +60,9 @@ importarloop: importar | importarloop importar|
 varsloop: vars | varsloop vars |
 mecanicaloop: mecanica | mecanicaloop  mecanica |
 capituloloop: capitulo | capituloloop capitulo 
+indice: INDICE IPAR FPAR ICOR llamada_capituloloop FCOR 
+llamada_capituloloop: llamada_capitulo | llamada_capituloloop llamada_capitulo
+llamada_capitulo: ">" ">" ID "(" ")"
 
 
 opciones: OPCIONES ":" "[" opciones2 "]"
@@ -88,7 +94,8 @@ np_mecanica_5:
 vars_mecanica_loop: vars | vars_mecanica_loop vars |
 
 
-capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO estatuto SALTO mecanica4 FCOR
+capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO estatuto SALTO mecanica4 FCOR end_cap -> np_capitulo
+end_cap:
 np_cap: 
 
 expresion: exp | exp expresion_mayor

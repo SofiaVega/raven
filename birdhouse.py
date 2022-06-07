@@ -38,6 +38,9 @@ pilaFunciones.append("global")
 # pila[-1] es la llamada actual
 pilaLlamadas = []
 
+# CAPITULOS
+capitulos = {}
+
 # ARREGLOS
 # Contador de parametros
 pilaK = []
@@ -122,12 +125,23 @@ tabla_ctes = TablaConstantes()
 
 class PuntosNeuralgicos(Visitor):
     def huv_inicio(self, tree):
-        print("Habia una vez", tree.children[1])
-        cuadruplos.generate_quad("GOTO", tree.children[1].value, None, "blank")
+        programName = tree.children[1].value
+        cuadruplos.generate_quad(
+            "PROGRAM", None, None, programName)
+        cuadruplos.generate_quad_mem("PROGRAM", None, None, programName)
+
+    # NP INDICE INICIO
+    # Genera cuádruplo de {GOTO, indice, , []} incompleto para ser llenado posteriormente
+    # Se llama desde programa
+    def np_indice_inicio(self, tree):
+        print("indice inicio")
+        cuadruplos.generate_quad("GOTO", "indice", None, "blank")
+        cuadruplos.print_quad()
         # to do: poner memoria en vez de valor
         cuadruplos.generate_quad_mem(
-            "GOTO", tree.children[1].value, None, "blank")
+            "GOTO", "indice", None, "blank")
         pSaltos.append(cuadruplos.quad_pointer-1)
+
 
     def titulo_asig(self, tree):
         val = tree.children[0].value
@@ -146,12 +160,47 @@ class PuntosNeuralgicos(Visitor):
         memoria["cte"]["enunciado"] += 1
         pilaMem.append(mem)
 
+    # NP INDICE
+    # Rellena el cuádruplo {GOTO, indice, , []} con el número de cuádruple donde inicia el indice
+    # Se llama desde programa
+    def indice(self, tree):
+        end = pSaltos.pop()
+        print("indice " + str(end) + " " + str(cuadruplos.quad_pointer))
+        cuadruplos.fill_quad(end, cuadruplos.quad_pointer)
+        cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer)
+
+    def llamada_capitulo(self, tree):
+        print("llamada capitulo ---------")
+        print(tree.children)
+        cap = tree.children[0].value
+        # estructura capitulos
+        salto = capitulos[cap]
+        # hacer un goto
+        cuadruplos.generate_quad("GOCAP", cap, None, salto + 1)
+        cuadruplos.print_quad()
+        # to do: poner memoria en vez de valor
+        cuadruplos.generate_quad_mem(
+            "GOCAP", cap, None, salto + 1)
+
+    def np_capitulo(self, tree):
+        # estructura capitulos
+        print("-------- capitulo children -------")
+        print(tree.children)
+        print(tree.children[1].value)
+        capitulos[tree.children[1].value] = cuadruplos.quad_pointer - 1
+        #pSaltos.append(cuadruplos.quad_pointer-1)
+        
+    def end_cap(self, tree):
+        cuadruplos.generate_quad("ENDCAP", None, None, None)
+        cuadruplos.generate_quad_mem("ENDCAP", None, None, None)
+    '''
     def np_cap(self, tree):
         print("AQUI")
         end = pSaltos.pop()
         print("capitulo " + str(end) + " " + str(cuadruplos.quad_pointer))
         cuadruplos.fill_quad(end, cuadruplos.quad_pointer)
         cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer)
+    '''
 
     # Funcion ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
     def inlineVar(self, inlineT, type):

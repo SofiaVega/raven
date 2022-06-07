@@ -1,7 +1,7 @@
 habiaUnaVez Raven
 titulo = "Raven"
 num b = 5
-num x = 2, y = 3, a = 4
+num x = 5, y = 3, a = 4
 bool z
 capitulo uno () {
     titulo = "el principio del fin"
@@ -11,4 +11,7 @@ capitulo uno () {
     }sino {
         -> "ye es mayor"
     }
+}
+indice(){
+    >> uno()
 }
