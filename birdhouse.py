@@ -347,7 +347,10 @@ class PuntosNeuralgicos(Visitor):
                 right_mem = pilaMem.pop()
                 left_mem = pilaMem.pop()
                 operator = pOper.pop()
-                result_type = cubo_semantico[operator][left_type][right_type]
+                if left_type == "pointer" or right_type == "pointer":
+                    result_type = "num"
+                else:
+                    result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     if result_type == "num":
                         global availNum
@@ -386,7 +389,10 @@ class PuntosNeuralgicos(Visitor):
                     if right_operand == "0" or var.value == 0:
                         print("Error: no se puede dividir entre 0")
                         exit()
-                result_type = cubo_semantico[operator][left_type][right_type]
+                if left_type == "pointer" or right_type == "pointer":
+                    result_type = "num"
+                else:
+                    result_type = cubo_semantico[operator][left_type][right_type]
                 if result_type != "error":
                     global availNum
                     result = temporalesNum[availNum]

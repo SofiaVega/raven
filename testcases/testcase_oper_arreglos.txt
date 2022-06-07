@@ -1,0 +1,17 @@
+habiaUnaVez Raven
+titulo = "Raven"
+num lista [3]
+num x = 1
+num y = 5
+capitulo uno () {
+    titulo = "el principio del fin"
+    lista[0] = 2
+    lista[x] = x
+    lista[2] = lista[0] + lista[1]
+    -> "probando arreglos"
+    -> lista[2]
+    -> "fin ahora si"
+}
+indice(){
+    >> uno()
+}

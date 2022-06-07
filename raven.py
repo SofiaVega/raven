@@ -155,8 +155,13 @@ def ejecutar():
             ip += 1
         elif operator == '+':
             print("+")
+            #printMV()
             print(cuadruplos[ip])
             #checar tipo con direcciones de memoria
+            if right_op >= 25000:
+                right_op = mv[int(right_op)]
+            if left_op >= 25000:
+                left_op = mv[int(left_op)]
             mv[result] = int(mv[left_op]) + int(mv[right_op])
             #printMV()
             ip += 1
