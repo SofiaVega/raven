@@ -88,14 +88,14 @@ cambiar_quad_pointer:
 np_funciones_1: tipo ID
 mecanica2: tipo ID mecanica3 |
 mecanica3: "," tipo ID mecanica3 | 
-mecanica4: estatuto SALTO mecanica4 | mecanica5 SALTO mecanica4 |
+mecanica4: estatuto SALTO mecanica4 | mecanica5 SALTO mecanica4 | llamada_capitulo mecanica4 | 
 mecanica5: REGRESA expresion np_mecanica_5 | 
 np_mecanica_5: 
 
 vars_mecanica_loop: vars | vars_mecanica_loop vars |
 
 
-capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO estatuto SALTO mecanica4 FCOR end_cap -> np_capitulo
+capitulo: CAPITULO ID IPAR mecanica2 FPAR ICOR SALTO titulo_asig np_asig_quad SALTO mecanica4 FCOR end_cap -> np_capitulo
 end_cap:
 np_cap: 
 

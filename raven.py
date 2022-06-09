@@ -38,8 +38,6 @@ def varsToMV():
     mv[13000] = 0
     
     for key in tabla_variables.tablaVar:
-        print("metiendo variables a mv")
-        print(key)
         #print(tabla_variables.tablaVar[key].addressVar)
         mv[int(tabla_variables.tablaVar[key].addressVar)] = tabla_variables.tablaVar[key].valueVar
     
@@ -86,29 +84,22 @@ def ejecutar():
         #    result = mv[result]
 
         if operator == "GOTO":
-            print("GOTO")
             # to do: 
             ip = int(result)
             #ip += 1
         elif operator == "GOCAP":
-            print("GOCAP")
             lineaQuede.append(ip + 1)
             ip = int(result)
         elif operator == "ENDCAP":
-            print("ENDCAP")
             ip = lineaQuede.pop()
         elif operator == "PROGRAM":
             ip += 1
         elif operator == "GOTOF":
-            print("GOTOF")
             if(mv[int(left_op)] == True):
-                print("true")
                 ip += 1
             else:
-                print("falso")
                 # to do: tomar en cuenta que los cuadruplos empiezan en 0 o en 1
                 ip = int(result)
-                print(ip)
         elif operator == "GOTOV":
             if(left_op):
                 ip += 1
@@ -131,14 +122,12 @@ def ejecutar():
             pilaCalls.append(left_op)
             ip += 1
         elif operator == "PARAM":
-            print("param")
             # Indicates that the argument sent must be copied into parámater#-- in Run-Time
             key = tabla_funciones.procDirectory[pilaCalls[-1]].keysParam[result]
             addv = tabla_funciones.procDirectory[pilaCalls[-1]].varsFunc.tablaVar[key].addressVar
             mv[addv] = mv[left_op]
             ip += 1
         elif operator == "=":
-            print("=")
             # checar si es pointer de 25000 en adelante
             if result >= 25000:
                 result = mv[int(result)]
@@ -147,7 +136,6 @@ def ejecutar():
             mv[int(result)] = mv[int(left_op)]
             ip += 1
         elif operator == '+':
-            print("+")
             #printMV()
             #checar tipo con direcciones de memoria
             if right_op >= 25000:
@@ -158,7 +146,6 @@ def ejecutar():
             #printMV()
             ip += 1
         elif operator == "-":
-            print("-")
             #printMV()
             if(left_op >= 25000):
                 left_op = mv[left_op]
@@ -167,7 +154,6 @@ def ejecutar():
             mv[result] = int(mv[int(left_op)]) - int(mv[int(right_op)])
             ip += 1
         elif operator == "/":
-            print("/")
             if(left_op >= 25000):
                 left_op = mv[left_op]
             if(right_op >= 25000):
@@ -176,7 +162,6 @@ def ejecutar():
             mv[result] = mv[left_op] / mv[right_op]
             ip += 1
         elif operator == "*":
-            print("*")
             #to do: puede ser int o float
             #printMV()
             if(left_op >= 25000):
@@ -186,25 +171,20 @@ def ejecutar():
             mv[result] = int(mv[left_op]) * int(mv[right_op])
             ip += 1
         elif operator == ">":
-            print(">")
             #printMV()
             mv[result] = int(mv[left_op]) > int(mv[right_op])
             #printMV()
             ip += 1
         elif operator == "<":
-            print("<")
             mv[result] = int(mv[left_op]) < int(mv[right_op])
             ip += 1
         elif operator == "<=":
-            print("<=")
             mv[result] = int(mv[left_op]) <= int(mv[right_op])
             ip += 1
         elif operator == ">=":
-            print(">=")
             mv[result] = mv[left_op] >= mv[right_op]
             ip += 1
         elif operator == "==":
-            print("==")
             if(left_op >= 25000):
                 left_op = mv[left_op]
             if(right_op >= 25000):
@@ -215,24 +195,19 @@ def ejecutar():
                 mv[result] = (mv[left_op]) == (mv[right_op])
             ip += 1
         elif operator == "!=":
-            print("!=")
             mv[result] = mv[left_op] != mv[right_op]
             ip += 1
         elif operator == "PRINT":
-            print("PRINT")
             #printMV()
             if result >= 25000:
                 result = mv[result]
             print(mv[result])
             ip += 1
         elif operator == "ENDFunc":
-            print("End function")
             restaurarFoto()
-            print("despues de foto")
             #printMV()
             ip = lineaQuede.pop()
         elif operator == "RETURN":
-            print("Return")
             # parche guadalupano maravilloso
             # return, dir var global func, none, val return
             #printMV()
@@ -243,7 +218,6 @@ def ejecutar():
             ip = lineaQuede.pop()
 
         elif operator == "VER":
-            print("Verificacion arreglos")
             # ver, x, li, ls
             #printMV()
             if (int(mv[left_op]) <  int(mv[right_op])) or (int(mv[left_op]) >= int(result)):
@@ -251,14 +225,13 @@ def ejecutar():
                 exit()
             ip += 1
         elif operator == "READ":
-            print("Leer")
             mv[result] = input()
             ip += 1
         elif operator == "otro":
             print("otro")
             ip += 1
         
-        policia += 1
+        #policia += 1
         if(policia >= 100):
             print("alto! ya se ciclo")
             exit()
@@ -281,6 +254,8 @@ def maquinaVirtual():
         openQuads()
     except:
         print("Quadruple file has not been generated yet")
+    print("----- Inicia ejecucion ------")
     ejecutar()
+    print("----- Termina ejecucion ------")
     printMV()
 
