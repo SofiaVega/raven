@@ -3,20 +3,21 @@ titulo = "Raven"
 num b = 5
 num x = 2, y = 3, a = 5
 bool z = Verdad
-capitulo uno () {
-    titulo = "capitulo uno"
-    -> "habia una vez"
-}
-capitulo dos () {
-    titulo = "capitulo dos"
-    -> "un cuervo"
-}
+
 capitulo tres () {
     titulo = "capitulo tres"
     -> "que no sabia volar"
 }
+capitulo dos () {
+    titulo = "capitulo dos"
+    -> "un cuervo"
+    >> tres()
+}
+capitulo uno () {
+    titulo = "capitulo uno"
+    -> "habia una vez"
+    >> dos()
+}
 indice() {
     >> uno()
-    >> dos()
-    >> tres()
 }
