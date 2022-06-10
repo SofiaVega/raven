@@ -198,6 +198,8 @@ class PuntosNeuralgicos(Visitor):
     def opciones(self, tree):
         # mandar caudruplo
         print("opciones")
+        global currOpciones
+        currOpciones = Opciones()
     
     def opcion(self, tree):
         global currOpcionStr

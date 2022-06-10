@@ -1,0 +1,34 @@
+habiaUnaVez Raven
+titulo = "Raven"
+num b = 5
+num x = 2, y = 3, a = 5
+bool z = Verdad
+
+capitulo cuatro_dos () {
+    titulo = "capitulo tres"
+    -> "y se murio"
+}
+
+capitulo cuatro_uno () {
+    titulo = "capitulo tres"
+    -> "pero aprendio y voló"
+}
+
+capitulo tres () {
+    titulo = "capitulo tres"
+    -> "que no sabia volar"
+    opciones : ["aprender", >> cuatro_uno() ; "no aprender", >> cuatro_dos()]
+}
+capitulo dos () {
+    titulo = "capitulo dos"
+    -> "un cuervo"
+    >> tres()
+}
+capitulo uno () {
+    titulo = "capitulo uno"
+    -> "habia una vez"
+    opciones : ["capitulo dos", >> dos() ; "capitulo tres", >> tres()]
+}
+indice() {
+    >> uno()
+}
