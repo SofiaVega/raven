@@ -14,7 +14,7 @@ parser = Lark(open("grammar", 'r').read())
 #goodInput = open("testcases/testcase_fact_linear.txt", 'r').read()
 #goodInput = open("testcases/testcase_funciones_fact.txt", 'r').read()
 #goodInput = open("testcases/testcase_fib_iter.txt", 'r').read()
-goodInput = open("testcases/testcase_mult_caps.txt", 'r').read()
+goodInput = open("testcases/testcase_opciones.txt", 'r').read()
 
 # print("------ Good Input --------")
 

@@ -41,6 +41,12 @@ pilaLlamadas = []
 # CAPITULOS
 capitulos = {}
 
+# OPCIONES indexadas por capitulo
+opciones = {}
+currOpciones = Opciones()
+currOpcionStr = ""
+currCap = ""
+
 # ARREGLOS
 # Contador de parametros
 pilaK = []
@@ -188,6 +194,50 @@ class PuntosNeuralgicos(Visitor):
         # to do: poner memoria en vez de valor
         cuadruplos.generate_quad_mem(
             "GOCAP", cap, None, salto + 1)
+    
+    def opciones(self, tree):
+        # mandar caudruplo
+        print("opciones")
+    
+    def opcion(self, tree):
+        global currOpcionStr
+        str = tree.children[0].value
+        print(str)
+        currOpcionStr = str
+
+    
+    def llamada_opcion(self, tree):
+        global currOpcionStr
+        global currOpciones
+
+        cap = tree.children[0].value
+        # estructura capitulos
+        salto = capitulos[cap]
+        str = currOpcionStr
+        currOpciones.cap = cap
+        currOpciones.agregaOpcion(str, cap, salto)
+        '''
+        print("llamada capitulo ---------")
+        print(tree.children)
+        cap = tree.children[0].value
+        # estructura capitulos
+        salto = capitulos[cap]
+        # los tres cuadruplos se generan uno despues del otro
+        # goop, nombre cap, num opcion de este capitulo, salto al capitulo
+        # variable global opcion correcta se actualiza en cuadruplo opciones
+        cuadruplos.generate_quad("GOOP", cap, None, salto + 1)
+        cuadruplos.print_quad()
+        # to do: poner memoria en vez de valor
+        cuadruplos.generate_quad_mem(
+            "GOOP", cap, None, salto + 1)
+        '''
+    
+    def np_fin_opciones(self, tree):
+        global currOpciones
+        cuadruplos.generate_quad("ELIGE", None, None, currOpciones.cap)
+        cuadruplos.generate_quad_mem("ELIGE", None, None, currOpciones.cap)
+        opciones[currOpciones.cap] = currOpciones
+
 
     def np_capitulo(self, tree):
         # estructura capitulos

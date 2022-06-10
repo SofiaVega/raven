@@ -39,6 +39,22 @@ class NodoArreglo():
         print("li " + str(self.li) + " ls " + str(self.ls) + " dim " +
               str(self.dim) + " ultimoNodo " + str(self.ultimoNodo))
 
+class Opciones():
+
+    def __init__(self):
+        self.cap = "" #capitulo en el que estan las opciones
+        self.strs = []
+        self.caps = []
+        self.saltos = []
+        self.choice = 0
+    
+    def agregaOpcion(self, str, opt, salto):
+        self.strs.append(str)
+        self.caps.append(opt)
+        self.saltos.append(salto)
+    
+    def elige(self, indice):
+        self.choice = indice
 
 class TablaConstantes():
     '''

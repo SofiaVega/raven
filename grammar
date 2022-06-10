@@ -66,10 +66,13 @@ llamada_capituloloop: llamada_capitulo | llamada_capituloloop llamada_capitulo
 llamada_capitulo: ">" ">" ID "(" ")"
 
 
-opciones: OPCIONES ":" "[" opciones2 "]"
+opciones: OPCIONES ":" "[" opciones2 "]" np_fin_opciones
+np_fin_opciones: 
 opciones2: opcion opciones3
 opciones3: ";" opcion opciones3 | 
-opcion: STRING "," ID IPAR estatuto2 FPAR
+opcion: STRING "," llamada_funcion | STRING "," llamada_opcion
+
+llamada_opcion: ">" ">" ID "(" ")"
 
 vars: tipo vars3 np_add_vars vars2 SALTO -> np_vars
         | arreglo

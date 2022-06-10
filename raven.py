@@ -1,6 +1,7 @@
 from birdhouse import *
 from memoria import memoriaVirtual as mv
 import ast
+from simple_term_menu import TerminalMenu
 
 #pasar tablas de variables constantes y funciones
 
@@ -87,6 +88,18 @@ def ejecutar():
             # to do: 
             ip = int(result)
             #ip += 1
+        elif operator == "ELIGE":
+            print("elige")
+            cap = result
+            strs = opciones[cap].strs
+            terminal_menu = TerminalMenu(strs)
+            choice_index = terminal_menu.show()
+            lineaQuede.append(ip + 1)
+            ip = opciones[cap].saltos[choice_index] + 1
+            # muestra las opciones segun el capitulo
+            # que esta en result
+            # espera la respuesta del usuario
+            # y hace un salto al salto que este en opciones[cap]
         elif operator == "GOCAP":
             lineaQuede.append(ip + 1)
             ip = int(result)
@@ -257,5 +270,5 @@ def maquinaVirtual():
     print("----- Inicia ejecucion ------")
     ejecutar()
     print("----- Termina ejecucion ------")
-    printMV()
+    #printMV()
 

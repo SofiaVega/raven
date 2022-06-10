@@ -15,7 +15,7 @@
 {'operator': 'ENDCAP', 'left': None, 'right': None, 'result': None}
 {'operator': '=', 'left': 15009, 'right': None, 'result': 15008}
 {'operator': 'PRINT', 'left': None, 'right': None, 'result': 15010}
-{'operator': 'GOCAP', 'left': 'dos', 'right': None, 'result': 11}
+{'operator': 'ELIGE', 'left': None, 'right': None, 'result': 'tres'}
 {'operator': 'ENDCAP', 'left': None, 'right': None, 'result': None}
 {'operator': 'GOCAP', 'left': 'uno', 'right': None, 'result': 15}
 {'operator': 'ENDProgram', 'left': None, 'right': None, 'result': None}
