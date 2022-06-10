@@ -28,8 +28,6 @@ class NodoArreglo():
         self.siguienteNodo = nodo
 
     def calcR(self):
-        print(self.ls)
-        print(type(self.ls))
         self.r = (self.ls + 1) * self.r
 
     def setVal(self, val):
@@ -65,7 +63,6 @@ class TablaConstantes():
 
     def __init__(self):
         self.mv = []
-        print("tabla constantes")
 
     def addCte(self, val, dir):
         t = [dir, val]
@@ -78,7 +75,6 @@ class TablaConstantes():
 
     def toTxt(self):
         f = open("tablaCtes.txt", "w")
-        print(self.mv)
         for m in self.mv:
             f.write(str(m[0])+' '+str(m[1]) + '\n')
         f.close()
@@ -216,7 +212,6 @@ class VariableTable:
 
     def checkExists(self, key):
         if key in self.tablaVar:
-            print("si existe " + key)
             return True
         else:
             print("aqui")
@@ -267,14 +262,12 @@ class Cuadruplos():
         cuadruplo = {"operator": operator, "left": left,
                      "right": right, "result": result}
         self.cuadruplosID.append(cuadruplo)
-        self.print_quad()
         self.quad_pointer = self.quad_pointer + 1
 
     def generate_quad_mem(self, operator, left, right, result):
         cuadruplo = {"operator": operator, "left": left,
                      "right": right, "result": result}
         self.cuadruplosMem.append(cuadruplo)
-        print("cuadruplo memoria", cuadruplo)
 
     # Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
     # Por lo general, para gotos
@@ -282,6 +275,4 @@ class Cuadruplos():
         self.cuadruplosID[end]["result"] = cont
 
     def fill_quad_mem(self, end, cont):
-        print("fill")
-        print(self.cuadruplosMem[end])
         self.cuadruplosMem[end]["result"] = cont

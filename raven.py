@@ -35,7 +35,6 @@ def restaurarFoto():
     mv[7000 : 12999] = fotos.pop()
 
 def varsToMV():
-    print("tabla variables")
     mv[13000] = 0
     
     for key in tabla_variables.tablaVar:
@@ -47,7 +46,6 @@ def openQuads():
     f = open("cuadruplosMem.txt", "r")
     quads = f.readlines()
     for quad in quads:
-        print(quad)
         cuadruplo = ast.literal_eval(quad)
         cuadruplos.append(cuadruplo)
     f.close()
@@ -56,7 +54,6 @@ def readCtes():
     f = open("tablaCtes.txt", "r")
     ctes = f.readlines()
     for c in ctes:
-        print(c)
         a, b = c.split(maxsplit=1)
         s = b.rstrip()
         mv[int(a)] = s
@@ -71,25 +68,16 @@ def ejecutar():
     right_op = cuadruplos[ip]['right']
     result = cuadruplos[ip]['result']
     while operator != "ENDProgram":
-        #printMV()
-        #print(ip)
-        #print(cuadruplos[ip])
 
         operator = cuadruplos[ip]['operator']
         left_op = cuadruplos[ip]['left']
         right_op = cuadruplos[ip]['right']
         result = cuadruplos[ip]['result']
 
-        # esto verifica si es pointer
-        #if (int(result) >= 25000):
-        #    result = mv[result]
 
         if operator == "GOTO":
-            # to do: 
             ip = int(result)
-            #ip += 1
         elif operator == "ELIGE":
-            print("elige")
             cap = result
             strs = opciones[cap].strs
             terminal_menu = TerminalMenu(strs)
@@ -261,7 +249,6 @@ def maquinaVirtual():
     print("-------- RAVEN TIME -------")
     readCtes()
     varsToMV()
-    printMV()
     openQuads()
     try:
         openQuads()
