@@ -300,8 +300,6 @@ class PuntosNeuralgicos(Visitor):
                                  right_operand, result)
         cuadruplos.generate_quad_mem(operator, left_mem, None, res_mem)
 
-        #generate_quad("=", "value", None, tree.children[0].value)
-
     ''' 
     GUARDADO DE CONSTANTES
     '''
@@ -309,9 +307,6 @@ class PuntosNeuralgicos(Visitor):
     # NP GUARDAR ID
     # Punto neurálgico que guarda un id, sea un arreglo o no
     def guardar_id(self, tree):
-        # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
-        # verificarlo con el len de children -1
-        # 0 o -1?
         miid = tree.children[0].value
         pilaO.append(miid)
         var = getVar(miid)
@@ -323,7 +318,6 @@ class PuntosNeuralgicos(Visitor):
     # NP GUADRAR NUM
     # Punto neurálgico que guarda un número como constante
     def guardar_num(self, tree):
-        # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
         miid = tree.children[-1].value
         pilaO.append(miid)
         pilaT.append("num")
@@ -335,7 +329,6 @@ class PuntosNeuralgicos(Visitor):
     # NP GUARDAR STRING
     # Punto neurálgico que guarda un string como constante
     def guardar_string(self, tree):
-        # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
         miid = tree.children[-1].value
         pilaO.append(miid)
         pilaT.append("enunciado")
@@ -347,7 +340,6 @@ class PuntosNeuralgicos(Visitor):
     # NP GUARDAR BOOL
     # Punto neurálgico que guarda un booleano como constante
     def guardar_bool(self, tree):
-        # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
         miid = tree.children[-1].value
         if miid == "Verdad":
             val = True
@@ -406,7 +398,6 @@ class PuntosNeuralgicos(Visitor):
                     pilaO.append(result)
                     pilaT.append(result_type)
                     pilaMem.append(result_mem)
-                    # revisar si uno de los operandos era un temporal
                 else:
                     errorTipos(operator, left_type, right_type)
 
@@ -444,7 +435,6 @@ class PuntosNeuralgicos(Visitor):
                     memoria["temp"][result_type] = memoria["temp"][result_type] + 1
                     cuadruplos.generate_quad_mem(operator, left_mem,
                                                  right_mem, result_mem)
-                    # revisar si uno de los operandos era un temporal
                 else:
                     errorTipos(operator, left_type, right_type)
 
@@ -485,7 +475,6 @@ class PuntosNeuralgicos(Visitor):
                     memoria["temp"][result_type] = memoria["temp"][result_type] + 1
                     cuadruplos.generate_quad_mem(operator, left_mem,
                                                  right_mem, result_mem)
-                    # revisar si uno de los operandos era un temporal
                 else:
                     errorTipos(operator, left_type, right_type)
 
@@ -498,7 +487,6 @@ class PuntosNeuralgicos(Visitor):
         mem_str = memoria["cte"]["enunciado"]
         memoria["cte"]["enunciado"] += 1
         pilaMem.append(mem_str)
-        # aqui habia un if pilaO pero creo que no es necesario
         if pilaT.pop() == "enunciado":
             result = pilaO.pop()
             pilaT.pop()
@@ -611,7 +599,6 @@ class PuntosNeuralgicos(Visitor):
     # Punto neurálgico que inserta las funciones y su tipo al Directorio de Funciones
     # Se verifica semántica
     def np_funciones_1(self, tree):
-        # Insert Function name into the DirFunc table (and its type, if any), verify semantics.
         tipo_funcion = tree.children[0].children[0].value
         nombre_funcion = tree.children[1].value
         func = FunctionClass(nombre_funcion, tipo_funcion)
@@ -629,7 +616,7 @@ class PuntosNeuralgicos(Visitor):
     # NP MECANICA 2
     # Punto neurálgico que inserta cada parámetro a una tabla de variables locales
     def mecanica2(self, tree):
-        # 2 - Insert every parameter into the current (local) VarTable.
+        # Inserta cada parámetro a la tabla local de Variables
         if tree.children:
             # esto solo funciona con un parámetro
             tipo = tree.children[0].children[0].value
@@ -677,18 +664,15 @@ class PuntosNeuralgicos(Visitor):
     # Punto neurálgico que genera el cuádruplo de ENDFUNC, libera la memoria y
     # hace un recuento de temporales utilizados
     def fin_mecanica(self, tree):
-        # varias cosas
-        # release
         cuadruplos.generate_quad("ENDFunc", None, None, None)
         cuadruplos.generate_quad_mem("ENDFunc", None, None, None)
         pilaFunciones.pop()
-        # insert the number of temps
 
     # PUNTOS NEURÁLGICOS PARA LLAMADAS DE FUNCIONES
     # NP LLAMADA FUNCIÓN 1
     # Punto neurálgico que verifica que la función exista
     def np_llamada_funcion_1(self, tree):
-        # verify that the function exists
+        # Verifica que la función exista
         nombre_func = tree.children[0].value
         if tabla_funciones.findFunction(nombre_func):
             pilaLlamadas.append(nombre_func)
@@ -792,9 +776,7 @@ class PuntosNeuralgicos(Visitor):
         mem = memoria[contexto][tipo]
         memoria[contexto][tipo] += ls
         var = VariableClass(thisID, tipo, addressVar=mem)
-        # np 2
         var.isArray = True
-        # np 3
         r = 1
         mem_ls = memoria["cte"]["num"]
         memoria["cte"]["num"] += 1

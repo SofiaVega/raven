@@ -83,8 +83,8 @@ def ejecutar():
             choice_index = terminal_menu.show()
             lineaQuede.append(ip + 1)
             ip = opciones[cap].saltos[choice_index] + 1
-            # muestra las opciones segun el capitulo
-            # que esta en result
+            # muestra las opciones segun el capítulo
+            # que está en result
             # espera la respuesta del usuario
             # y hace un salto al salto que este en opciones[cap]
         elif operator == "GOCAP":
@@ -113,7 +113,7 @@ def ejecutar():
             pilaCalls.append(left_op)
             ip += 1
         elif operator == "PARAM":
-            # Indicates that the argument sent must be copied into parámater#-- in Run-Time
+            # Indica que el argumento enviado deben ser copiados como parámetros en ejecución
             key = tabla_funciones.procDirectory[pilaCalls[-1]
                                                 ].keysParam[result]
             addv = tabla_funciones.procDirectory[pilaCalls[-1]
@@ -208,8 +208,6 @@ def ejecutar():
             ip += 1
         elif operator == "otro":
             ip += 1
-
-        #policia += 1
         if(policia >= 100):
             print("alto! ya se ciclo")
             exit()
