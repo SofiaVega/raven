@@ -10,7 +10,7 @@ from raven import *
 # testcase_find.txt
 
 parser = Lark(open("grammar", 'r').read())
-input = open("testcases/testcase_opciones_2.txt", 'r').read()
+input = open("testcases/testcase_fact_linear.txt", 'r').read()
 
 result = parser.parse(input)
 PuntosNeuralgicos().visit_topdown(result)
