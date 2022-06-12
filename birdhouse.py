@@ -18,14 +18,14 @@ pOper = []  # Pila de Operadores
 pilaT = []  # Pila de Tipos
 pSaltos = []  # Pila de Saltos (migaja de pan)
 pilaDim = []  # Pila de dimensiones
-pilaMem = []  # Dirs de memoria de pilaO
+pilaMem = []  # Direcciones de memoria de pilaO
 
 # TEMPORALES
 temporalesNum = []  # Temporales para numeros
 temporalesBool = []  # Temporales booleanos
 temporalesString = []  # Temporales de string
 temporalesPointer = []  # Temporales para Instruction Pointer
-availNum = 0  # Contador de temporales para numero (empieza en t0)
+availNum = 0  # Contador de temporales para número (empieza en t0)
 availBool = 0  # Contador de temporales para booleanos (empieza en t0)
 availString = 0  # Contador de temporales para strings (empieza en t0)
 availPointer = 0  # Contador de temporales para iPointer (empieza en t0)
@@ -45,14 +45,14 @@ pilaLlamadas = []
 # CAPITULOS
 capitulos = {}
 
-# OPCIONES indexadas por capitulo
+# OPCIONES indexadas por capítulo
 opciones = {}
 currOpciones = Opciones()
 currOpcionStr = ""
 currCap = ""
 
 # ARREGLOS
-# Contador de parametros
+# Contador de parámetros
 pilaK = []
 tipo_arr_aux = ""  # Es el tipo con el que vamos a declarar un arreglo
 # Necesitamos un auxiliar porque lo declaramos en 2 puntos diferentes
@@ -181,7 +181,7 @@ class PuntosNeuralgicos(Visitor):
     # Punto neurálgico que genera cuádruplos de GOCAP
     def llamada_capitulo(self, tree):
         cap = tree.children[0].value
-        # estructura capitulos
+        # estructura capítulos
         salto = capitulos[cap]
         # hacer un goto
         cuadruplos.generate_quad("GOCAP", cap, None, salto + 1)
@@ -211,7 +211,7 @@ class PuntosNeuralgicos(Visitor):
         global currOpciones
 
         cap = tree.children[0].value
-        # estructura capitulos
+        # estructura capítulos
         salto = capitulos[cap]
         str = currOpcionStr
         currOpciones.cap = cap
@@ -426,7 +426,7 @@ class PuntosNeuralgicos(Visitor):
                 operator = pOper.pop()
                 if operator == "/":
                     var = getVar(right_operand)
-                    # to do: en compilación no sabemos el valor de las variables, asi que este check es incorrecto
+                    # to do: en compilación no sabemos el valor de las variables, así que este check es incorrecto
                     if right_operand == "0" or var.value == 0:
                         print("Error: no se puede dividir entre 0")
                         exit()
@@ -511,7 +511,7 @@ class PuntosNeuralgicos(Visitor):
             tabla_ctes.addCte(result, mem)
 
     # NP PRINT EXPRESION
-    # Punto neurálgico que genera el cuádruplo de
+    # Punto neurálgico que genera el cuádruplo de PRINT
     def np_print_expresion(self, tree):
         result = pilaO.pop()
         pilaT.pop()
@@ -553,7 +553,7 @@ class PuntosNeuralgicos(Visitor):
             t = pilaT.pop()
             mem = pilaMem.pop()
             cuadruplos.generate_quad("GOTOF", result, None, "blank")
-            # to do: este cuadruplo de memoria tambien tiene que ir con blank?
+            # to do: este cuádruplo de memoria también tiene que ir con blank?
             cuadruplos.generate_quad_mem("GOTOF", mem, None, "blank")
             pSaltos.append(cuadruplos.quad_pointer - 1)
 
@@ -710,7 +710,7 @@ class PuntosNeuralgicos(Visitor):
     # Punto neurálgico que genera el cuádruplo ERA cada que se llama una función
     def np_llamada_funcion_2(self, tree):
         # Generar cuádruplo ERA, nombreFuncion
-        # Cuando se llama a una funcion
+        # Cuando se llama a una función
         cuadruplos.generate_quad("ERA", pilaLlamadas[-1], None, None)
         cuadruplos.generate_quad_mem("ERA", pilaLlamadas[-1], None, None)
         pilaK.append(0)
