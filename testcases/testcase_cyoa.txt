@@ -1,5 +1,5 @@
 habiaUnaVez Raven
-titulo = "Raven"
+titulo = "Choose your own adventure"
 // Fuente de historia ejemplo: https://www.write4fun.net/view-entry/205506
 
 capitulo siete () {

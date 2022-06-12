@@ -1,5 +1,5 @@
 habiaUnaVez Raven
-titulo = "Raven"
+titulo = "Operaciones con arreglos"
 num lista [3]
 num x = 1
 num y = 5

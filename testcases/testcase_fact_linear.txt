@@ -1,5 +1,5 @@
 habiaUnaVez Raven
-titulo = "Raven"
+titulo = "Factorial Linear (o Iterativo)"
 num n
 num res = 1
 capitulo uno () {

@@ -1,5 +1,5 @@
 habiaUnaVez Raven
-titulo = "Raven"
+titulo = "Factorial Recursivo"
 mecanica num fact(num n){
     si (n == 1){
         regresa n

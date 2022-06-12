@@ -1,5 +1,5 @@
 habiaUnaVez Raven
-titulo = "Raven"
+titulo = "Búsqueda sobre un arreglo"
 num lista[4]
 num x = 3
 num cont = 0
@@ -25,9 +25,9 @@ capitulo uno () {
     -> "inicio loop"
     b = find()
     si (b == 1){
-        -> "se encuentra el numero"
+        -> "se encuentra el número 🥳"
     } sino {
-        -> "no se encuentra el numero"
+        -> "no se encuentra el número 😓"
     }
 
 }
