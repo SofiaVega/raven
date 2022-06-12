@@ -5,11 +5,10 @@
 
 from errores import *
 
+
 # NODO ARREGLO
 # Clase que representa la estructura de uno de los nodos generados
 # por la linked list de representación de un arreglo
-
-
 class NodoArreglo():
 
     def __init__(self, r=1, var="", ls=0, dim=1, dirLS=0):
@@ -45,22 +44,23 @@ class NodoArreglo():
               str(self.dim) + " ultimoNodo " + str(self.ultimoNodo))
 
 
+# CLASE OPCIONES
+# Clase que modela la estructura propia del lenguaje OPCIONES
 class Opciones():
 
     def __init__(self):
-        self.cap = ""  # capitulo en el que están las opciones
+        self.cap = ""  # capítulo en el que están las opciones
         self.strs = []
         self.caps = []
         self.saltos = []
         self.choice = 0
 
+    # AGREGA OPCIÓN
+    # Función que agrega la información de la opción a las pilas de atributos de las Opciones
     def agregaOpcion(self, str, opt, salto):
         self.strs.append(str)
         self.caps.append(opt)
         self.saltos.append(salto)
-
-    def elige(self, indice):
-        self.choice = indice
 
 
 # TABLA DE CONSTANTES

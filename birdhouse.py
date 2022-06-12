@@ -130,7 +130,7 @@ def checkExists_contexto(val):
 
 class PuntosNeuralgicos(Visitor):
     # HUV_INICIO
-    # Genera cuádruplo {PROGRAM, , , programName} para definir el nombre del programa
+    # Punto neurálgico que genera cuádruplo {PROGRAM, , , programName} para definir el nombre del programa
     # Se llama desde programa
     def huv_inicio(self, tree):
         programName = tree.children[1].value
@@ -139,7 +139,7 @@ class PuntosNeuralgicos(Visitor):
         cuadruplos.generate_quad_mem("PROGRAM", None, None, programName)
 
     # NP INDICE INICIO
-    # Genera cuádruplo de {GOTO, indice, , []} incompleto para ser llenado posteriormente
+    # Punto neurálgico que genera cuádruplo de {GOTO, indice, , []} incompleto para ser llenado posteriormente
     # Se llama desde programa
     def np_indice_inicio(self, tree):
         cuadruplos.generate_quad("GOTO", "indice", None, "blank")
@@ -149,7 +149,7 @@ class PuntosNeuralgicos(Visitor):
         pSaltos.append(cuadruplos.quad_pointer-1)
 
     # NP TITULO ASIG
-    # Mete valores a pila de operandos, sus tipos a la pila de tipos, operador de
+    # Punto neurálgico que mete valores a pila de operandos, sus tipos a la pila de tipos, operador de
     # asignación a pila de operadores, guarda los valores en la tabla de constantes,
     # y mete la variable 'titulo' a la tabla de variables
     def titulo_asig(self, tree):
@@ -170,7 +170,7 @@ class PuntosNeuralgicos(Visitor):
         pilaMem.append(mem)
 
     # NP INDICE
-    # Rellena el cuádruplo {GOTO, indice, , []} con el número de cuádruple donde inicia el indice
+    # Punto neurálgico que rellena el cuádruplo {GOTO, indice, , []} con el número de cuádruple donde inicia el indice
     # Se llama desde programa
     def indice(self, tree):
         end = pSaltos.pop()
@@ -178,7 +178,7 @@ class PuntosNeuralgicos(Visitor):
         cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer)
 
     # NP LLAMADA CAPITULOS
-    # Genera cuádruplos de GOCAP
+    # Punto neurálgico que genera cuádruplos de GOCAP
     def llamada_capitulo(self, tree):
         cap = tree.children[0].value
         # estructura capitulos
@@ -190,14 +190,14 @@ class PuntosNeuralgicos(Visitor):
             "GOCAP", cap, None, salto + 1)
 
     # NP OPCIONES
-    # Genera la estructura ayudante de Opciones
+    # Punto neurálgico que genera la estructura ayudante de Opciones
     def opciones(self, tree):
         # mandar cuádruplo
         global currOpciones
         currOpciones = Opciones()
 
     # NP OPCION
-    # Genera la opción
+    # Punto neurálgico que genera la opción
     def opcion(self, tree):
         global currOpcionStr
         str = tree.children[0].value
@@ -305,11 +305,11 @@ class PuntosNeuralgicos(Visitor):
         #generate_quad("=", "value", None, tree.children[0].value)
 
     ''' 
-    Guardado de constantes
+    GUARDADO DE CONSTANTES
     '''
+
     # NP GUARDAR ID
     # Punto neurálgico que guarda un id, sea un arreglo o no
-
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
         # verificarlo con el len de children -1
@@ -334,7 +334,7 @@ class PuntosNeuralgicos(Visitor):
         tabla_ctes.addCte(miid, mem)
         pilaMem.append(mem)
 
-    # GUARDAR STRING
+    # NP GUARDAR STRING
     # Punto neurálgico que guarda un string como constante
     def guardar_string(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
@@ -346,7 +346,7 @@ class PuntosNeuralgicos(Visitor):
         tabla_ctes.addCte(miid, mem)
         pilaMem.append(mem)
 
-    # GUARDAR BOOL
+    # NP GUARDAR BOOL
     # Punto neurálgico que guarda un booleano como constante
     def guardar_bool(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
@@ -521,7 +521,7 @@ class PuntosNeuralgicos(Visitor):
 
     # NP LECTURA
     # Puntos neurálgicos de lectura
-    # Mete valores a sus respectivas pilas
+    # Punto neurálgico que mete valores a sus respectivas pilas
     def np_lectura(self, tree):
         # meter el id
         val = tree.children[1].value
@@ -634,7 +634,7 @@ class PuntosNeuralgicos(Visitor):
         # to do: verificar semánticas
 
     # NP MECANICA 2
-    # Se inserta cada parámetro a una tabla de variables locales
+    # Punto neurálgico que inserta cada parámetro a una tabla de variables locales
     def mecanica2(self, tree):
         # 2 - Insert every parameter into the current (local) VarTable.
         if tree.children:
@@ -648,7 +648,7 @@ class PuntosNeuralgicos(Visitor):
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
 
     # NP MECANICA 3
-    # Inserta parámetros después de la coma a tabla de variables locales
+    # Punto neurálgico que inserta parámetros después de la coma a tabla de variables locales
     def mecanica3(self, tree):
         if tree.children:
             # otro parametro
@@ -662,7 +662,7 @@ class PuntosNeuralgicos(Visitor):
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
 
     # NP MECANICA 5
-    # Genera cuádruplo de {RETURN, FUNC, , result}
+    # Punto neurálgico que genera cuádruplo de {RETURN, FUNC, , result}
     def np_mecanica_5(self, tree):
         o = pilaO.pop()
         t = pilaT.pop()
@@ -697,7 +697,7 @@ class PuntosNeuralgicos(Visitor):
 
     # PUNTOS NEURÁLGICOS PARA LLAMADAS DE FUNCIONES
     # NP LLAMADA FUNCIÓN 1
-    # Este punto neurálgico verifica que la función exista
+    # Punto neurálgico que verifica que la función exista
     def np_llamada_funcion_1(self, tree):
         # verify that the function exists
         nombre_func = tree.children[0].value
@@ -707,7 +707,7 @@ class PuntosNeuralgicos(Visitor):
             errorFuncionNoExiste(nombre_func)
 
     # NP LLAMADA FUNCIÓN 2
-    # Este punto neurálgico genera el cuádruplo ERA cada que se llama una función
+    # Punto neurálgico que genera el cuádruplo ERA cada que se llama una función
     def np_llamada_funcion_2(self, tree):
         # Generar cuádruplo ERA, nombreFuncion
         # Cuando se llama a una funcion
@@ -747,6 +747,11 @@ class PuntosNeuralgicos(Visitor):
             print("Faltan parametros")
             exit()
 
+    # NP LLAMADA FUNCION 6
+    # Punto neurálgico que genera los cuádruplos de GOSUB
+    # además de generar el cuádruplo de asignación para la variable
+    # con el nombre de la función cuando el tipo de la función es
+    # diferente de vacío
     def np_llamada_funcion_6(self, tree):
         global availNum
         # to do: falta initial-address
@@ -767,6 +772,10 @@ class PuntosNeuralgicos(Visitor):
             cuadruplos.generate_quad("=", pilaLlamadas[-1], None, result)
             cuadruplos.generate_quad_mem("=", mem_llamada, None, result_mem)
 
+    # NP FIN
+    # Punto neurálgico que genera el cuádruplo {ENDPROGRAM, , , }
+    # además de llamar a las funciones que generarán los archivos
+    # de la lista de cuádruplos y la tabla de constantes
     def np_fin(self, tree):
         cuadruplos.generate_quad("ENDProgram", None, None, None)
         cuadruplos.generate_quad_mem("ENDProgram", None, None, None)
@@ -850,7 +859,7 @@ class PuntosNeuralgicos(Visitor):
             currNodo = currNodo.siguienteNodo
 
     # NP ACC ARR 2
-    # el siguiente cuádruplo es guardar una dirección virtual
+    # Punto neurálgico que guarda una dirección virtual
     def np_acc_arr_2(self, tree):
         global currNodo
         idd = pilaO.pop()
@@ -868,7 +877,7 @@ class PuntosNeuralgicos(Visitor):
         currNodo.imprimir()
 
     # NP ACC ARR 3
-    # Genera los cuádruplos de verificación de límite superior para los arreglos
+    # Punto neurálgico que genera los cuádruplos de verificación de límite superior para los arreglos
     # además de los cálculos de indexación
     def np_acc_arr_3(self, tree):
         global currNodo
@@ -913,7 +922,7 @@ class PuntosNeuralgicos(Visitor):
             pilaMem.append(result_mem)
 
     # NP ACC ARR 4
-    # Cambia el nodo a trabajar, es decir, nos pasamos a la siguiente dimensión
+    # Punto neurálgico que cambia el nodo a trabajar, es decir, nos pasamos a la siguiente dimensión
     def np_acc_arr_4(self, tree):
         global currNodo
         pilaDim[-1][1] = pilaDim[-1][1] + 1
