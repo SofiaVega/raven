@@ -119,14 +119,14 @@ def getVar(varID):
 # Revisa si el id corresponde a una variable del contexto actual
 def checkExists_contexto(val):
     if pilaFunciones[-1] == "global":
-        res =  tabla_variables.checkExists(val)
+        res = tabla_variables.checkExists(val)
     else:
         res = tabla_funciones.procDirectory[pilaFunciones[-1]
                                             ].varsFunc.checkExists(val)
         if res == False:
             res = tabla_variables.checkExists(val)
     if res == False:
-            errorVariableNoExiste(val)
+        errorVariableNoExiste(val)
     return res
 
 
@@ -170,9 +170,22 @@ class PuntosNeuralgicos(Visitor):
         memoria["cte"]["enunciado"] += 1
         pilaMem.append(mem)
 
+    def np_print_titulo_historia(self, tree):
+        cuadruplos.generate_quad(
+            "PRINT_BOOK_TITLE", None, None, tabla_ctes.mv[-1][1])
+        cuadruplos.generate_quad_mem(
+            "PRINT_BOOK_TITLE", None, None, tabla_ctes.mv[-1][0])
+
+    def np_print_titulo(self, tree):
+        cuadruplos.generate_quad(
+            "PRINT_TITLE", None, None, tabla_ctes.mv[-1][1])
+        cuadruplos.generate_quad_mem(
+            "PRINT_TITLE", None, None, tabla_ctes.mv[-1][0])
+
     # NP INDICE
     # Punto neurálgico que rellena el cuádruplo {GOTO, indice, , []} con el número de cuádruple donde inicia el indice
     # Se llama desde programa
+
     def indice(self, tree):
         end = pSaltos.pop()
         cuadruplos.fill_quad(end, cuadruplos.quad_pointer)

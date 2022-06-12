@@ -187,6 +187,27 @@ def ejecutar():
                 result = mv[result]
             print(mv[result])
             ip += 1
+        elif operator == "PRINT_TITLE":
+            if result >= 25000:
+                result = mv[result]
+            print('╔═╗┌─┐┌─┐┬┌┬┐┬ ┬┬  ┌─┐\n' +
+                  mv[result] + '\n' +
+                  '╚═╝┴ ┴┴  ┴ ┴ └─┘┴─┘└─┘')
+            ip += 1
+        elif operator == "PRINT_BOOK_TITLE":
+            if result >= 25000:
+                result = mv[result]
+            print('''      _.--._  _.--._
+,-=.-:;:;:;\':;:;:;-._ 
+\\\:;:;:;:;:;\:;:;:;:;:;\ 
+ \\\:;:;:;:;:;\:;:;:;:;:;\ 
+  \\\:;:;:;:;:;\:;:;:;:;:;\ 
+   \\\:;:;:;:;:;\:;::;:;:;:\ 
+    \\\;:;::;:;:;\:;:;:;::;:\ 
+     \\\;;:;:_:--:\:_:--:_;:;\    ''' + mv[result] + '''
+      \\\_.-      :      ---._\ 
+       \__..--------.;.----.._=> \n \n''')
+            ip += 1
         elif operator == "ENDFunc":
             restaurarFoto()
             ip = lineaQuede.pop()
@@ -230,11 +251,4 @@ def maquinaVirtual():
         openQuads()
     except:
         print("ERROR DE COMPILACIÓN: Archivo de cuádruplos no ha sido generado.")
-    print('''      ______ ______
-    _/    Raven    \_
-   // ~~ ~~ | ~~ ~  \\
-  // ~ ~ ~~ | ~~~ ~~ \\      
- //________.|.________\\     
-`----------`-'----------'
-          ''')
     ejecutar()
