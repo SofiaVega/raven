@@ -49,11 +49,10 @@ class NodoArreglo():
 class Opciones():
 
     def __init__(self):
-        self.cap = ""  # capítulo en el que están las opciones
-        self.strs = []
-        self.caps = []
-        self.saltos = []
-        self.choice = 0
+        self.cap = ""       # capítulo en el que están las opciones
+        self.strs = []      # Strings de texto de la opción
+        self.caps = []      # capítulos a los que manda
+        self.saltos = []    # saltos necesarios
 
     # AGREGA OPCIÓN
     # Función que agrega la información de la opción a las pilas de atributos de las Opciones
@@ -154,12 +153,10 @@ class FunctionClass:
     # ADD PARAM
     # Función que agrega los parámetros a la tabla de variables de la función
     def addParam(self, tipo, id_param, address):
-        # to do: los parametros se agregan como variables?
         var = VariableClass(id_param, tipo, addressVar=address)
         self.varsFunc.addVar(var)
         self.numParam = self.numParam + 1
         self.keysParam.append(id_param)
-        # self.paramsFunc.append(var)
 
     # ADD VAR
     # Función que agrega variables a la tabla de variables de la función

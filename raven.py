@@ -3,23 +3,23 @@ from memoria import memoriaVirtual as mv
 import ast
 from simple_term_menu import TerminalMenu
 
-#pasar tablas de variables constantes y funciones
+# pasar tablas de variables constantes y funciones
 
 cuadruplos = []
 ip = 0
 pilaCalls = []
-#to do: rename, es la pila donde te quedaste cuando haces una llamada
-# a funcion
 lineaQuede = []
 fotos = []
 policia = 0
 
+
 def tomarFoto():
     global fotos
     global mv
-    foto = mv[7000 : 12999]
-    #printSubMV(foto)
+    foto = mv[7000: 12999]
+    # printSubMV(foto)
     fotos.append(foto)
+
 
 def printSubMV(smv):
     cont = 7000
@@ -29,18 +29,21 @@ def printSubMV(smv):
             print(str(cont) + " " + str(i))
         cont += 1
 
+
 def restaurarFoto():
     global fotos
     global mv
-    mv[7000 : 12999] = fotos.pop()
+    mv[7000: 12999] = fotos.pop()
+
 
 def varsToMV():
     mv[13000] = 0
-    
+
     for key in tabla_variables.tablaVar:
-        #print(tabla_variables.tablaVar[key].addressVar)
-        mv[int(tabla_variables.tablaVar[key].addressVar)] = tabla_variables.tablaVar[key].valueVar
-    
+        # print(tabla_variables.tablaVar[key].addressVar)
+        mv[int(tabla_variables.tablaVar[key].addressVar)
+           ] = tabla_variables.tablaVar[key].valueVar
+
 
 def openQuads():
     f = open("cuadruplosMem.txt", "r")
@@ -50,6 +53,7 @@ def openQuads():
         cuadruplos.append(cuadruplo)
     f.close()
 
+
 def readCtes():
     f = open("tablaCtes.txt", "r")
     ctes = f.readlines()
@@ -57,7 +61,6 @@ def readCtes():
         a, b = c.split(maxsplit=1)
         s = b.rstrip()
         mv[int(a)] = s
-
 
 
 def ejecutar():
@@ -73,7 +76,6 @@ def ejecutar():
         left_op = cuadruplos[ip]['left']
         right_op = cuadruplos[ip]['right']
         result = cuadruplos[ip]['result']
-
 
         if operator == "GOTO":
             ip = int(result)
@@ -99,7 +101,6 @@ def ejecutar():
             if(mv[int(left_op)] == True):
                 ip += 1
             else:
-                # to do: tomar en cuenta que los cuadruplos empiezan en 0 o en 1
                 ip = int(result)
         elif operator == "GOTOV":
             if(left_op):
@@ -108,24 +109,20 @@ def ejecutar():
                 ip = int(result)
         elif operator == "GOSUB":
             lineaQuede.append(ip + 1)
-            #printMV()
-            #tomarFoto()
+            # printMV()
+            # tomarFoto()
             ip = int(left_op)
-            # to do: como regresamos a donde nos quedamos
-            #pila ?
-            #action(cuadruplos[int(left_op)])
-            #action(cuadruplos[++ip])
         elif operator == "ERA":
             # Generar los espacios de memoria
-            #action()
-            #to do: reservar espacio de memoria
             tomarFoto()
             pilaCalls.append(left_op)
             ip += 1
         elif operator == "PARAM":
             # Indicates that the argument sent must be copied into parámater#-- in Run-Time
-            key = tabla_funciones.procDirectory[pilaCalls[-1]].keysParam[result]
-            addv = tabla_funciones.procDirectory[pilaCalls[-1]].varsFunc.tablaVar[key].addressVar
+            key = tabla_funciones.procDirectory[pilaCalls[-1]
+                                                ].keysParam[result]
+            addv = tabla_funciones.procDirectory[pilaCalls[-1]
+                                                 ].varsFunc.tablaVar[key].addressVar
             mv[addv] = mv[left_op]
             ip += 1
         elif operator == "=":
@@ -137,17 +134,17 @@ def ejecutar():
             mv[int(result)] = mv[int(left_op)]
             ip += 1
         elif operator == '+':
-            #printMV()
-            #checar tipo con direcciones de memoria
+            # printMV()
+            # checar tipo con direcciones de memoria
             if right_op >= 25000:
                 right_op = mv[int(right_op)]
             if left_op >= 25000:
                 left_op = mv[int(left_op)]
             mv[result] = int(mv[left_op]) + int(mv[right_op])
-            #printMV()
+            # printMV()
             ip += 1
         elif operator == "-":
-            #printMV()
+            # printMV()
             if(left_op >= 25000):
                 left_op = mv[left_op]
             if(right_op >= 25000):
@@ -159,12 +156,9 @@ def ejecutar():
                 left_op = mv[left_op]
             if(right_op >= 25000):
                 right_op = mv[right_op]
-            # to do: division por 0?
             mv[result] = mv[left_op] / mv[right_op]
             ip += 1
         elif operator == "*":
-            #to do: puede ser int o float
-            #printMV()
             if(left_op >= 25000):
                 left_op = mv[left_op]
             if(right_op >= 25000):
@@ -172,9 +166,9 @@ def ejecutar():
             mv[result] = int(mv[left_op]) * int(mv[right_op])
             ip += 1
         elif operator == ">":
-            #printMV()
+            # printMV()
             mv[result] = int(mv[left_op]) > int(mv[right_op])
-            #printMV()
+            # printMV()
             ip += 1
         elif operator == "<":
             mv[result] = int(mv[left_op]) < int(mv[right_op])
@@ -199,29 +193,29 @@ def ejecutar():
             mv[result] = mv[left_op] != mv[right_op]
             ip += 1
         elif operator == "PRINT":
-            #printMV()
+            # printMV()
             if result >= 25000:
                 result = mv[result]
             print(mv[result])
             ip += 1
         elif operator == "ENDFunc":
             restaurarFoto()
-            #printMV()
+            # printMV()
             ip = lineaQuede.pop()
         elif operator == "RETURN":
             # parche guadalupano maravilloso
             # return, dir var global func, none, val return
-            #printMV()
+            # printMV()
             aux = mv[result]
             restaurarFoto()
             mv[left_op] = aux
-            #printMV()
+            # printMV()
             ip = lineaQuede.pop()
 
         elif operator == "VER":
             # ver, x, li, ls
-            #printMV()
-            if (int(mv[left_op]) <  int(mv[right_op])) or (int(mv[left_op]) >= int(result)):
+            # printMV()
+            if (int(mv[left_op]) < int(mv[right_op])) or (int(mv[left_op]) >= int(result)):
                 print("Fuera de limites de arreglo " + str(left_op))
                 exit()
             ip += 1
@@ -231,11 +225,12 @@ def ejecutar():
         elif operator == "otro":
             print("otro")
             ip += 1
-        
+
         #policia += 1
         if(policia >= 100):
             print("alto! ya se ciclo")
             exit()
+
 
 def printMV():
     cont = 0
@@ -244,6 +239,7 @@ def printMV():
         if i != None:
             print(str(cont) + " " + str(i))
         cont += 1
+
 
 def maquinaVirtual():
     print("-------- RAVEN TIME -------")
@@ -257,5 +253,4 @@ def maquinaVirtual():
     print("----- Inicia ejecucion ------")
     ejecutar()
     print("----- Termina ejecucion ------")
-    #printMV()
-
+    # printMV()

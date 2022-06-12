@@ -12,8 +12,6 @@ from raven import *
 parser = Lark(open("grammar", 'r').read())
 input = open("testcases/testcase_opciones_2.txt", 'r').read()
 
-# print("------ Good Input --------")
-
 result = parser.parse(input)
 PuntosNeuralgicos().visit_topdown(result)
 maquinaVirtual()
