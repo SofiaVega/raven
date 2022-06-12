@@ -5,58 +5,107 @@ Un lenguaje de programacion para escribir ficción interactiva
 Link a la [propuesta](https://docs.google.com/document/d/1PtagpOnKwr7J5G9_Y12FzRvn-EZwffHPhILCqVtUy80/edit?usp=sharing)
 
 ---
+# Manual de usuario
+Raven es un lenguaje de programación sencillo y españolizado para escribir ficción interactiva. Está dividido en componentes llamados capítulos para segmentar y reorganizar el código según el flujo de la historia interactiva.
 
-## Avance 1
+Todo programa se inicia con la palabra clave habiaUnaVez y el nombre de tu archivo
+`habiaUnaVez raven`
 
-#### Lunes 2 de Mayo
 
-Se genera el análisis léxico y de sintaxis sobre la gramática libre de contexto generada en la propuesta del nuevo lenguaje Raven, utilizando la herramienta de Lark.
+Seguido de la declaración del título de tu historia
+`titulo = "La historia de Raven"`
 
-## Avance 2
 
-#### Lunes 2 de Mayo
+Seguida de la declaración de variables
+`[tipoVar] [ID]`
+`[tipoVar] [ID] = [valor]`
 
-Se genera la semántica básica de las variables a través del directorio de procedimientos y las tablas de variables.
 
-## Avance 5
+En Raven tienes tres tipos de datos, `num, enunciado o bool`
 
-#### Lunes 16 de Mayo
+Después, declaras capítulos de la siguiente forma, siempre con su título.
+Un capítulo se declara así:
 
-Agregamos los puntos neuralgicos para operaciones aritmeticas y algunas expresiones booleanas (>, <>, <, ==)
+`capitulo uno () {
+	titulo = "Capitulo uno"
 
-Se agregan las variables a la tabla de variables
+}`
 
-Tambien agregamos validacion semantica y division por cero
 
-## Avance 7
+Y se llaman de la siguiente manera:
+`>> uno()`
 
-## Martes 17 de Mayo
 
-Agregamos puntos neuralgicos para ciclos
-Ya genera cuadruplos de condicionales y ciclos
+Puedes llamar un capítulo desde otro capítulo, o desde el índice. El índice es el programa principal, desde donde se llaman los capítulos de manera secuencial.
 
-## Lunes 24 de Mayo
+`capitulo uno(){
+	titulo = "Capitulo uno"
+	>> dos()
+}
 
-- Agregamos puntos neurálgicos para declaracion de funciones
-- Algunos puntos neuralgicos para llamadas de funciones
-- Refactorizamos codigo
+indice(){
+	>> uno()
+}`
 
-#### Lunes 30 de Mayo
+## Inputs y outputs
+Para imprimir, escribe “->” antes de lo que vas a imprimir
 
-Se agregan puntos neuralgicos para la asignacion
-Se hacen correciones generales
-Se arregla codigo generador de funciones y de arreglos
+`-> "Hola mundo!"`
 
----
 
-## Próximos avances
+Para recibir respuesta del usuario, escribe "<-" (lo opuesto)
 
-- [x] **Avance 0:** Propuesta aprobada
-- [x] **Avance 1:** Análisis de léxico y sintaxis
-- [x] **Avance 2:** Semántica básica de variables. Directorio de procedimientos y tablas de variables
-- [x] **Avance 3:** Semántica básica de expresiones. tabla de Consideraciones semánticas (Cubo semántico). Genración de código de expresiones aritméticas y estatutos secuenciales: Asignación, lectura, etc
-- [x] **Avance 4:** Generación de código de estatutos condicionales (Decisiones, ciclos)
-- [x] **Avance 5:** Generación de código de funciones
-- [ ] **Avance 6:** Mapa de memoria de ejecución para la máquina virtual. Máquina virtual: ejecución de expresiones aritméticas y estatutos secuenciales
-- [ ] **Avance 7:** Generación de código de arreglos y tipos estruturados. Máquina virtual: ejecución de estatutos condicionales
-- [ ] **Avance 8:** Primera versión de la documentación. Generación de código y máuina virtual para una parte de la aplicación particular
+`num respuesta`
+`<- respuesta`
+
+
+## Funciones
+Una función se declara con la palabra mecánica seguida del tipo que regresa, y después el título. Los tienes que declarar antes de los capïtulos.
+`mecanica vacia imprimir(){
+	-> "Hola mundo!"
+}`
+
+
+
+Te dejamos un programa ejemplo. ¡Mucho éxito creando historias con Raven!
+
+
+`habiaUnaVez Raven
+titulo = "Raven"
+num b = 5
+num x = 2, y = 3, a = 5
+bool z = Verdad
+
+capitulo cuatro_dos () {
+    titulo = "capitulo tres"
+    -> "y se murio"
+}
+
+capitulo cuatro_uno () {
+    titulo = "capitulo tres"
+    -> "pero aprendio y voló"
+}
+
+capitulo tres () {
+    titulo = "capitulo tres"
+    -> "que no sabia volar"
+    opciones : ["aprender", >> cuatro_uno() ; "no aprender", >> cuatro_dos()]
+}
+capitulo dos () {
+    titulo = "capitulo dos"
+    -> "un cuervo"
+    >> tres()
+}
+capitulo uno () {
+    titulo = "capitulo uno"
+    -> "habia una vez"
+    opciones : ["capitulo dos", >> dos() ; "capitulo tres", >> tres()]
+}
+indice() {
+    >> uno()
+}`
+
+
+
+
+

@@ -8,6 +8,10 @@ from clases import *
 from memoria import *
 from errores import *
 
+tabla_variables = VariableTable()  # Tabla de variables
+tabla_funciones = ProcDirectory()  # Tabla de funciones
+tabla_ctes = TablaConstantes()     # Tabla de constantes
+
 # PILAS GENERALES
 pilaO = []  # Pila de Operandos
 pOper = []  # Pila de Operadores
@@ -64,9 +68,8 @@ for i in range(0, 1000):
     temporalesString.append("tS" + str(i))
     temporalesPointer.append("tP" + str(i))
 
+
 # Agrega una variable a la tabla de variables global o local
-
-
 def getTemp(tipo):
     global availNum
     global availBool
@@ -87,50 +90,48 @@ def getTemp(tipo):
 
     return result
 
+
+# ADD VAR
 # Agrega una variable a la tabla de variables global o local
-
-
 def addVar(var):
     if pilaFunciones[-1] == "global":
         tabla_variables.addVar(var)
     else:
         tabla_funciones.procDirectory[pilaFunciones[-1]].addVar(var)
 
+
+# GET VAR
 # Obtiene una variable a partir de su nombre y el contexto en el que estamos
-# (global o una funcion)
-
-
+# (global o una función)
 def getVar(varID):
     if pilaFunciones[-1] == "global":
         var = tabla_variables.tablaVar[varID]
     else:
         try:
             var = tabla_funciones.procDirectory[pilaFunciones[-1]
-                                            ].varsFunc.tablaVar[varID]
+                                                ].varsFunc.tablaVar[varID]
         except:
             var = tabla_variables.tablaVar[varID]
     return var
 
+
+# CHECK EXISTS CONTEXTO
 # Revisa si el id corresponde a una variable del contexto actual
-
-
 def checkExists_contexto(val):
     if pilaFunciones[-1] == "global":
         return tabla_variables.checkExists(val)
     else:
-        res = tabla_funciones.procDirectory[pilaFunciones[-1]].varsFunc.checkExists(val)
+        res = tabla_funciones.procDirectory[pilaFunciones[-1]
+                                            ].varsFunc.checkExists(val)
         if res == False:
             res = tabla_variables.checkExists(val)
         return res
-        
-
-
-tabla_variables = VariableTable()  # Tabla de variables
-tabla_funciones = ProcDirectory()  # Tabla de funciones
-tabla_ctes = TablaConstantes()
 
 
 class PuntosNeuralgicos(Visitor):
+    # HUV_INICIO
+    # Genera cuádruplo {PROGRAM, , , programName} para definir el nombre del programa
+    # Se llama desde programa
     def huv_inicio(self, tree):
         programName = tree.children[1].value
         cuadruplos.generate_quad(
@@ -147,7 +148,10 @@ class PuntosNeuralgicos(Visitor):
             "GOTO", "indice", None, "blank")
         pSaltos.append(cuadruplos.quad_pointer-1)
 
-
+    # NP TITULO ASIG
+    # Mete valores a pila de operandos, sus tipos a la pila de tipos, operador de
+    # asignación a pila de operadores, guarda los valores en la tabla de constantes,
+    # y mete la variable 'titulo' a la tabla de variables
     def titulo_asig(self, tree):
         val = tree.children[0].value
         pilaO.append(val)
@@ -173,6 +177,8 @@ class PuntosNeuralgicos(Visitor):
         cuadruplos.fill_quad(end, cuadruplos.quad_pointer)
         cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer)
 
+    # NP LLAMADA CAPITULOS
+    # Genera cuádrulpos de GOCAP
     def llamada_capitulo(self, tree):
         cap = tree.children[0].value
         # estructura capitulos
@@ -182,18 +188,24 @@ class PuntosNeuralgicos(Visitor):
         # to do: poner memoria en vez de valor
         cuadruplos.generate_quad_mem(
             "GOCAP", cap, None, salto + 1)
-    
+
+    # NP OPCIONES
+    # Genera la estructura ayudante de Opciones
     def opciones(self, tree):
-        # mandar caudruplo
+        # mandar cuádruplo
         global currOpciones
         currOpciones = Opciones()
-    
+
+    # NP OPCION
+    # Genera la opción
     def opcion(self, tree):
         global currOpcionStr
         str = tree.children[0].value
         currOpcionStr = str
 
-    
+    # NP LLAMADA OPCION
+    # Punto neurálgico que construye una llamada a una opción llamando a la
+    # función de la clase Opciones, agregaOpcion
     def llamada_opcion(self, tree):
         global currOpcionStr
         global currOpciones
@@ -204,24 +216,31 @@ class PuntosNeuralgicos(Visitor):
         str = currOpcionStr
         currOpciones.cap = cap
         currOpciones.agregaOpcion(str, cap, salto)
-    
+
+    # NP FIN OPCIONES
+    # Punto neurálgico que genera el cuádruplo ELIGE
     def np_fin_opciones(self, tree):
         global currOpciones
         cuadruplos.generate_quad("ELIGE", None, None, currOpciones.cap)
         cuadruplos.generate_quad_mem("ELIGE", None, None, currOpciones.cap)
         opciones[currOpciones.cap] = currOpciones
 
-
+    # NP CAPITULO
+    # Punto neurálgico que indica el cuádruplo de inciio del capítulo
     def np_capitulo(self, tree):
         # estructura capitulos
         capitulos[tree.children[1].value] = cuadruplos.quad_pointer - 1
-        #pSaltos.append(cuadruplos.quad_pointer-1)
-        
+        # pSaltos.append(cuadruplos.quad_pointer-1)
+
+    # NP END CAP
+    # Punto neurálgico que genera el cuádruplo de ENDCAP
     def end_cap(self, tree):
         cuadruplos.generate_quad("ENDCAP", None, None, None)
         cuadruplos.generate_quad_mem("ENDCAP", None, None, None)
 
-    # Funcion ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
+    # INLINE VAR
+    # Función ayudante recursiva para agregar multiples asignaciones de variables del mismo tipo
+    # a la tabla de variables
     def inlineVar(self, inlineT, type):
         if(inlineT != []):
             name = inlineT[0].children[0].value
@@ -235,8 +254,9 @@ class PuntosNeuralgicos(Visitor):
         else:
             return
 
+    # NP VARS
+    # Punto neurálgico que agrega variables a la tabla de variables
     def np_vars(self, tree):
-        # print(tree)
         type = tree.children[0].children[0].value
         name = tree.children[1].children[0].value
         contexto = pilaFunciones[-1]
@@ -246,10 +266,12 @@ class PuntosNeuralgicos(Visitor):
         memoria[contexto][type] += 1
         var = VariableClass(name, type, addressVar=mem)
         addVar(var)
-        # Logica para tambien agregar variables que se declaran en la misma linea
+        # Lógica para tambien agregar variables que se declaran en la misma línea
         self.inlineVar(tree.children[3].children, type)
 
-    # Agrega ID a pila de operandos
+    # NP ASIG
+    # Punto neurálgico que agrega ID y su tipo a la pila de operadores y pila de tipos,
+    # además de agregar el operador = a la pila de operadores
     def np_asig(self, tree):
         val = tree.children[0].value
         if (checkExists_contexto(val) == True):
@@ -265,9 +287,10 @@ class PuntosNeuralgicos(Visitor):
             except:
                 pOper.append(tree.children[2].value)
         else:
-            print("no existe " + val)
-            exit()
+            errorExisteContexto(val)
 
+    # NP ASIG QUAD
+    # Punto neurálgico que genera cuádruplos de asignación
     def np_asig_quad(self, tree):
         operator = pOper.pop()
         left_operand = pilaO.pop()
@@ -280,9 +303,12 @@ class PuntosNeuralgicos(Visitor):
         cuadruplos.generate_quad_mem(operator, left_mem, None, res_mem)
 
         #generate_quad("=", "value", None, tree.children[0].value)
+
     ''' 
     Guardado de constantes
     '''
+    # NP GUARDAR ID
+    # Punto neurálgico que guarda un id, sea un arreglo o no
 
     def guardar_id(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
@@ -296,6 +322,8 @@ class PuntosNeuralgicos(Visitor):
         mem = var.addressVar
         pilaMem.append(mem)
 
+    # NP GUADRAR NUM
+    # Punto neurálgico que guarda un número como constante
     def guardar_num(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
         miid = tree.children[-1].value
@@ -306,6 +334,8 @@ class PuntosNeuralgicos(Visitor):
         tabla_ctes.addCte(miid, mem)
         pilaMem.append(mem)
 
+    # GUARDAR STRING
+    # Punto neurálgico que guarda un string como constante
     def guardar_string(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
         miid = tree.children[-1].value
@@ -316,6 +346,8 @@ class PuntosNeuralgicos(Visitor):
         tabla_ctes.addCte(miid, mem)
         pilaMem.append(mem)
 
+    # GUARDAR BOOL
+    # Punto neurálgico que guarda un booleano como constante
     def guardar_bool(self, tree):
         # 1 PilaO.Push(id.name) and PTypes.Push(id.type)
         miid = tree.children[-1].value
@@ -330,16 +362,21 @@ class PuntosNeuralgicos(Visitor):
         tabla_ctes.addCte(val, mem)
         pilaMem.append(mem)
 
+    # NP TÊRMINO MULT
+    # Punto neurálgico que agrega el signo de multiplicación o de división a la pila de operadores
     def termino_mult(self, tree):
         signo = tree.children[0].value
         pOper.append(signo)
 
+    # NP EXP SUMA
+    # Punto neurálgico que agrega el signo de suma o resta a la pila de operadores
     def exp_suma(self, tree):
         signo = tree.children[0].value
         pOper.append(signo)
 
+    # NP CUÁDRUPLO SUMA
+    # Punto neurálgico que genera el cuádruplo de suma o de resta
     def cuadruplo_suma(self, tree):
-
         if pOper:
             if (pOper[-1] == "+") or (pOper[-1] == "-"):
                 right_operand = pilaO.pop()
@@ -375,6 +412,8 @@ class PuntosNeuralgicos(Visitor):
                 else:
                     errorTipos(operator, left_type, right_type)
 
+    # NP CUADRUPLO MULT DIV
+    # Punto neurálgico que genera el cuádruplo de multiplicación o división
     def cuadruplo_mult_div(self, tree):
         if pOper:
             if (pOper[-1] == "*") or (pOper[-1] == "/"):
@@ -412,11 +451,16 @@ class PuntosNeuralgicos(Visitor):
                 else:
                     errorTipos(operator, left_type, right_type)
 
+    # NP EXPRESION MAYOR
+    # Punto neurálgico que agrega los signos de mayor qué menor qué mayor
+    # o igual qué, menor o igual qué a la pila de operadores
     def expresion_mayor(self, tree):
         # poper.push <, >, etc
         signo = tree.children[0].value
         pOper.append(signo)
 
+    # NP CUÁDRUPLO EXPRESIÓN
+    # Punto neurálgico que genera los cuádruplos de expresiones de lógica booleana
     def cuadruplo_expresion(self, tree):
         if pOper:
             if (pOper[-1] == ">") or (pOper[-1] == "<") or (pOper[-1] == "!=") or (pOper[-1] == "==") or (pOper[-1] == ">=") or (pOper[-1] == "<="):
@@ -448,6 +492,8 @@ class PuntosNeuralgicos(Visitor):
                 else:
                     errorTipos(operator, left_type, right_type)
 
+    # NP PRINT STRING
+    # Punto neurálgico que genera los cuádruplos de print
     def print_string(self, tree):
         my_str = tree.children[-1].value
         pilaO.append(my_str)
@@ -464,6 +510,8 @@ class PuntosNeuralgicos(Visitor):
             cuadruplos.generate_quad_mem("PRINT", None, None, mem)
             tabla_ctes.addCte(result, mem)
 
+    # NP PRINT EXPRESION
+    # Punto neurálgico que genera el cuádruplo de
     def np_print_expresion(self, tree):
         result = pilaO.pop()
         pilaT.pop()
@@ -471,10 +519,11 @@ class PuntosNeuralgicos(Visitor):
         cuadruplos.generate_quad("PRINT", None, None, result)
         cuadruplos.generate_quad_mem("PRINT", None, None, mem)
 
-    # Puntos neuralgicos de lectura
-
+    # NP LECTURA
+    # Puntos neurálgicos de lectura
+    # Mete valores a sus respectivas pilas
     def np_lectura(self, tree):
-        #meter el id
+        # meter el id
         val = tree.children[1].value
         # to do: si var es arreglo, hace otras cosas
         var = getVar(val)
@@ -482,22 +531,23 @@ class PuntosNeuralgicos(Visitor):
         pilaT.append(var.typeVar)
         pilaMem.append(var.addressVar)
 
+    # NP ASIG LECTURA
+    # Punto neurálgico que genera los cuádruplos para lectura de la respuesta del usuario
     def np_asig_lectura(self, tree):
-        #crear cuadruplo para leer respuesta del usuario
+        # crear cuádruplo para leer respuesta del usuario
         result = pilaO.pop()
-        #revisar que exista la variable o acceso a arreglo
+        # revisar que exista la variable o acceso a arreglo
         tipo = pilaT.pop()
         mem = pilaMem.pop()
         cuadruplos.generate_quad("READ", None, None, result)
         cuadruplos.generate_quad_mem("READ", None, None, mem)
 
-    # Puntos neuralgicos del if
-
+    # NP IF
+    # Punto neurálgico que genera el cuádruplo de GOTOF para un IF
     def np_if(self, tree):
         exp_type = pilaT.pop()
         if exp_type != "bool":
-            print("Type mismatch")
-            exit()
+            errorTiposB()
         else:
             result = pilaO.pop()
             t = pilaT.pop()
@@ -507,11 +557,16 @@ class PuntosNeuralgicos(Visitor):
             cuadruplos.generate_quad_mem("GOTOF", mem, None, "blank")
             pSaltos.append(cuadruplos.quad_pointer - 1)
 
+    # NP IF 2
+    # Punto neurálgico que llena los cuádruplos generados en los GOTO de un IF
     def np_if_2(self, tree):
         end = pSaltos.pop()
         cuadruplos.fill_quad(end, cuadruplos.quad_pointer)
         cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer)
 
+    # NP IF 3
+    # Punto neurálgico que genera los cuádruplos GOTO de un IF y
+    # rellena los cuádruplos de GOTOF generados anteriormente
     def np_if_3(self, tree):
         cuadruplos.generate_quad("GOTO", None, None, "blank")
         cuadruplos.generate_quad_mem("GOTO", None, None, "blank")
@@ -520,19 +575,20 @@ class PuntosNeuralgicos(Visitor):
         cuadruplos.fill_quad(falso, cuadruplos.quad_pointer)
         cuadruplos.fill_quad_mem(falso, cuadruplos.quad_pointer)
 
-    # Puntos neuralgicos para un while
-
+    # NP WHILE 1
+    # Punto neurálgico que mete el número de cuádruplo a la pila de saltos
     def np_while_1(self, tree):
         # Migaja de pan
         # En cuanto encuentras el while
         pSaltos.append(cuadruplos.quad_pointer)
 
+    # NP WHILE 2
+    # Punto neurálgico que genera los cuádruplos de GOTOF para un WHILE
     def np_while_2(self, tree):
         # Revisar que el tipo sea booleano
         exp_type = pilaT.pop()
         if exp_type != "bool":
-            print("Type mismatch")
-            exit()
+            errorTiposB()
         else:
             result = pilaO.pop()
             t = pilaT.pop()
@@ -541,8 +597,11 @@ class PuntosNeuralgicos(Visitor):
             cuadruplos.generate_quad_mem("GOTOF", mem, None, "blank")
             pSaltos.append(cuadruplos.quad_pointer - 1)
 
+    # NP WHILE 3
+    # Punto neurálgico que genera los cuádruplos de GOTO para un WHILE
+    # y rellena los cuádruplos de GOTOF generados con anterioridad
     def np_while_3(self, tree):
-        # Hacer un goto de regreso a la condicion del while
+        # Hacer un goto de regreso a la condición del while
         # Llenar el gotoF vacio
         end = pSaltos.pop()
         regreso = pSaltos.pop()
@@ -551,8 +610,11 @@ class PuntosNeuralgicos(Visitor):
         cuadruplos.fill_quad(end, cuadruplos.quad_pointer)
         cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer)
 
-    # Puntos neuralgicos funciones
+    # Puntos neurálgicos funciones
 
+    # NP FUNCIONES 1
+    # Punto neurálgico que inserta las funciones y su tipo al Directorio de Funciones
+    # Se verifica semántica
     def np_funciones_1(self, tree):
         # Insert Function name into the DirFunc table (and its type, if any), verify semantics.
         tipo_funcion = tree.children[0].children[0].value
@@ -571,6 +633,8 @@ class PuntosNeuralgicos(Visitor):
 
         # to do: verificar semanticas
 
+    # NP MECANICA 2
+    # Se inserta cada parámetro a una tabla de variables locales
     def mecanica2(self, tree):
         # 2 - Insert every parameter into the current (local) VarTable.
         if tree.children:
@@ -583,6 +647,8 @@ class PuntosNeuralgicos(Visitor):
                                           ].addParam(tipo, id_param, mem)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
 
+    # NP MECANICA 3
+    # Inserta parámetros después de la coma a tabla de variables locales
     def mecanica3(self, tree):
         if tree.children:
             # otro parametro
@@ -595,6 +661,8 @@ class PuntosNeuralgicos(Visitor):
                                           ].addParam(tipo, id_param, mem)
             tabla_funciones.procDirectory[pilaFunciones[-1]].addTipo(tipo)
 
+    # NP MECANICA 5
+    # Genera cuádruplo de {RETURN, FUNC, , result}
     def np_mecanica_5(self, tree):
         o = pilaO.pop()
         t = pilaT.pop()
@@ -608,10 +676,17 @@ class PuntosNeuralgicos(Visitor):
         # to do: el return en ejecucion asigna mv[m] a la variable global llamada como la funcion actual
         # hacer pop de llamada?
 
+    # NP CAMBIAR QUAD POINTER
+    # Punto neurálgico que rellena el cuádruplo inicial de una función en la tabla de Funciones,
+    # aka Directorio de Procedimientos
+
     def cambiar_quad_pointer(self, tree):
         tabla_funciones.procDirectory[pilaFunciones[-1]
                                       ].quad_inicial = cuadruplos.quad_pointer
 
+    # NP FIN_MECANICA
+    # Punto neurálgico que genera el cuádruplo de ENDFUNC, libera la memoria y
+    # hace un recuento de temporales utilizados
     def fin_mecanica(self, tree):
         # varias cosas
         # release
@@ -620,17 +695,19 @@ class PuntosNeuralgicos(Visitor):
         pilaFunciones.pop()
         # insert the number of temps
 
-    # puntos neuralgicos para llamadas a funciones
-
+    # PUNTOS NEURÁLGICOS PARA LLAMADAS DE FUNCIONES
+    # NP LLAMADA FUNCIÓN 1
+    # Este punto neurálgico verifica que la función exista
     def np_llamada_funcion_1(self, tree):
         # verify that the function exists
         nombre_func = tree.children[0].value
         if tabla_funciones.findFunction(nombre_func):
             pilaLlamadas.append(nombre_func)
         else:
-            print("Error, esa funcion no existe " + nombre_func)
-            exit()
+            errorFuncionNoExiste(nombre_func)
 
+    # NP LLAMADA FUNCIÓN 2
+    # Este punto neurálgico genera el cuádruplo ERA cada que se llama una función
     def np_llamada_funcion_2(self, tree):
         # Generar cuadruplo ERA, nombreFuncion
         # Cuando se llama a una funcion
@@ -638,6 +715,9 @@ class PuntosNeuralgicos(Visitor):
         cuadruplos.generate_quad_mem("ERA", pilaLlamadas[-1], None, None)
         pilaK.append(0)
 
+    # NP LLAMADA FUNCION 3
+    # Punto neurálgico que genera el cuádruplo {PARAM, argumento, , numParam}
+    # Verifica que correspondan los tipos declarados de los invocados
     def np_llamada_funcion_3(self, tree):
         # Argument= PilaO. Pop() ArgumentType= PTypes.Pop().
         # Verify ArgumentType against current Parameter (#k) in ParameterTable.
@@ -649,12 +729,16 @@ class PuntosNeuralgicos(Visitor):
             cuadruplos.generate_quad("PARAM", argument, None, pilaK[-1])
             cuadruplos.generate_quad_mem("PARAM", arg_mem, None, pilaK[-1])
         else:
-            print("El parametro no es del tipo correcto")
-            exit()
+            errorTiposNoCoinciden(argument, argumentType)
 
+    # NP LLAMADA FUNCION 4
+    # Punto neurálgico que incrementa el contador de número de parámetros de la función
     def np_llamada_funcion_4(self, tree):
         pilaK[-1] = pilaK[-1] + 1
 
+    # NP LLAMADA FUNCION 5
+    # Punto neurálgico que revisa si el nūmero de parámetros invocados coincide
+    # coincide con el número de parámetros declarados
     def np_llamada_funcion_5(self, tree):
         # antes era numparam - 1
         if pilaK[-1] == (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam):
@@ -690,11 +774,16 @@ class PuntosNeuralgicos(Visitor):
         tabla_ctes.toTxt()
 
     # Arreglos
+    # NP ARREGLO
+    # Punto neurálgicoque mete a una variable auxiliar el tipo de arreglo
     def arreglo(self, tree):
         #vartable.add(id, type)
         global tipo_arr_aux
         tipo_arr_aux = tree.children[0].children[0].value
 
+    # NP ARR
+    # Punto neurálgico que genera la variable del arreglo y construye los nodos
+    # para las dimensiones del arreglo
     def arr(self, tree):
         global currNodo
         global headNodo
@@ -708,14 +797,14 @@ class PuntosNeuralgicos(Visitor):
             contexto = "local"
         mem = memoria[contexto][tipo]
         memoria[contexto][tipo] += ls
-        var = VariableClass(thisID, tipo, addressVar = mem)
+        var = VariableClass(thisID, tipo, addressVar=mem)
         # np 2
         var.isArray = True
         # np 3
         r = 1
         mem_ls = memoria["cte"]["num"]
         memoria["cte"]["num"] += 1
-        currNodo = NodoArreglo(dim=1, r=1, ls=ls, var=thisID, dirLS = mem_ls)
+        currNodo = NodoArreglo(dim=1, r=1, ls=ls, var=thisID, dirLS=mem_ls)
         var.arrNode = currNodo
         headNodo = var.arrNode
         mem_pointer = memoria["cte"]["num"]
@@ -723,10 +812,15 @@ class PuntosNeuralgicos(Visitor):
         tabla_ctes.addCte(mem, mem_pointer)
         addVar(var)
 
+    # NP ARR 5
+    # Punto neurálgico que genera el cálculo de las R's en la dimensión actual
     def np_arr_5(self, tree):
         global currNodo
         currNodo.calcR()
 
+    # NP AR 6
+    # Punto neurálgico que se extiende a la siguiente dimensión de un arreglo,
+    # generando el nuevo nodo a seguir trabajando
     def np_arr_6(self, tree):
         # to do: ver si la referencia al objeto te permite funcionar como una linked list
         global currNodo
@@ -735,6 +829,8 @@ class PuntosNeuralgicos(Visitor):
         currNodo.siguienteNodo = nuevoNodo
         currNodo = nuevoNodo
 
+    # NP ARR 7
+    # Punto neurálgico que indica la última dimensión y genera los cálulos pertinentes
     def np_arr_7(self, tree):
         global currNodo
         global r
@@ -753,13 +849,8 @@ class PuntosNeuralgicos(Visitor):
                 currNodo.val = 0
             currNodo = currNodo.siguienteNodo
 
+    # NP ACC ARR 2
     # el siguiente cuadruplo es guardar una direccion virtual
-
-    # cuadruplos de acceso a arreglos
-    def np_acc_arr_1(self, tree):
-        # este cuadruplo ya no hace nada
-        print("es un arreglo")
-
     def np_acc_arr_2(self, tree):
         global currNodo
         idd = pilaO.pop()
@@ -769,14 +860,16 @@ class PuntosNeuralgicos(Visitor):
         pilaDim.append([idd, dim])
         var = getVar(idd)
         if var.isArray == False:
-            print(idd + "no es un arreglo")
-            exit()
+            errorVarNoArr(idd)
         currNodo = var.arrNode
         # fondo falso
         pOper.append("[")
         print("curr nodo")
         currNodo.imprimir()
 
+    # NP ACC ARR 3
+    # Genera los cuádruplos de verificación de límite superior para los arreglos
+    # además de los cálculos de indexación
     def np_acc_arr_3(self, tree):
         global currNodo
         global availNum
@@ -819,11 +912,16 @@ class PuntosNeuralgicos(Visitor):
             pilaT.append("num")
             pilaMem.append(result_mem)
 
+    # NP ACC ARR 4
+    # Cambia el nodo a trabajar, es decir, nos pasamos a la siguiente dimensión
     def np_acc_arr_4(self, tree):
         global currNodo
         pilaDim[-1][1] = pilaDim[-1][1] + 1
         currNodo = currNodo.siguienteNodo
 
+    # NP ACC ARR 5
+    # Punto neurálgico que termina de realizar las operaciones de indexación y
+    # y genera los cuádruplos para las operaciones de memoria en ejecución
     def np_acc_arr_5(self, tree):
         global temporalesNum
         global availPointer
