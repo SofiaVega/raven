@@ -265,7 +265,6 @@ class VariableTable:
         if key in self.tablaVar:
             return True
         else:
-            errorVariableNoExiste(key)
             return False
 
     # GET TYPE

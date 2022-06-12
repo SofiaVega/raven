@@ -119,13 +119,15 @@ def getVar(varID):
 # Revisa si el id corresponde a una variable del contexto actual
 def checkExists_contexto(val):
     if pilaFunciones[-1] == "global":
-        return tabla_variables.checkExists(val)
+        res =  tabla_variables.checkExists(val)
     else:
         res = tabla_funciones.procDirectory[pilaFunciones[-1]
                                             ].varsFunc.checkExists(val)
         if res == False:
             res = tabla_variables.checkExists(val)
-        return res
+    if res == False:
+            errorVariableNoExiste(val)
+    return res
 
 
 class PuntosNeuralgicos(Visitor):

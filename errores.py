@@ -33,7 +33,7 @@ def errorTipos(operador, left_type, right_type):
 # Existencia en contexto
 # Aparece cuando una variable no existe dentro del contexto actual
 def errorExisteContexto(val):
-    print("ERROR: La variable ", val, " no existe.")
+    print("ERROR: La variable ", val, " no existe en este contexto.")
     exit()
 
 
