@@ -48,7 +48,7 @@ class NodoArreglo():
 class Opciones():
 
     def __init__(self):
-        self.cap = ""  # capitulo en el que estan las opciones
+        self.cap = ""  # capitulo en el que están las opciones
         self.strs = []
         self.caps = []
         self.saltos = []
@@ -103,7 +103,7 @@ class VariableClass():
     - typeVar : string ->  tipo de la variable (numero, enunciado, bool, arreglo)
     - valueVar : [numero, bool, enunciado, arreglo] -> valor de la variable de acuerdo a su tipo
     - scopeVar : string -> scope de la variable
-    - addressVar : int -> direccion de memoria virtual
+    - addressVar : int -> dirección de memoria virtual
     - isArray : bool
     - arrNode : la primera dimension del arreglo
     '''
@@ -131,12 +131,12 @@ class FunctionClass:
     Constructor de Function
 
     Parámetros:
-    - nameFunc : string -> nombre de la funcion
-    - typeFunc : string ->  tipo de retorno de la funcion (numero, enunciado, bool, arreglo, void)
+    - nameFunc : string -> nombre de la función
+    - typeFunc : string ->  tipo de retorno de la función (numero, enunciado, bool, arreglo, void)
     - paramsFunc : [] -> arreglo de parametros de tipo variable, o constante
-    - scopeFunc : string -> scope de la funcion
-    - addressFunc : int -> numero de cuadruplo donde inicia la funcion
-    - quad_inicial: numero de cuadruplo donde inicia la funcion
+    - scopeFunc : string -> scope de la función
+    - addressFunc : int -> numero de cuádruplo donde inicia la función
+    - quad_inicial: numero de cuádruplo donde inicia la función
     '''
 
     def __init__(self, nameFunc, typeFunc, paramTipos=[], scopeFunc="", addressFunc="", numParam=0, numVar=0, quad_inicial=0):
@@ -283,19 +283,19 @@ class VariableTable:
 
 
 #   CLASE CUADRUPLOS
-#   Un cuadruplo es una estructura de tipo registro con cuatro campos:
+#   Un cuádruplo es una estructura de tipo registro con cuatro campos:
 #   {operador, operando_izquierdo, operando_derecho, resultado}
 #
 #   Esta clase albergará todas las funciones relacionadas con esta estructura
 class Cuadruplos():
     def __init__(self):
-        self.cuadruplosID = []  # Lista de cuadruplos con identificadores
-        self.cuadruplosMem = []  # Lista de cuadruplos con direcciones de memoria
-        self.quad_pointer = 0   # Contador/Apuntador de cuadruplo
+        self.cuadruplosID = []  # Lista de cuádruplos con identificadores
+        self.cuadruplosMem = []  # Lista de cuádruplos con direcciones de memoria
+        self.quad_pointer = 0   # Contador/Apuntador de cuádruplo
 
     #   GENERA ARCHIVOS
-    #   Función que genera dos archivos de texto, uno con los cuadruplos con
-    #   identificadores y otro con los cuadruplos con direcciones de memoria
+    #   Función que genera dos archivos de texto, uno con los cuádruplos con
+    #   identificadores y otro con los cuádruplos con direcciones de memoria
     #   para ser interpretados por la máquina virtual
     def generaArchivos(self):
         f = open("cuadruplosID.txt", "w")
@@ -326,7 +326,7 @@ class Cuadruplos():
         self.cuadruplosMem.append(cuadruplo)
 
     #   FILL QUAD
-    #   Función que regresa a un cuadruplo generado con identificadores con ____
+    #   Función que regresa a un cuádruplo generado con identificadores con ____
     #   en la casilla de result para meter el número de cuádruplo al que tendrá
     #   que tiene que brincar
     #   Por lo general, para gotos
@@ -334,7 +334,7 @@ class Cuadruplos():
         self.cuadruplosID[end]["result"] = cont
 
     #   FILL QUAD MEM
-    #   Función que regresa a un cuadruplo con direcciones de memoria virtuales
+    #   Función que regresa a un cuádruplo con direcciones de memoria virtuales
     #   con ____ en la casilla de result para meter el número de cuádruplo al
     #   que tendrá que tiene que brincar
     #

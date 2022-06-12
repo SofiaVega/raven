@@ -35,7 +35,7 @@ cuadruplos = Cuadruplos()
 
 # FUNCIONES
 # Pila de funciones
-# pilaFunciones[-1] es la funcion actual
+# pilaFunciones[-1] es la función actual
 pilaFunciones = []
 pilaFunciones.append("global")
 # pila de llamadas a funciones
@@ -178,7 +178,7 @@ class PuntosNeuralgicos(Visitor):
         cuadruplos.fill_quad_mem(end, cuadruplos.quad_pointer)
 
     # NP LLAMADA CAPITULOS
-    # Genera cuádrulpos de GOCAP
+    # Genera cuádruplos de GOCAP
     def llamada_capitulo(self, tree):
         cap = tree.children[0].value
         # estructura capitulos
@@ -226,9 +226,9 @@ class PuntosNeuralgicos(Visitor):
         opciones[currOpciones.cap] = currOpciones
 
     # NP CAPITULO
-    # Punto neurálgico que indica el cuádruplo de inciio del capítulo
+    # Punto neurálgico que indica el cuádruplo de inicio del capítulo
     def np_capitulo(self, tree):
-        # estructura capitulos
+        # estructura capítulos
         capitulos[tree.children[1].value] = cuadruplos.quad_pointer - 1
         # pSaltos.append(cuadruplos.quad_pointer-1)
 
@@ -247,7 +247,7 @@ class PuntosNeuralgicos(Visitor):
             inlineT = inlineT[1].children
             mem = memoria["global"][type]
             memoria["global"][type] += 1
-            # pasar esto a cuadruplos
+            # pasar esto a cuádruplos
             var = VariableClass(name, type, addressVar=mem)
             addVar(var)
             self.inlineVar(inlineT, type)
@@ -266,7 +266,7 @@ class PuntosNeuralgicos(Visitor):
         memoria[contexto][type] += 1
         var = VariableClass(name, type, addressVar=mem)
         addVar(var)
-        # Lógica para tambien agregar variables que se declaran en la misma línea
+        # Lógica para también agregar variables que se declaran en la misma línea
         self.inlineVar(tree.children[3].children, type)
 
     # NP ASIG
@@ -362,7 +362,7 @@ class PuntosNeuralgicos(Visitor):
         tabla_ctes.addCte(val, mem)
         pilaMem.append(mem)
 
-    # NP TÊRMINO MULT
+    # NP TÉRMINO MULT
     # Punto neurálgico que agrega el signo de multiplicación o de división a la pila de operadores
     def termino_mult(self, tree):
         signo = tree.children[0].value
@@ -426,7 +426,7 @@ class PuntosNeuralgicos(Visitor):
                 operator = pOper.pop()
                 if operator == "/":
                     var = getVar(right_operand)
-                    # to do: en compilacion no sabemos el valor de las variables, asi que este check es incorrecto
+                    # to do: en compilación no sabemos el valor de las variables, asi que este check es incorrecto
                     if right_operand == "0" or var.value == 0:
                         print("Error: no se puede dividir entre 0")
                         exit()
@@ -602,7 +602,7 @@ class PuntosNeuralgicos(Visitor):
     # y rellena los cuádruplos de GOTOF generados con anterioridad
     def np_while_3(self, tree):
         # Hacer un goto de regreso a la condición del while
-        # Llenar el gotoF vacio
+        # Llenar el gotoF vacío
         end = pSaltos.pop()
         regreso = pSaltos.pop()
         cuadruplos.generate_quad("GOTO", None, None, regreso)
@@ -631,14 +631,14 @@ class PuntosNeuralgicos(Visitor):
                                 typeVar=tipo_funcion, addressVar=mem)
             tabla_variables.addVar(var)
 
-        # to do: verificar semanticas
+        # to do: verificar semánticas
 
     # NP MECANICA 2
     # Se inserta cada parámetro a una tabla de variables locales
     def mecanica2(self, tree):
         # 2 - Insert every parameter into the current (local) VarTable.
         if tree.children:
-            # esto solo funciona con un parametro
+            # esto solo funciona con un parámetro
             tipo = tree.children[0].children[0].value
             id_param = tree.children[1].value
             mem = memoria["local"][tipo]
@@ -667,13 +667,13 @@ class PuntosNeuralgicos(Visitor):
         o = pilaO.pop()
         t = pilaT.pop()
         mem = pilaMem.pop()
-        # to do: como conecta esto con el parche guadalupano??
+        # to do: cómo conecta esto con el parche guadalupano??
         # meter funcion actual
         cuadruplos.generate_quad("RETURN", pilaFunciones[-1], None, o)
         mem_func = tabla_variables.tablaVar[pilaFunciones[-1]].addressVar
         # direccion de la variable global
         cuadruplos.generate_quad_mem("RETURN", mem_func, None, mem)
-        # to do: el return en ejecucion asigna mv[m] a la variable global llamada como la funcion actual
+        # to do: el return en ejecución asigna mv[m] a la variable global llamada como la función actual
         # hacer pop de llamada?
 
     # NP CAMBIAR QUAD POINTER
@@ -709,7 +709,7 @@ class PuntosNeuralgicos(Visitor):
     # NP LLAMADA FUNCIÓN 2
     # Este punto neurálgico genera el cuádruplo ERA cada que se llama una función
     def np_llamada_funcion_2(self, tree):
-        # Generar cuadruplo ERA, nombreFuncion
+        # Generar cuádruplo ERA, nombreFuncion
         # Cuando se llama a una funcion
         cuadruplos.generate_quad("ERA", pilaLlamadas[-1], None, None)
         cuadruplos.generate_quad_mem("ERA", pilaLlamadas[-1], None, None)
@@ -737,7 +737,7 @@ class PuntosNeuralgicos(Visitor):
         pilaK[-1] = pilaK[-1] + 1
 
     # NP LLAMADA FUNCION 5
-    # Punto neurálgico que revisa si el nūmero de parámetros invocados coincide
+    # Punto neurálgico que revisa si el número de parámetros invocados coincide
     # coincide con el número de parámetros declarados
     def np_llamada_funcion_5(self, tree):
         # antes era numparam - 1
@@ -775,7 +775,7 @@ class PuntosNeuralgicos(Visitor):
 
     # Arreglos
     # NP ARREGLO
-    # Punto neurálgicoque mete a una variable auxiliar el tipo de arreglo
+    # Punto neurálgico que mete a una variable auxiliar el tipo de arreglo
     def arreglo(self, tree):
         #vartable.add(id, type)
         global tipo_arr_aux
@@ -830,7 +830,7 @@ class PuntosNeuralgicos(Visitor):
         currNodo = nuevoNodo
 
     # NP ARR 7
-    # Punto neurálgico que indica la última dimensión y genera los cálulos pertinentes
+    # Punto neurálgico que indica la última dimensión y genera los cálculos pertinentes
     def np_arr_7(self, tree):
         global currNodo
         global r
@@ -850,7 +850,7 @@ class PuntosNeuralgicos(Visitor):
             currNodo = currNodo.siguienteNodo
 
     # NP ACC ARR 2
-    # el siguiente cuadruplo es guardar una direccion virtual
+    # el siguiente cuádruplo es guardar una dirección virtual
     def np_acc_arr_2(self, tree):
         global currNodo
         idd = pilaO.pop()

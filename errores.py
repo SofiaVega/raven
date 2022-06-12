@@ -2,10 +2,10 @@
 ERRORES POSIBLES
 - 1. Error de tipos
 - 2. Variable no declarada
-- 3. Redeclaracion de variable
+- 3. Redeclaración de variable
 - 4. Variable no existe
 - 5. Función no existe
-- 6. Redeclaracion de funcion
+- 6. Redeclaración de función
 - 7. Discrepancia de tipos
 - 8. Diferente número de parámetros
 - 9. División entre 0 previo a ejecución
@@ -89,7 +89,7 @@ def errorReFunc(key):
 # Aparece cuando se intenta declarar una variable ya registrada en
 # la tabla de variables de su contexto actual
 def errorReVar(key):
-    print('ERROR: Redeclación de la variable ', key)
+    print('ERROR: Redeclaración de la variable ', key)
 
 
 # Error de acceso a variable que no es arreglo
