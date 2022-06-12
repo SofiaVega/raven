@@ -741,11 +741,9 @@ class PuntosNeuralgicos(Visitor):
     # coincide con el número de parámetros declarados
     def np_llamada_funcion_5(self, tree):
         # antes era numparam - 1
-        if pilaK[-1] == (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam):
-            print("right amount of params")
-        else:
-            print("Faltan parametros")
-            exit()
+        if pilaK[-1] != (tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam):
+            errorDifNumParams(
+                pilaK[-1], tabla_funciones.procDirectory[pilaLlamadas[-1]].numParam)
 
     # NP LLAMADA FUNCION 6
     # Punto neurálgico que genera los cuádruplos de GOSUB
@@ -873,8 +871,6 @@ class PuntosNeuralgicos(Visitor):
         currNodo = var.arrNode
         # fondo falso
         pOper.append("[")
-        print("curr nodo")
-        currNodo.imprimir()
 
     # NP ACC ARR 3
     # Punto neurálgico que genera los cuádruplos de verificación de límite superior para los arreglos
@@ -882,7 +878,6 @@ class PuntosNeuralgicos(Visitor):
     def np_acc_arr_3(self, tree):
         global currNodo
         global availNum
-        print("verificacion")
         # to do: guardar 0 y ls como constantes
         cuadruplos.generate_quad("VER", pilaO[-1], dirCero, currNodo.ls)
         cuadruplos.generate_quad_mem("VER", pilaMem[-1], dirCero, currNodo.ls)
@@ -934,7 +929,6 @@ class PuntosNeuralgicos(Visitor):
     def np_acc_arr_5(self, tree):
         global temporalesNum
         global availPointer
-        print("ultimo arr")
         aux = pilaO.pop()
         t = pilaT.pop()
         mem = pilaMem.pop()
