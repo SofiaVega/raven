@@ -194,7 +194,6 @@ class ProcDirectory:
     def addFunc(self, funcObject):
         if not (self.checkDuplicate(funcObject.nameFunc)):
             self.procDirectory[funcObject.nameFunc] = funcObject
-            print("Function added")
 
     # PRINT TABLE
     # Función que imprime el Directorio de Procedimientos
