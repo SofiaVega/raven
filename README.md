@@ -4,6 +4,8 @@ Un lenguaje de programacion para escribir ficción interactiva
 
 Link a la [propuesta](https://docs.google.com/document/d/1PtagpOnKwr7J5G9_Y12FzRvn-EZwffHPhILCqVtUy80/edit?usp=sharing)
 
+Link a la [documentación completa] (https://docs.google.com/document/d/e/2PACX-1vScXdR2G7cQUrTUtJ-DdUrzyvcwnrTI5Y7j8IpCtRcujNlQf58dRSq7kKJ0C-STV2HbdEgMZzEYD_3y/pub)
+
 ---
 # Manual de usuario
 Raven es un lenguaje de programación sencillo y españolizado para escribir ficción interactiva. Está dividido en componentes llamados capítulos para segmentar y reorganizar el código según el flujo de la historia interactiva.
@@ -53,7 +55,7 @@ Para imprimir, escribe “->” antes de lo que vas a imprimir
 `-> "Hola mundo!"`
 
 
-Para recibir respuesta del usuario, escribe "<-" (lo opuesto)
+Para recibir respuesta del usuario, escribe "&lt-" (lo opuesto)
 
 `num respuesta`
 `<- respuesta`

@@ -21,7 +21,7 @@ pilaDim = []  # Pila de dimensiones
 pilaMem = []  # Direcciones de memoria de pilaO
 
 # TEMPORALES
-temporalesNum = []  # Temporales para numeros
+temporalesNum = []  # Temporales para números
 temporalesBool = []  # Temporales booleanos
 temporalesString = []  # Temporales de string
 temporalesPointer = []  # Temporales para Instruction Pointer
