@@ -17,13 +17,11 @@ def tomarFoto():
     global fotos
     global mv
     foto = mv[7000: 12999]
-    # printSubMV(foto)
     fotos.append(foto)
 
 
 def printSubMV(smv):
     cont = 7000
-    print("imprimiendo sub mv")
     for i in smv:
         if i != None:
             print(str(cont) + " " + str(i))
@@ -40,7 +38,6 @@ def varsToMV():
     mv[13000] = 0
 
     for key in tabla_variables.tablaVar:
-        # print(tabla_variables.tablaVar[key].addressVar)
         mv[int(tabla_variables.tablaVar[key].addressVar)
            ] = tabla_variables.tablaVar[key].valueVar
 
@@ -109,8 +106,6 @@ def ejecutar():
                 ip = int(result)
         elif operator == "GOSUB":
             lineaQuede.append(ip + 1)
-            # printMV()
-            # tomarFoto()
             ip = int(left_op)
         elif operator == "ERA":
             # Generar los espacios de memoria
@@ -134,17 +129,14 @@ def ejecutar():
             mv[int(result)] = mv[int(left_op)]
             ip += 1
         elif operator == '+':
-            # printMV()
             # checar tipo con direcciones de memoria
             if right_op >= 25000:
                 right_op = mv[int(right_op)]
             if left_op >= 25000:
                 left_op = mv[int(left_op)]
             mv[result] = int(mv[left_op]) + int(mv[right_op])
-            # printMV()
             ip += 1
         elif operator == "-":
-            # printMV()
             if(left_op >= 25000):
                 left_op = mv[left_op]
             if(right_op >= 25000):
@@ -166,9 +158,7 @@ def ejecutar():
             mv[result] = int(mv[left_op]) * int(mv[right_op])
             ip += 1
         elif operator == ">":
-            # printMV()
             mv[result] = int(mv[left_op]) > int(mv[right_op])
-            # printMV()
             ip += 1
         elif operator == "<":
             mv[result] = int(mv[left_op]) < int(mv[right_op])
@@ -193,37 +183,30 @@ def ejecutar():
             mv[result] = mv[left_op] != mv[right_op]
             ip += 1
         elif operator == "PRINT":
-            # printMV()
             if result >= 25000:
                 result = mv[result]
             print(mv[result])
             ip += 1
         elif operator == "ENDFunc":
             restaurarFoto()
-            # printMV()
             ip = lineaQuede.pop()
         elif operator == "RETURN":
             # parche guadalupano maravilloso
             # return, dir var global func, none, val return
-            # printMV()
             aux = mv[result]
             restaurarFoto()
             mv[left_op] = aux
-            # printMV()
             ip = lineaQuede.pop()
 
         elif operator == "VER":
             # ver, x, li, ls
-            # printMV()
             if (int(mv[left_op]) < int(mv[right_op])) or (int(mv[left_op]) >= int(result)):
-                print("Fuera de limites de arreglo " + str(left_op))
-                exit()
+                errorEjFueraLimites(left_op)
             ip += 1
         elif operator == "READ":
             mv[result] = input()
             ip += 1
         elif operator == "otro":
-            print("otro")
             ip += 1
 
         #policia += 1
@@ -242,15 +225,18 @@ def printMV():
 
 
 def maquinaVirtual():
-    print("-------- RAVEN TIME -------")
     readCtes()
     varsToMV()
     openQuads()
     try:
         openQuads()
     except:
-        print("Quadruple file has not been generated yet")
-    print("----- Inicia ejecucion ------")
+        print("ERROR DE COMPILACIÓN: Archivo de cuádruplos no ha sido generado.")
+    print('''      ______ ______
+    _/    Raven    \_
+   // ~~ ~~ | ~~ ~  \\
+  // ~ ~ ~~ | ~~~ ~~ \\      
+ //________.|.________\\     
+`----------`-'----------'
+          ''')
     ejecutar()
-    print("----- Termina ejecucion ------")
-    # printMV()
