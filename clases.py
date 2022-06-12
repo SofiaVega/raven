@@ -1,83 +1,97 @@
+# clases.py
+# por Nadia Garcia y Sofia Vega (2022)
+# Clases de apoyo que representan las estructuras de datos
+# requeridas para el buen funcionamiento de nuestro compilador
+
+from errores import *
+
+# NODO ARREGLO
+# Clase que representa la estructura de uno de los nodos generados
+# por la linked list de representación de un arreglo
+
+
 class NodoArreglo():
-    """
-    Nodo arreglo
-        Limite inferior
-        Limite Superior
-        Dim
-        SiguenteNodo
-        val: mdim o -k
-        ultimoNodo: booleano
-        r
-        ls: limite superior
-        dirLS: direccion del limite superior como constante
 
-    """
+    def __init__(self, r=1, var="", ls=0, dim=1, dirLS=0):
+        self.li = 0                 # Límite inferior, siempre empieza en 0
+        self.ls = int(ls)           # Límite superior
+        self.dim = dim              # Dimensión
+        self.ultimoNodo = True      # Último nodo
+        self.r = r                  # R
+        self.var = var              # Valor casilla inferior (mdim o -k)
+        self.siguienteNodo = None   # Siguiente nodo
+        self.dirLS = dirLS          # Dirección del límite superior
 
-    def __init__(self, r=1, var="", ls=0, dim=1, dirLS = 0):
-        self.li = 0
-        self.ls = int(ls)
-        self.dim = dim
-        self.ultimoNodo = True
-        self.r = r
-        self.var = var
-        self.siguienteNodo = None
-        self.dirLS = dirLS
-
+    # SET NEXT NODE
+    # Función que modifica el apuntador de siguiente nodo a el nodo siguiente
     def setNextNode(self, nodo):
         self.ultimoNodo = False
         self.siguienteNodo = nodo
 
+    # CALC R
+    # Función que calcula el valor de r y lo actualiza en el objeto
     def calcR(self):
         self.r = (self.ls + 1) * self.r
 
+    # SET VAL
+    # Función que actualiza el valor de var
     def setVal(self, val):
         self.val = val
 
+    # IMPRIMIR
+    # Función que imprime los datos calculados y necesarios de un nodo
     def imprimir(self):
         print("li " + str(self.li) + " ls " + str(self.ls) + " dim " +
               str(self.dim) + " ultimoNodo " + str(self.ultimoNodo))
 
+
 class Opciones():
 
     def __init__(self):
-        self.cap = "" #capitulo en el que estan las opciones
+        self.cap = ""  # capitulo en el que estan las opciones
         self.strs = []
         self.caps = []
         self.saltos = []
         self.choice = 0
-    
+
     def agregaOpcion(self, str, opt, salto):
         self.strs.append(str)
         self.caps.append(opt)
         self.saltos.append(salto)
-    
+
     def elige(self, indice):
         self.choice = indice
 
+
+# TABLA DE CONSTANTES
+# Clase que modela la tabla de constantes
 class TablaConstantes():
-    '''
-    Atributos:
-    - dirs: arreglo de memoria virtual
-    - vals
-    '''
-
     def __init__(self):
-        self.mv = []
+        self.mv = []            # Memoria virtual
 
+    # ADD CTE
+    # Función para agregar constante a tabla de constantes
     def addCte(self, val, dir):
         t = [dir, val]
         self.mv.append(t)
 
+    # GET DIR
+    # Función para obtener dirección de memoria virtual de una constante
     def getDir(self, val):
         for i in self.mv:
             if i[1] == val:
                 return i[0]
 
+    # TO TXT
+    # Función para crear un archivo txt con la lista de constantes generadas
     def toTxt(self):
         f = open("tablaCtes.txt", "w")
         for m in self.mv:
             f.write(str(m[0])+' '+str(m[1]) + '\n')
         f.close()
+
+# VARIABLE CLASS
+# Clase que modela una variable y sus atributos
 
 
 class VariableClass():
@@ -102,11 +116,14 @@ class VariableClass():
         self.isArray = False
         self.arrNode = None
 
+    # PRINT VAR
+    # Función para imprimir la información pertinente de una variable
     def printvar(self):
         print("[nameVar: {} typeVar: {} valueVar: {} addressVar: {}]".format(
             self.nameVar, self.typeVar, self.valueVar, self.addressVar))
 
-# Clase Funcion para la creación de funciones y sus atributos
+# FUNCTION CLASS
+# Clase que modela una función y sus atributos pertinentes
 
 
 class FunctionClass:
@@ -134,95 +151,134 @@ class FunctionClass:
         self.quad_inicial = quad_inicial
         self.keysParam = []
 
+    # ADD PARAM
+    # Función que agrega los parámetros a la tabla de variables de la función
     def addParam(self, tipo, id_param, address):
         # to do: los parametros se agregan como variables?
-        var = VariableClass(id_param, tipo, addressVar = address)
+        var = VariableClass(id_param, tipo, addressVar=address)
         self.varsFunc.addVar(var)
         self.numParam = self.numParam + 1
         self.keysParam.append(id_param)
         # self.paramsFunc.append(var)
 
+    # ADD VAR
+    # Función que agrega variables a la tabla de variables de la función
     def addVar(self, varObject):
         self.varsFunc.addVar(varObject)
         self.numVar = self.numVar + 1
 
+    # ADD TIPO
+    # Función que agrega el tipo a la lista de tipos de los parámetros de la función
     def addTipo(self, tipo):
         self.paramTipos.append(tipo)
 
+    # PRINT FUNC
+    # Función que imprime la información pertinente de la función
     def printfunc(self):
         print("[nameFunc: {} typeFunc: {} paramTipos: {} scopeFunc: {} addressFunc: {}]".format(
             self.nameFunc, self.typeFunc, self.paramTipos, self.scopeFunc, self.addressFunc))
         print("variables")
         self.varsFunc.printTable()
 
+# PROC DIRECTORY
+# Clase Directorio de Procedimientos
+
 
 class ProcDirectory:
     def __init__(self):
-        self.procDirectory = {}
+        self.procDirectory = {}     # Diccionario de procedimientos/funciones
 
+    # ADD FUNC
+    # Función que agrega una función al Directorio de Procedimientos
+    # INPUT: Función a ser agregada
     def addFunc(self, funcObject):
         if not (self.checkDuplicate(funcObject.nameFunc)):
             self.procDirectory[funcObject.nameFunc] = funcObject
             print("Function added")
 
+    # PRINT TABLE
+    # Función que imprime el Directorio de Procedimientos
     def printTable(self):
         for item in self.procDirectory.items():
             print(item)
             item[1].printfunc()
 
+    # FIND FUNCTION
+    # Función que ayuda a encontrar la función deseada en el directorio de procedimientos
+    # INPUT: nombre de la función como llave
+    # OUTPUT: True o False, de acuerdo a si fue encontrada
     def findFunction(self, key):
         if key in self.procDirectory:
             return True
         else:
             return False
 
+    # CHECK DUPLICATE
+    # Función que revisa si la función ya fue agregada previamente
+    # INPUT: Nombre de la función
+    # OUTPUT: True si ya se encuentra registrada, False si no
     def checkDuplicate(self, key):
         if key in self.procDirectory:
-            print('Syntax error: redeclaration of function' + key)
+            errorReFunc(key)
             return True
         else:
             return False
+
+    # GET FUNC
+    # Función que retorna la función del directorio
+    # INPUT: nombre de la función
     def getFunc(self, name):
         return self.procDirectory[name]
 
 
-
+# VARIABLE TABLE
+# Clase que representa una tabla de variables
 class VariableTable:
     def __init__(self):
-        self.tablaVar = {}
+        self.tablaVar = {}  # Diccionario que representa la tabla de variables
 
+    # ADD VAR
+    # Función que agrega una variable a la tabla de variables
     def addVar(self, varObject):
         if not (self.checkDuplicate(varObject.nameVar)):
             self.tablaVar[varObject.nameVar] = varObject
 
-    def asignar(self, name, new_value):
-        self.tablaVar[name]
-
+    # PRINT TABLE
+    # Función que imprime la tabla de variables
     def printTable(self):
         for item in self.tablaVar.items():
             print(item)
             item[1].printvar()
 
+    # CHECK DUPLICATE
+    # Función que revisa si la variable a agregar sería un duplicado de una variable ya existente
+    # INPUT: Nombre de la variable
+    # OUTPUT: True si la función ya existe, o False si no
     def checkDuplicate(self, key):
         if key in self.tablaVar:
-            print('Syntax error: redeclaration of variable' + key)
+            errorReVar(key)
             return True
         else:
             return False
 
+    # CHECK EXISTS
+    # Función que revisa si una variable existe en el contexto actual
+    # INPUT: Nombre de la variable
+    # OUTPUT: True o False, dependiendo si fue encontrada
     def checkExists(self, key):
         if key in self.tablaVar:
             return True
         else:
-            print("aqui")
-            print('Syntax error: variable ' + key + ' does not exist')
+            errorVariableNoExiste(key)
             return False
 
+    # GET TYPE
+    # Función que obtiene el tipo de una variable
     def getType(self, key):
         if key in self.tablaVar:
             return self.tablaVar[key].typeVar
         else:
-            print('Syntax error: variable ' + key + ' does not exist')
+            errorVariableNoExiste(key)
             return False
 
 
@@ -269,10 +325,19 @@ class Cuadruplos():
                      "right": right, "result": result}
         self.cuadruplosMem.append(cuadruplo)
 
-    # Regresar a un cuadruplo con ____ para meter la linea a la que tiene que brincar
-    # Por lo general, para gotos
+    #   FILL QUAD
+    #   Función que regresa a un cuadruplo generado con identificadores con ____
+    #   en la casilla de result para meter el número de cuádruplo al que tendrá
+    #   que tiene que brincar
+    #   Por lo general, para gotos
     def fill_quad(self, end, cont):
         self.cuadruplosID[end]["result"] = cont
 
+    #   FILL QUAD MEM
+    #   Función que regresa a un cuadruplo con direcciones de memoria virtuales
+    #   con ____ en la casilla de result para meter el número de cuádruplo al
+    #   que tendrá que tiene que brincar
+    #
+    #   Por lo general, para gotos
     def fill_quad_mem(self, end, cont):
         self.cuadruplosMem[end]["result"] = cont
