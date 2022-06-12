@@ -1,0 +1,45 @@
+habiaUnaVez Raven
+titulo = "Raven"
+// Fuente de historia ejemplo: https://www.write4fun.net/view-entry/205506
+
+capitulo siete () {
+    titulo = "capitulo 7"
+    -> "You decide to run away. In the distance you hear a car. Its headlights are getting closer. You take a left turn into a dark alleyway and end up behind a small boat house. You see the car speed past you and you decide to flank it."
+    -> "You run onto the main road and lose it. It only took you ten minutes to find the police station nearest to you."
+    -> "Once you arrive you quickly tell your story. Thirty minutes later the police sergeant returns looking happy with himself. He tells you that you were the bait in a drug bust and now you are a key person in the crime of the year."
+    
+}
+
+capitulo seis () {
+    titulo = "capitulo 6"
+    -> "You decide to stand your ground. The car is getting dangerously close to you. Five seconds feels like it has been an hour."
+    -> "The car is getting nearer and you are regretting your decision. You can now see the red hood of the car coming towards you. Just as you get ready for the numbing pain of the car hitting you it screeches to a stop. A suited man comes out of the car and he is holding a hand gun. Where is the money? the man shouts at you. You run away."
+    >> siete()
+}
+
+capitulo cuatro () {
+    titulo = "capitulo cuatro"
+    -> "You decide to go down to the docks to confront the person who wrote the red letter."
+    -> "11:59 pm and there is no one there. Where is he? You think to yourself, did he forget? Is it a prank? Then you hear a car rumble in the distance."
+    -> "A pair of bright yellow headlights pop into existence and they are heading towards you and the noise is getting louder."
+    opciones : ["Stand your ground", >> seis() ; "Run away as fast as you can", >> siete()]
+}
+
+capitulo tres () {
+    titulo = "capitulo tres"
+    -> "You are too curious not to answer your mail. So you grab it out of your mailbox and open it and find seven words. Meet me on the docks at twelve."
+    -> "You are not that sure whether to go or not because it seems like a stereotypical set up for a camp fire story."
+    opciones : ["Drive up to the dock to find out who sent you the letter", >> cuatro()]
+}
+capitulo dos () {
+    titulo = "capitulo dos"
+    -> "You decide that it is too suspicious and you choose to go inside. Half way up the drive you slip and fall head first on a rock. No one knows what happened to your body. Did the writer of the letter take it?"
+}
+capitulo uno () {
+    titulo = "capitulo uno"
+    -> "After a long hard day at your boring office job you arrive at home. Before you walk into your house you see a letter in your mailbox, an unusual occurrence as bill day is Thursday not Monday. You go up to the mailbox and see that there is a little red letter—quite suspicious."
+    opciones : ["Open mail", >> tres() ; "Go inside", >> dos()]
+}
+indice() {
+    >> uno()
+}

@@ -8,7 +8,8 @@ testcases = ['testcase_oper_arreglos.txt',
              'testcase_funciones_fact.txt',
              'testcase_fib_iter.txt',
              'testcase_find.txt',
-             'testcase_opciones_2.txt']
+             'testcase_opciones_2.txt',
+             'testcase_cyoa.txt']
 
 parser = Lark(open("grammar", 'r').read())
 
